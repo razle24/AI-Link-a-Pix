@@ -9,3 +9,6 @@ class Game:
 
     def get_board(self):
         pass
+
+    def get_possible_actions(self, x, y):
+        pass
