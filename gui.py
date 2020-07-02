@@ -1,6 +1,7 @@
 class GUI:
-    def __init__(self):
-        pass
+    def __init__(self, game, debug=False):
+        self.game = game
+        self.debug = debug
 
     def start(self):
         pass
