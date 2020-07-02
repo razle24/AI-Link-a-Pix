@@ -27,8 +27,11 @@ class Game:
         """
         pass
 
-    # def get_possible_actions(self, x, y):
-    #     pass
+    def get_all_possible_actions(self, x, y):
+        pass
+    
+    def get_possible_actions(self, all_possible_actions):
+        pass
     
     def get_successors(self, cur_state, possible_actions):
         pass

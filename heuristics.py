@@ -18,7 +18,6 @@ def photo_recognition(state, action, successor):
 	pass
 
 
-
 def stick_to_same_color(state, action, successor):
 	"""
 	heuristic 4
@@ -39,11 +38,3 @@ def compact_path(state, action, successor):
 	:return:
 	"""
 	pass
-
-
-
-
-
-
-
-

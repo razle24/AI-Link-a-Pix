@@ -1,6 +1,7 @@
 from lxml import etree as ET
 from game import *
 import sys
+from gui import *
 
 
 def get_xml_from_path(path):
@@ -13,6 +14,7 @@ def readCommand(args):
 
 def runGames(args):
 	# self.path = path
+	# self.gui = GUI()
 	# self.game = Game(get_xml_from_path(path))
 	# self.board = game.get_initial_board()
 	# self.heuristic = heuristic
