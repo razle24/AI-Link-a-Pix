@@ -1,8 +1,13 @@
 import numpy as np
 
 
-class Board:
+class Cell:
+    def __init__(self, number=0):
+        self.number = number
+        self.value = 0
 
+
+class Board:
     """
     A Board describes the current state of the game board. It's separate from
     the game engine to allow the Input objects to check if their moves are valid,
@@ -23,7 +28,7 @@ class Board:
         self.board_w = board_w
         self.board_h = board_h
         self.state = np.full((board_h, board_w), -1, np.int8)
-        self._legal = np.full((num_players, board_h, board_w), True, np.bool_) # CHECK
+        self._legal = np.full((num_players, board_h, board_w), True, np.bool_)  # CHECK
         self.remaining_paths = 0
         # TODO - change remaining_paths
 
@@ -133,34 +138,34 @@ class Board:
     # def check_tile_legal(self, player, x, y):
     #     """
     #     Check if it's legal for <player> to place one tile at (<x>, <y>).
-	#
+    #
     #     Legal tiles:
     #     - Are in bounds
     #     - Don't intersect with existing tiles
     #     - Aren't adjacent to the player's existing tiles
-	#
+    #
     #     Returns True if legal or False if not.
     #     """
-	#
+    #
     #     # Make sure tile in bounds
     #     if x < 0 or x >= self.board_w or y < 0 or y >= self.board_h:
     #         return False
-	#
+    #
     #     # Otherwise, it's in the lookup table
     #     return self._legal[player, y, x]
 
     # def check_tile_attached(self, player, x, y):
     #     """Check if (<x>, <y>) is diagonally attached to <player>'s moves.
-	#
+    #
     #     Note that this does not check if this move is legal.
-	#
+    #
     #     Returns True if attached or False if not.
     #     """
-	#
+    #
     #     # Make sure tile in bounds
     #     if x < 0 or x >= self.board_w or y < 0 or y >= self.board_h:
     #         return False
-	#
+    #
     #     # Otherwise, it's in the lookup table
     #     return self.connected[player, y, x]
 
@@ -220,5 +225,3 @@ class Move:
         # )
         # return ''.join(out_str) + "x: " + str(self.x) + " y: " + str(self.y)
         pass
-
-

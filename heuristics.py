@@ -1,40 +1,40 @@
 def null_heuristic(state, action, successor):
-	return 0
+    return 0
 
 
 def csp(state, action, successor):
-	pass
+    pass
 
 
 def mrv(state, action, successor):
-	pass
+    pass
 
 
 def lcv(state, action, successor):
-	pass
+    pass
 
 
 def photo_recognition(state, action, successor):
-	pass
+    pass
 
 
 def stick_to_same_color(state, action, successor):
-	"""
-	heuristic 4
-	:param state:
-	:param action:
-	:param successor:
-	:return:
-	"""
-	pass
+    """
+    heuristic 4
+    :param state:
+    :param action:
+    :param successor:
+    :return:
+    """
+    pass
 
 
 def compact_path(state, action, successor):
-	"""
-	heuristic 5
-	:param state:
-	:param action:
-	:param successor:
-	:return:
-	"""
-	pass
+    """
+    heuristic 5
+    :param state:
+    :param action:
+    :param successor:
+    :return:
+    """
+    pass
