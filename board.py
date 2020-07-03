@@ -1,12 +1,6 @@
 import numpy as np
 
 
-class Cell:
-    def __init__(self, number=0):
-        self.number = number
-        self.value = 0
-
-
 class Board:
     """
     A Board describes the current state of the game board. It's separate from
