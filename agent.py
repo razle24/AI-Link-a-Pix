@@ -103,4 +103,5 @@ def get_runtime(self):
 
 if __name__ == '__main__':
     get_xml_from_path('boards/small_color.xml')
+    print("lll")
 # # TODO - change
