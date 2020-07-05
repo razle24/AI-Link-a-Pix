@@ -7,10 +7,10 @@ class Game:
         :param file: XML file that represents the board
         """
         # TODO represent the board as coordinates
-        self.initial_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["high"])]
+        self.initial_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
         self.board = None
-        self.goal_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["high"])]
-
+        self.goal_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
+        
     def generate_boards(self, xml_dict):
         for color, paths in xml_dict.items():
 

@@ -33,6 +33,7 @@ def build_layout_from_board(window, board, colors):
             else:
                 window[(i, j)](visible=False, value='', background_color='white')
 
+
 def update_layout_from_board():
     pass
 

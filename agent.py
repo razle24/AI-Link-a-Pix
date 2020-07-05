@@ -22,8 +22,8 @@ def get_xml_from_path(path):
         ret_dict = {'name': my_dict['header']['properties']['text']['#text'], 'width': 0, 'height': 0, 'colors': [],
                     'paths': {}}
         my_dict = my_dict['data']
-        ret_dict['width'] = my_dict['dimensions']['@width']
-        ret_dict['height'] = my_dict['dimensions']['@height']
+        ret_dict['width'] = int(my_dict['dimensions']['@width'])
+        ret_dict['height'] = int(my_dict['dimensions']['@height'])
         color_dict = my_dict['palette']['color']
         color_list = create_colors_list(color_dict)
         ret_dict['colors'] = color_list
@@ -59,7 +59,8 @@ def create_tuple_path(str_path):
     for i in range(0, len(path_list), 2):
         result.append((int(path_list[i]), int(path_list[i+1])))
     return result
-        
+
+
 def create_colors_list(color_dict):
     """
     extract the colors from their section in the xml file, and puts them in a list
@@ -72,20 +73,20 @@ def create_colors_list(color_dict):
     return ret
 
 
-def readCommand(args):
-    pass
+# def readCommand(args):
+#     pass
 
 
-def runGames(args):
-    # self.path = path
-    # self.gui = GUI()
-    # self.game = Game(get_xml_from_path(path))
-    # self.board = game.get_initial_board()
-    # self.heuristic = heuristic
-    # self.search = search
-    # self.result = search(game, heuristic)
-    # self.expand = 0
-    pass
+# def runGames(args):
+#     # self.path = path
+#     # self.gui = GUI()
+#     # self.game = Game(get_xml_from_path(path))
+#     # self.board = game.get_initial_board()
+#     # self.heuristic = heuristic
+#     # self.search = search
+#     # self.result = search(game, heuristic)
+#     # self.expand = 0
+#     pass
 
 
 def calc_err_rate(self):
@@ -101,7 +102,5 @@ def get_runtime(self):
 
 
 if __name__ == '__main__':
-    #     args = readCommand(sys.argv[1:])  # Get game components based on input
-    #     runGames(**args)
     get_xml_from_path('boards/small_color.xml')
 # # TODO - change
