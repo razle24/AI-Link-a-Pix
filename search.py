@@ -1,3 +1,24 @@
+import util
+
+
+class StateNode:
+    """
+    Fix problem with util.PriorityQueue which tried (and failed) to use '<' operator on a tuple.
+    This class is basically the same tuple with overloaded '<' operator.
+    """
+
+    def __init__(self, state, actions):
+        self.state = state
+        self.actions = actions
+
+    def __lt__(self, other):
+        return self.state.score(0) < other.score(0)
+
+    def __iter__(self):
+        yield self.state
+        yield self.actions
+
+
 def a_star_search(problem, heuristic):
     """
     Search the node that has the lowest combined cost and heuristic first.
