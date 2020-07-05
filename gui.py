@@ -202,3 +202,57 @@ if __name__ == '__main__':
     ]
 
     runGUI(layout)
+
+
+def get_paths(x, y, end_x, end_y):
+    """
+
+    :param x:
+    :param y:
+    :param end_x:
+    :param end_y:
+    :return:
+    """
+    pass
+
+def get_possable_paths(self, x, y):
+    """
+
+    :param self:
+    :param x:
+    :param y:
+    :return:
+    """
+    # odd numbers must have odd manhattan distance between start and end
+    # even numbers must have even manhattan distance between start and end
+    paths = []
+    length = self.get_number_in_cell(x, y)
+
+    # If no path
+    if length == 0:
+        print(f"Got x: {x}, y:{y}, but cell ({x}, {y}) has no number!")
+        return None
+
+    # This loop will only check possible end coordinates for the path
+    offset = length % 2 == 0
+    # for every possible x
+    for i in range(length + 1):
+        # and every other y
+        for j in range(offset, length - i, 2):
+            # if not (0, 0) AND has the same number in end positions, return all possible paths
+            if (i != 0 or j != 0)
+                continue
+            end_x = x + i
+            end_y = y + j
+            if self.get_number_in_cell(   end_x,  end_y) == length:
+                paths += get_paths(x, y,  end_x,  end_y)
+            if self.get_number_in_cell(  -end_x,  end_y) == length:
+                paths += get_paths(x, y, -end_x,  end_y)
+            if self.get_number_in_cell(   end_x, -end_y) == length:
+                paths += get_paths(x, y,  end_x, -end_y)
+            if self.get_number_in_cell(  -end_x, -end_y) == length:
+                paths += get_paths(x, y, -end_x, -end_y)
+                
+        offset = not offset
+
+    return paths
