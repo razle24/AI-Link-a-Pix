@@ -9,22 +9,22 @@ class Board:
 
     The Board stores:
     - board_w/board_h: the width and height of the playing area
-    - state: a 2D array of the board state. -1 = free; 0-3 = player x's tile
-    - _legal: a 4 x 2D array. _legal[player][y][x] is True iff (x,y) is not
-      on another player's piece or adjacent to a player's own piece
-    - connected: a 4 x 2D array. _connected[player][y][x] is True iff (x,y) is
-      diagonally connected to another one of the player's tiles
-    - piece_list: A PieceList object (probably shared with the game engine) to
-      help understand the moves
+    - state: a matrix (2D list) of tuples (int, int) where t[0]- the number of
+    the current entry (0 = empty), t[1]- the index of the color in self colors
+    of the current entry
+    - colors: the number of the colors (the max value(-1) available for colors)
+    - paths - dictionary where the keys are the colors and the values are
+    lists of lists of paths in the key color
+    { RED : [[(i1,j1), (i2,j2)...], [(i3,j3), (i4, j4)...]...]}
     """
+    def __init__(self, num_of_colors, paths, b_matrix):
+        self.board_w = len(b_matrix[0])
+        self.board_h = len(b_matrix)
+        self.num_of_colors = num_of_colors -1
+        self.state = b_matrix
+        self.paths = paths
 
-    def __init__(self, board_w, board_h, num_players, piece_list, starting_point=(0, 0)):
-        self.board_w = board_w
-        self.board_h = board_h
-        self.state = np.full((board_h, board_w), -1, np.int8)
-        self._legal = np.full((num_players, board_h, board_w), True, np.bool_)  # CHECK
-        self.remaining_paths = 0
-        # TODO - change remaining_paths
+
 
     def add_move(self, move):
         """
