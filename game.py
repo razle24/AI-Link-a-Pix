@@ -7,9 +7,9 @@ class Game:
         :param file: XML file that represents the board
         """
         # TODO represent the board as coordinates
-        self.initial_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["high"])]
+        self.initial_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
         self.board = None
-        self.goal_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["high"])]
+        self.goal_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
         self.heuristic = None
         self.successors = []
 
@@ -98,8 +98,10 @@ class Game:
     #     """
     #     pass
     
+    
 if __name__ == '__main__':
     xml = get_xml_from_path('boards/small_color.xml')
     my_game = Game(xml)
     print("lll")
     
+
