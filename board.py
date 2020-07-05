@@ -12,15 +12,10 @@ class Board:
     - state: a matrix (2D list) of tuples (int, int) where t[0]- the number of
     the current entry (0 = empty), t[1]- the index of the color in self colors
     of the current entry
-    - colors: a list of the able colors for entries (the index is the key
-     for the color)
-
-    - _legal: a 4 x 2D array. _legal[player][y][x] is True iff (x,y) is not
-      on another player's piece or adjacent to a player's own piece
-    - connected: a 4 x 2D array. _connected[player][y][x] is True iff (x,y) is
-      diagonally connected to another one of the player's tiles
-    - piece_list: A PieceList object (probably shared with the game engine) to
-      help understand the moves
+    - colors: the number of the colors (the max value(-1) available for colors)
+    - paths - dictionary where the keys are the colors and the values are
+    lists of lists of paths in the key color
+    { RED : [[(i1,j1), (i2,j2)...], [(i3,j3), (i4, j4)...]...]}
     """
     def __init__(self, num_of_colors, paths, b_matrix):
         self.board_w = len(b_matrix[0])
