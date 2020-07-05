@@ -98,8 +98,10 @@ class Game:
     #     """
     #     pass
     
+    
 if __name__ == '__main__':
     xml = get_xml_from_path('boards/small_color.xml')
     my_game = Game(xml)
     print("lll")
     
+
