@@ -1,17 +1,33 @@
 class Game:
-    def __init__(self, file):
+    def __init__(self, xml_dict):
         """
         :param file: XML file that represents the board
         """
         # TODO represent the board as coordinates
-        self.initial_board = None
+        self.initial_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["high"])]
         self.board = None
-        self.goal_board = None
+        self.goal_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["high"])]
 
     def generate_boards(self, xml_dict):
+        for color, paths in xml_dict.items():
 
+            for path in paths:
+                # fill the initial board with the (len,color) of the wanted path
+                cur_num = len(path)
+                start = path[0]
+                end = path[len(path) - 1]
+                self.initial_board[start[0]][start[1]] = (cur_num, color)
+                self.initial_board[end[0]][end[1]] = (cur_num, color)
 
-        pass
+                # fill the first and last entries of the path in goal board
+                self.goal_board[start[0]][start[1]] = (cur_num, color)
+                self.goal_board[end[0]][end[1]] = (cur_num, color)
+
+                # fill the rest of the entries of the path with color only
+                # without number
+                for i, j in path[1: (len(path) - 1)]:
+                    self.goal_board[i][j] = (0, color)
+
     def __str__(self):
         """
         prints the board
