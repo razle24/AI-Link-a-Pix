@@ -10,6 +10,8 @@ class Game:
         self.initial_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["high"])]
         self.board = None
         self.goal_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["high"])]
+        self.heuristic = None
+        self.successors = []
 
     def generate_boards(self, xml_dict):
         for color, paths in xml_dict.items():
@@ -44,6 +46,12 @@ class Game:
     def get_initial_board(self):
         return self.initial_board
 
+    def set_heuristic(self, heuristic):
+        self.heuristic = heuristic
+
+    def get_heuristic(self):
+        return self.heuristic
+
     def get_current_board(self):
         """
         returns the current board object
@@ -57,8 +65,27 @@ class Game:
     def get_possible_actions(self, all_possible_actions):
         pass
 
-    def get_successors(self, cur_state, possible_actions):
-        pass
+    def set_successors(self, possible_actions):
+        successors = []
+        for act_pat in possible_actions:
+            successors.append(self.get_successor(act_pat))
+        self.successors = successors
+
+    def get_successors(self):
+        return self.successors
+
+    def get_successor(self, action):
+        result = [[(0, 0) for i in range(self.board.board_w)] for j in range(self.board.board_h)]
+        color = self.board[action[0][0]][action[0][1]]
+        size = len(action)
+        result[action[0][0]][action[0][1]] = (size, color)
+        result[action[len(action)-1][0]][action[len(action)-1][1]] = (size, color)
+        for i, j in action[1: (len(action) - 1)]:
+            result[i][j] = (0, color)
+        return result
+
+    def set_successor(self, action):
+        self.board = self.get_successor(action)
 
     def is_goal_state(self):
         return self.board == self.goal_board

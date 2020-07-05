@@ -36,7 +36,7 @@ def build_layout_from_board(window, board, colors):
 def update_layout_from_board():
     pass
 
-
+כן
 colors_test = ['white', 'black', 'red']
 # Tuple of (number, color drawn). if 'number'!=0 the second value is number's color.
 # (0, 0) - Empty cell
