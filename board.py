@@ -20,7 +20,7 @@ class Board:
     def __init__(self, num_of_colors, paths, b_matrix):
         self.board_w = len(b_matrix[0])
         self.board_h = len(b_matrix)
-        self.num_of_colors = num_of_colors
+        self.num_of_colors = num_of_colors -1
         self.state = b_matrix
         self.paths = paths
 

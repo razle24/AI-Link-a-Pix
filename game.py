@@ -1,3 +1,5 @@
+import copy
+
 class Game:
     def __init__(self, xml_dict):
         """
@@ -27,13 +29,16 @@ class Game:
                 # without number
                 for i, j in path[1: (len(path) - 1)]:
                     self.goal_board[i][j] = (0, color)
+        # in this point we will create a deep copy of the initial board to
+        # work on during the game
+        self.board = copy.deepcopy(self.initial_board)
 
     def __str__(self):
         """
         prints the board
         :return:
         """
-        pass
+        print(self.board)
 
     def get_initial_board(self):
         return self.initial_board
@@ -43,7 +48,7 @@ class Game:
         returns the current board object
         :return:
         """
-        pass
+        return self.board
 
     def get_all_possible_actions(self, x, y):
         pass
