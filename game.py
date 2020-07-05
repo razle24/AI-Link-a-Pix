@@ -7,15 +7,16 @@ class Game:
         """
         :param file: XML file that represents the board
         """
-        # TODO represent the board as coordinates
+
         self.initial_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
-        self.board = None
+        self.board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
         self.goal_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
         self.heuristic = None
         self.successors = []
+        self.generate_boards(xml_dict)
 
     def generate_boards(self, xml_dict):
-        for color, paths in xml_dict.items():
+        for color, paths in xml_dict["paths"].items():
 
             for path in paths:
                 # fill the initial board with the (len,color) of the wanted path
@@ -25,6 +26,10 @@ class Game:
                 self.initial_board[start[0]][start[1]] = (cur_num, color)
                 self.initial_board[end[0]][end[1]] = (cur_num, color)
 
+                # now the we have board to work on
+                self.board[start[0]][start[1]] = (cur_num, color)
+                self.board[end[0]][end[1]] = (cur_num, color)
+
                 # fill the first and last entries of the path in goal board
                 self.goal_board[start[0]][start[1]] = (cur_num, color)
                 self.goal_board[end[0]][end[1]] = (cur_num, color)
@@ -33,9 +38,6 @@ class Game:
                 # without number
                 for i, j in path[1: (len(path) - 1)]:
                     self.goal_board[i][j] = (0, color)
-        # in this point we will create a deep copy of the initial board to
-        # work on during the game
-        self.board = copy.deepcopy(self.initial_board)
 
     def __str__(self):
         """
@@ -60,6 +62,7 @@ class Game:
         """
         return self.board
 
+    # TODO get_possible_actions
     def get_all_possible_actions(self, x, y):
         pass
 
@@ -76,8 +79,10 @@ class Game:
         return self.successors
 
     def get_successor(self, action):
-        result = [[(0, 0) for i in range(self.board.board_w)] for j in range(self.board.board_h)]
-        color = self.board[action[0][0]][action[0][1]]
+        w = len(self.board[0])
+        h = len(self.board)
+        result = [[(0, 0) for i in range(w)] for j in range(h)]
+        color = self.board[action[0][0]][action[0][1]][1]
         size = len(action)
         result[action[0][0]][action[0][1]] = (size, color)
         result[action[len(action)-1][0]][action[len(action)-1][1]] = (size, color)
@@ -100,10 +105,10 @@ class Game:
     #     pass
     
 
-
 if __name__ == '__main__':
     xml = get_xml_from_path('boards/small_color.xml')
     my_game = Game(xml)
     print("lll")
+    print(my_game.get_successor([(1, 9), (1, 8), (1, 7), (0, 7), (0, 6), (0, 5), (0, 4), (1, 4), (1, 3)]))
     print("updated 6:20")
 
