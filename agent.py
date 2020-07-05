@@ -1,4 +1,7 @@
 import sys
+import xml.etree.ElementTree as ET
+import xmltodict
+from xml.dom import minidom
 
 
 def get_xml_from_path(path):
@@ -14,20 +17,59 @@ def get_xml_from_path(path):
     :param path: Path to xml file
     :return: The above dictionary
     """
-    pass
-
-
-# 	tree = etree.parse("some_file.xml")
-# 	etree_to_dict(tree.getroot())
-#
-# 	result = dict()
-# 	# result['name'] = tree.puzzle.header.properties.
-#
-# def etree_to_dict(t):
-# 	d = {t.tag: map(etree_to_dict, t.iterchildren())}
-# 	d.update(('@' + k, v) for k, v in t.attrib.iteritems())
-# 	d['text'] = t.text
-# 	return d
+    with open(path, 'rb') as file :
+        my_dict = dict(xmltodict.parse(file)['puzzle'])
+        ret_dict = {'name': my_dict['header']['properties']['text']['#text'], 'width': 0, 'height': 0, 'colors': [],
+                    'paths': {}}
+        my_dict = my_dict['data']
+        ret_dict['width'] = my_dict['dimensions']['@width']
+        ret_dict['height'] = my_dict['dimensions']['@height']
+        color_dict = my_dict['palette']['color']
+        color_list = create_colors_list(color_dict)
+        ret_dict['colors'] = color_list
+        my_dict = my_dict['solution']['path']
+        # print(my_dict[0]['@color'])
+        paths_dict = create_paths_dict(my_dict, color_list)
+        ret_dict['paths'] = paths_dict
+        print(ret_dict)
+        
+        
+def create_paths_dict(paths_dict, color_list):
+    """
+    
+    :param paths_dict:
+    :return:
+    """
+    result = {i: [] for i in range(len(color_list))}
+    for i in range(len(paths_dict)):
+        str_path = paths_dict[i]['#text']
+        color = int(paths_dict[i]['@color'])
+        result[color].append(create_tuple_path(str_path))
+    return result
+    
+    
+def create_tuple_path(str_path):
+    """
+    gets a path as a string - for example : '1 2 3 4' and creates a list of tuples.
+    :param str_path:
+    :return: a list of tuples - [(1,2), (3,4)]
+    """
+    result = []
+    path_list = str_path.split()
+    for i in range(0, len(path_list), 2):
+        result.append((int(path_list[i]), int(path_list[i+1])))
+    return result
+        
+def create_colors_list(color_dict):
+    """
+    extract the colors from their section in the xml file, and puts them in a list
+    :param color_dict:
+    :return: the list of the colors
+    """
+    ret = []
+    for i in range(len(color_dict)):
+        ret.append(color_dict[i]['@rgb'])
+    return ret
 
 
 def readCommand(args):
@@ -59,6 +101,7 @@ def get_runtime(self):
 
 
 if __name__ == '__main__':
-    args = readCommand(sys.argv[1:])  # Get game components based on input
-    runGames(**args)
-# TODO - change
+    #     args = readCommand(sys.argv[1:])  # Get game components based on input
+    #     runGames(**args)
+    get_xml_from_path('boards/small_color.xml')
+# # TODO - change

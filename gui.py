@@ -12,7 +12,6 @@ def get_board_layout(size):
     for i in range(size):
         layout += [[sg.Text(key=(i, j), pad=(0, 0), size=(1, 1), background_color='white',
                             text_color='white', visible=True) for j in range(size)]]
-
     return layout
 
 
