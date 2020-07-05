@@ -105,5 +105,5 @@ if __name__ == '__main__':
     xml = get_xml_from_path('boards/small_color.xml')
     my_game = Game(xml)
     print("lll")
-    #updated 6:20
+    print("updated 6:20")
 
