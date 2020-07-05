@@ -31,7 +31,7 @@ def get_xml_from_path(path):
         # print(my_dict[0]['@color'])
         paths_dict = create_paths_dict(my_dict, color_list)
         ret_dict['paths'] = paths_dict
-        print(ret_dict)
+        return ret_dict
         
         
 def create_paths_dict(paths_dict, color_list):
