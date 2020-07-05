@@ -4,38 +4,91 @@ import PySimpleGUI as sg
 
 from texts import *
 
-MAX_BOARD_SIZE = 5
+# MAX_BOARD_SIZE = 5
+#
+#
+# def get_board_layout(size):
+#     layout = []
+#     for i in range(size):
+#         layout += [[sg.Text(key=(i, j), pad=(0, 0), size=(1, 1), background_color='white',
+#                             text_color='white', visible=True) for j in range(size)]]
+#
+#     return layout
+#
+#
+# def build_layout_from_board(window, board, colors):
+#     w = len(board)
+#     h = len(board[0])
+#
+#     for i in range(MAX_BOARD_SIZE):
+#         for j in range(MAX_BOARD_SIZE):
+#             window.finalize()
+#             if i < w and j < h:
+#                 cell = board[i][j]
+#                 if cell[0] == 0:
+#                     window[(i, j)](visible=True, value='', background_color=colors[cell[1]])
+#                 else:
+#                     window[(i, j)](visible=True, value=str(cell[0]),
+#                                    background_color=colors[cell[1]])
+#
+#             else:
+#                 window[(i, j)](visible=False, value='', background_color='white')
 
 
-def get_board_layout(size):
-    layout = []
-    for i in range(size):
-        layout += [[sg.Text(key=(i, j), pad=(0, 0), size=(1, 1), background_color='white',
-                            text_color='white', visible=True) for j in range(size)]]
-
-    return layout
+GRAPH_HEIGHT = 100.0
+GRAPH_WIDTH = 100.0
 
 
-def build_layout_from_board(window, board, colors):
-    w = len(board)
-    h = len(board[0])
+class BoardGraph:
+    def __init__(self, graph: sg.Graph, board: list, colors: list, w: int, h: int):
+        self.graph = graph
+        self.board_numbers = board
+        self.colors = colors
+        self.board_colors = dict()
+        self.w = w
+        self.h = h
 
-    for i in range(MAX_BOARD_SIZE):
-        for j in range(MAX_BOARD_SIZE):
-            window.finalize()
-            if i < w and j < h:
-                cell = board[i][j]
-                if cell[0] == 0:
-                    window[(i, j)](visible=True, value='', background_color=colors[cell[1]])
-                else:
-                    window[(i, j)](visible=True, value=str(cell[0]),
-                                   background_color=colors[cell[1]])
+        self.draw_board_borders()
+        self.draw_board_numbers()
 
-            else:
-                window[(i, j)](visible=False, value='', background_color='white')
+    def draw_board_borders(self):
+        h_offset = GRAPH_HEIGHT / self.h
+        w_offset = GRAPH_WIDTH / self.w
 
-def update_layout_from_board():
-    pass
+        curr_h = 0
+        for i in range(self.h):
+            curr_w = 0
+            for j in range(self.w):
+                self.board_colors[(i, j)] = self.graph.DrawRectangle(
+                    top_left=(curr_h + 1, curr_w + 1),
+                    bottom_right=(curr_h + h_offset,
+                                  curr_w + w_offset),
+                    fill_color=self.colors[0],
+                    line_color='gray', line_width=2)
+
+                self.graph.send_figure_to_back(self.board_colors[(i, j)])
+
+                curr_w += w_offset
+            curr_h += h_offset
+
+    def draw_board_numbers(self):
+        h_offset = GRAPH_HEIGHT / self.h
+        w_offset = GRAPH_WIDTH / self.w
+
+        for i in range(self.h):
+            for j in range(self.w):
+                cell = self.board_numbers[i][j]
+                if cell[0] != 0:
+                    print('i', i, 'j', j)
+                    text = self.graph.DrawText(text=str(cell[0]), color='white',
+                                               location=((h_offset + 1) * i + (h_offset / 2),
+                                                         (w_offset + 1) * j + (w_offset / 2))
+                                               )
+                    self.graph.bring_figure_to_front(text)
+                    self.board_colors[(i, j)].SetColor(self.colors[cell[1]])
+
+    def drew_colors_on_board(self, x, y, color_index):
+        pass
 
 
 colors_test = ['white', 'black', 'red']
@@ -67,12 +120,13 @@ def runGUI(layout):
         # If player selects file, update to GUI to show file name
         if event == 'file_path':
             print('File selected:', values['file_path'])
+
+            # Show file in GUI
             window['text_puzzle_name'](os.path.basename(values['file_path']))
-            window['frame_board'](visible=False)
-            build_layout_from_board(window, board_test, colors_test)
-            window.finalize()
-            window['frame_board'].expand(expand_x=True, expand_y=True, expand_row=True)
-            window['frame_board'](visible=True)
+
+            # Create board in GUI
+            graph = BoardGraph(window['graph_board'], board_test, colors_test,
+                               len(board_test[0]), len(board_test))
 
         if event == 'button_resume':
             print('button_resume')
@@ -83,7 +137,8 @@ def runGUI(layout):
         if event == 'button_reset':
             print('button_reset')
 
-        # if event == 'Run':
+        if event == 'graph_board':
+            print(f'Clicked on x: {values["graph_board"][0]}\t y: {values["graph_board"][1]}')
 
     window.close()
 
@@ -130,9 +185,14 @@ if __name__ == '__main__':
                       orientation='h', disable_number_display=True)
         ],
         [
-            sg.Frame(key='frame_board', title='', layout=get_board_layout(MAX_BOARD_SIZE),
-                     size=(1100, 400),
-                     background_color='white', element_justification='center')
+            sg.Graph(key='graph_board', enable_events=True, float_values=True,
+                     canvas_size=(300, 300),
+                     graph_top_right=(GRAPH_WIDTH, 0), graph_bottom_left=(0, GRAPH_HEIGHT),
+                     background_color='white')
+
+            # sg.Frame(key='frame_board', title='', layout=get_board_layout(MAX_BOARD_SIZE),
+            #          size=(1100, 400),
+            #          background_color='white', element_justification='center')
         ],
         [sg.HorizontalSeparator()],
         [sg.Text(STATS_TEXT)],
