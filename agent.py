@@ -8,7 +8,9 @@ def get_xml_from_path(path):
     width - Puzzle width
     height - Puzzle height
     colors - List of RGB values [str]
-    paths - Set of sets of path coordinates {{(int, int)}}
+    paths - dictionary where the keys are the colors and the values are
+    lists of lists of paths in the key color
+    { RED : [[(i1,j1), (i2,j2)...], [(i3,j3), (i4, j4)...]...]}
     :param path: Path to xml file
     :return: The above dictionary
     """

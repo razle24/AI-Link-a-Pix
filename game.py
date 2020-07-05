@@ -8,6 +8,10 @@ class Game:
         self.board = None
         self.goal_board = None
 
+    def generate_boards(self, xml_dict):
+
+
+        pass
     def __str__(self):
         """
         prints the board
