@@ -204,7 +204,7 @@ if __name__ == '__main__':
     runGUI(layout)
 
 
-def get_paths(x, y, end_x, end_y):
+def get_paths(self, x, y, end_x, end_y):
     """
 
     :param x:
@@ -213,7 +213,13 @@ def get_paths(x, y, end_x, end_y):
     :param end_y:
     :return:
     """
-    pass
+    if self.get_number_in_cell(end_x, end_y) == length:
+        return []
+
+    if end_x < 0 or end_y < 0 or end_x > self.w or end_y > self.h or self.is_connected(end_x,
+                                                                                       end_y):
+        return []
+
 
 def get_possable_paths(self, x, y):
     """
@@ -223,8 +229,6 @@ def get_possable_paths(self, x, y):
     :param y:
     :return:
     """
-    # odd numbers must have odd manhattan distance between start and end
-    # even numbers must have even manhattan distance between start and end
     paths = []
     length = self.get_number_in_cell(x, y)
 
@@ -233,26 +237,30 @@ def get_possable_paths(self, x, y):
         print(f"Got x: {x}, y:{y}, but cell ({x}, {y}) has no number!")
         return None
 
+    # Odd numbers must have odd manhattan distance between start and end
+    # Even numbers must have even manhattan distance between start and end
     # This loop will only check possible end coordinates for the path
     offset = length % 2 == 0
-    # for every possible x
+    # For every possible x
     for i in range(length + 1):
-        # and every other y
+        # And every other y such that i + j <= length
         for j in range(offset, length - i, 2):
-            # if not (0, 0) AND has the same number in end positions, return all possible paths
-            if (i != 0 or j != 0)
-                continue
             end_x = x + i
             end_y = y + j
-            if self.get_number_in_cell(   end_x,  end_y) == length:
-                paths += get_paths(x, y,  end_x,  end_y)
-            if self.get_number_in_cell(  -end_x,  end_y) == length:
-                paths += get_paths(x, y, -end_x,  end_y)
-            if self.get_number_in_cell(   end_x, -end_y) == length:
-                paths += get_paths(x, y,  end_x, -end_y)
-            if self.get_number_in_cell(  -end_x, -end_y) == length:
-                paths += get_paths(x, y, -end_x, -end_y)
-                
+
+            if i != 0:
+                paths += self.get_paths(x, y, end_x, end_y)
+                paths += self.get_paths(x, y, -end_x, end_y)
+
+                if j != 0:
+                    paths += self.get_paths(x, y, end_x, -end_y)
+                    paths += self.get_paths(x, y, -end_x, -end_y)
+
+            elif j != 0:
+                paths += self.get_paths(x, y, end_x, end_y)
+                paths += self.get_paths(x, y, end_x, -end_y)
+
         offset = not offset
 
     return paths
+
