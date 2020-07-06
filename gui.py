@@ -4,39 +4,7 @@ import PySimpleGUI as sg
 
 from texts import *
 
-# MAX_BOARD_SIZE = 5
-#
-#
-# def get_board_layout(size):
-#     layout = []
-#     for i in range(size):
-#         layout += [[sg.Text(key=(i, j), pad=(0, 0), size=(1, 1), background_color='white',
-#                             text_color='white', visible=True) for j in range(size)]]
-#
-#     return layout
-#
-#
-# def build_layout_from_board(window, board, colors):
-#     w = len(board)
-#     h = len(board[0])
-#
-#     for i in range(MAX_BOARD_SIZE):
-#         for j in range(MAX_BOARD_SIZE):
-#             window.finalize()
-#             if i < w and j < h:
-#                 cell = board[i][j]
-#                 if cell[0] == 0:
-#                     window[(i, j)](visible=True, value='', background_color=colors[cell[1]])
-#                 else:
-#                     window[(i, j)](visible=True, value=str(cell[0]),
-#                                    background_color=colors[cell[1]])
-#
-#             else:
-#                 window[(i, j)](visible=False, value='', background_color='white')
-
-
-GRAPH_HEIGHT = 100.0
-GRAPH_WIDTH = 100.0
+GRAPH_SIZE = 420
 
 
 class BoardGraph:
@@ -47,48 +15,46 @@ class BoardGraph:
         self.board_colors = dict()
         self.w = w
         self.h = h
+        self.cell_size = min(GRAPH_SIZE / self.h, GRAPH_SIZE / self.w, 25)
 
         self.draw_board_borders()
         self.draw_board_numbers()
 
     def draw_board_borders(self):
-        h_offset = GRAPH_HEIGHT / self.h
-        w_offset = GRAPH_WIDTH / self.w
-
         curr_h = 0
         for i in range(self.h):
             curr_w = 0
             for j in range(self.w):
                 self.board_colors[(i, j)] = self.graph.DrawRectangle(
                     top_left=(curr_h + 1, curr_w + 1),
-                    bottom_right=(curr_h + h_offset,
-                                  curr_w + w_offset),
+                    bottom_right=(curr_h + self.cell_size,
+                                  curr_w + self.cell_size),
                     fill_color=self.colors[0],
                     line_color='gray', line_width=2)
 
                 self.graph.send_figure_to_back(self.board_colors[(i, j)])
 
-                curr_w += w_offset
-            curr_h += h_offset
+                curr_w += self.cell_size
+            curr_h += self.cell_size
 
     def draw_board_numbers(self):
-        h_offset = GRAPH_HEIGHT / self.h
-        w_offset = GRAPH_WIDTH / self.w
-
         for i in range(self.h):
             for j in range(self.w):
                 cell = self.board_numbers[i][j]
                 if cell[0] != 0:
                     print('i', i, 'j', j)
-                    text = self.graph.DrawText(text=str(cell[0]), color='white',
-                                               location=((h_offset + 1) * i + (h_offset / 2),
-                                                         (w_offset + 1) * j + (w_offset / 2))
-                                               )
-                    self.graph.bring_figure_to_front(text)
-                    self.board_colors[(i, j)].SetColor(self.colors[cell[1]])
+                    fig = self.graph.DrawText(text=str(cell[0]), color=colors_test[cell[1]],
+                                              location=((self.cell_size * i + (self.cell_size / 2)),
+                                              (self.cell_size * j + (self.cell_size / 2))))
 
-    def drew_colors_on_board(self, x, y, color_index):
-        pass
+                    self.graph.bring_figure_to_front(fig)
+
+    def drew_color_on_board(self, x, y, color):
+        cell = self.board_numbers[i][j]
+        if cell[0] == 0:
+            pass
+        else:
+            pass
 
 
 colors_test = ['white', 'black', 'red']
@@ -108,7 +74,6 @@ board_test = [
 def runGUI(layout):
     # Create the Window
     window = sg.Window(APP_NAME, layout, finalize=True)
-
     # Event Loop to process "events" and get the "values" of the inputs
     while True:
         event, values = window.read()
@@ -130,6 +95,9 @@ def runGUI(layout):
 
         if event == 'button_resume':
             print('button_resume')
+            graph = BoardGraph(window['graph_board'], board_test, colors_test,
+                               len(board_test[0]), len(board_test))
+
 
         if event == 'button_pause':
             print('button_pause')
@@ -156,48 +124,46 @@ if __name__ == '__main__':
 
             sg.Radio(key='radio_ai_play', text=RADIO_AI_PLAY_MODE, group_id=MODE_GROUP_ID,
                      default=True),
-            sg.Radio(key='radio_ai_build', text=RADIO_AI_BUILD_MODE, group_id=MODE_GROUP_ID),
-            sg.Radio(key='radio_human', text=RADIO_HUMAN_MODE, group_id=MODE_GROUP_ID),
+            sg.Radio(key='radio_ai_build', text=RADIO_AI_BUILD_MODE, group_id=MODE_GROUP_ID,
+                     disabled=True),
+            sg.Radio(key='radio_human', text=RADIO_HUMAN_MODE, group_id=MODE_GROUP_ID,
+                     disabled=True)
         ],
         [
             sg.InputText(key='file_path', enable_events=True, visible=False),
             sg.FileBrowse(button_text=FILE_BROWSER_TEXT, initial_folder='./boards', size=(14, 1)),
             sg.Text(FILE_SELECTED_TEXT),
-            sg.Text(key='text_puzzle_name', size=(80, 1), text=NO_PUZZLE_SELECTED_TEXT)
+            sg.Text(key='text_puzzle_name', size=(50, 1), text=NO_PUZZLE_SELECTED_TEXT)
         ],
         [
             sg.Text(AI_MODE),
-            sg.Combo(key='combo_select', values=DROP_DOWN_SEARCH_LIST,
-                     default_value='Select search type', readonly=True, text_color='black'),
-            sg.Combo(key='combo_heuristic', values=DROP_DOWN_HEURISTIC_LIST,
-                     default_value='Select heuristic', readonly=True, text_color='black')
+            sg.Combo(key='combo_select', values=DROP_DOWN_SEARCH_LIST, text_color='black',
+                     default_value='Select search type', readonly=True),
+            sg.Combo(key='combo_heuristic', values=DROP_DOWN_HEURISTIC_LIST, text_color='black',
+                     default_value='Select heuristic', readonly=True)
         ],
         [sg.HorizontalSeparator()],
         [
             sg.Button(key='button_resume', button_text=BUTTON_RESUME_TEXT, size=(8, 1)),
             sg.Button(key='button_pause', button_text=BUTTON_PAUSE_TEXT, size=(8, 1)),
-            sg.Button(key='button_reset', button_text=BUTTON_RESET_TEXT, size=(8, 1)),
+            sg.Button(key='button_reset', button_text=BUTTON_RESET_TEXT, size=(8, 1))
 
-            sg.Sizer(400),
-
-            sg.Text(SLIDER_SPEED_TEXT),
-            sg.Slider(key='slider_speed', range=(0, 2), default_value=0, resolution=1,
-                      orientation='h', disable_number_display=True)
+            # sg.Sizer(400),
+            #
+            # sg.Text(SLIDER_SPEED_TEXT),
+            # sg.Slider(key='slider_speed', range=(0, 2), default_value=0, resolution=1,
+            #           orientation='h', disable_number_display=True)
         ],
         [
             sg.Graph(key='graph_board', enable_events=True, float_values=True,
-                     canvas_size=(300, 300),
-                     graph_top_right=(GRAPH_WIDTH, 0), graph_bottom_left=(0, GRAPH_HEIGHT),
+                     canvas_size=(GRAPH_SIZE, GRAPH_SIZE),
+                     graph_top_right=(GRAPH_SIZE, 0), graph_bottom_left=(0, GRAPH_SIZE),
                      background_color='white')
-
-            # sg.Frame(key='frame_board', title='', layout=get_board_layout(MAX_BOARD_SIZE),
-            #          size=(1100, 400),
-            #          background_color='white', element_justification='center')
         ],
         [sg.HorizontalSeparator()],
         [sg.Text(STATS_TEXT)],
         [
-            sg.Output(key='textbox_stats', size=(155, 10))
+            sg.Output(key='textbox_stats', size=(100, 10))
         ]
     ]
 
@@ -263,4 +229,3 @@ def get_possable_paths(self, x, y):
         offset = not offset
 
     return paths
-
