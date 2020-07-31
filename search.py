@@ -4,6 +4,7 @@ from variables import *
 import itertools
 FAILURE = 'Failure'
 from gui import get_possable_paths
+from board import *
 
 
 class StateNode:
@@ -65,7 +66,7 @@ def get_vars(board):
             if board.state[i][j][0] != 0 and board.state[i][j][1] != 0:
                 cur_var.head = True
             vars.append(cur_var)
-    set_domain_values(vars)
+    # set_domain_values(vars)
     return vars
 
 
@@ -103,8 +104,8 @@ def color_path(vars, path):
     """
     color = get_var_by_pos(path[0], vars).color
     for x, y in path[1:]:
-        get_var_by_pos((x, y), vars).color = color
-
+        get_var_by_pos((x, y), vars).set_value(color)
+        
 
 def uncolor_path(vars, path):
     """
@@ -120,22 +121,23 @@ def uncolor_path(vars, path):
         var.remove_value()
 
 
-def backtrack(vars, paths):
+def backtrack(coords, vars, paths, cols):
     i = 0
-    while 0 <= i < len(vars):
-        if vars[i].color == 0:
-            continue
+    while 0 <= i < len(coords):
+        # if vars[i].color != 0:
+        #     continue
         # get_value = all possible paths from var[i]
-        path = get_value(vars, i)
+        cur_coord = coords[i]
+        path = get_value(vars, cur_coord[0] * cols + cur_coord[1])
         if path is None:
-            # ?????
-            if len(paths) == 0:
-                return FAILURE
+            # # ?????
+            # if len(paths) == 0:
+            #     return FAILURE
             path_to_del = paths.pop(-1)
-            last_head = get_pos_by_var(path_to_del[0], vars)
+            # last_head = get_pos_by_var(path_to_del[0], vars)
             uncolor_path(vars, path_to_del)
             # vars[i].remove_value()
-            i = last_head
+            i -= 1
         else:
             color_path(vars, path)
             paths += path
@@ -147,9 +149,34 @@ def backtrack(vars, paths):
     return vars
 
 
+def printVarBoard(vars, cols, rows):
+    for i in range(rows):
+        for j in range(cols):
+            print(vars[i * cols + j].color, end="", flush=True)
+            print(" ", end="", flush=True)
+        print()
+
+
 def get_value(vars, i):
     while len(vars[i].legalValues) > 0:
         value = vars[i].legalValues.pop(0)
         if is_path_legal(value, vars):
             return value
     return None
+
+
+if __name__ == '__main__':
+    mat = [[(1, 1), (7, 2), (0, 0), (1, 2), (1, 3)],
+           [(4, 3), (1, 1), (0, 0), (0, 0), (7, 2)],
+           [(0, 0), (0, 0), (4, 1), (0, 0), (0, 0)],
+           [(1, 1), (4, 3), (0, 0), (5, 1), (1, 3)],
+           [(3, 3), (4, 1), (0, 0), (0, 0), (5, 1)],
+           [(0, 0), (4, 3), (0, 0), (0, 0), (0, 0)],
+           [(3, 3), (9, 4), (0, 0), (0, 0), (0, 0)],
+           [(0, 0), (0, 0), (4, 3), (5, 4), (0, 0)],
+           [(0, 0), (0, 0), (0, 0), (9, 4), (5, 4)],
+           [(1, 3), (1, 4), (0, 0), (0, 0), (1, 3)]]
+    
+    board = Board(4, None, mat)
+    vars = get_vars(board)
+    printVarBoard(vars, 5, 10)
