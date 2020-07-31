@@ -3,7 +3,6 @@ import math
 from variables import *
 import itertools
 FAILURE = 'Failure'
-from gui import get_possable_paths
 from board import *
 
 
@@ -51,9 +50,9 @@ def a_star_search(problem, heuristic):
     return None
 
 
-def set_domain_values(vars):
+def set_domain_values(vars, board):
     for var in vars:
-        var.domain = get_possable_paths(var.pos)
+        var.domain = board.get_possable_paths(var.pos[0], var.pos[1])
 
 
 def get_vars(board):
@@ -66,14 +65,14 @@ def get_vars(board):
             if board.state[i][j][0] != 0 and board.state[i][j][1] != 0:
                 cur_var.head = True
             vars.append(cur_var)
-    # set_domain_values(vars)
+    set_domain_values(vars, board)
     return vars
 
 
-def csp(state, mrv=False, lcv=False):
+def csp(state, heads, mrv=False, lcv=False):
     vars = get_vars(state)
     paths = []
-    backtrack(vars, paths)
+    backtrack(heads, vars, paths, state.board_w)
 
 
 def get_var_by_pos(pos, vars):
@@ -128,7 +127,7 @@ def backtrack(coords, vars, paths, cols):
         #     continue
         # get_value = all possible paths from var[i]
         cur_coord = coords[i]
-        path = get_value(vars, cur_coord[0] * cols + cur_coord[1])
+        path = get_value(vars, (cur_coord[0] * cols) + cur_coord[1])
         if path is None:
             # # ?????
             # if len(paths) == 0:
@@ -158,8 +157,8 @@ def printVarBoard(vars, cols, rows):
 
 
 def get_value(vars, i):
-    while len(vars[i].legalValues) > 0:
-        value = vars[i].legalValues.pop(0)
+    while len(vars[i].legal_paths) > 0:
+        value = vars[i].legal_paths.pop(0)
         if is_path_legal(value, vars):
             return value
     return None
@@ -177,6 +176,10 @@ if __name__ == '__main__':
            [(0, 0), (0, 0), (0, 0), (9, 4), (5, 4)],
            [(1, 3), (1, 4), (0, 0), (0, 0), (1, 3)]]
     
+    heads = [(0, 0), (0, 3), (0, 4), (1, 1), (3, 0), (3, 4), (9, 0), (9, 1), (9, 4), (4, 0), (6, 0),
+             (1, 0), (2, 2), (3, 1), (4, 1), (5, 1), (7, 2), (3, 3), (4, 4), (7, 3), (8, 4), (0, 1),
+             (1, 4), (6, 1), (8, 3)]
+    
     board = Board(4, None, mat)
-    vars = get_vars(board)
-    printVarBoard(vars, 5, 10)
+    csp(board, heads)
+    # printVarBoard(vars, 5, 10)
