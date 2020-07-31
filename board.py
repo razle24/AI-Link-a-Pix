@@ -1,5 +1,7 @@
 import numpy as np
 
+from util import manhattan_distance
+
 
 class Board:
     """
@@ -23,8 +25,6 @@ class Board:
         self.num_of_colors = num_of_colors -1
         self.state = b_matrix
         self.paths = paths
-
-
 
     def add_move(self, move):
         """
@@ -192,6 +192,102 @@ class Board:
         cpy_board.scores = self.scores[:]
         return cpy_board
 
+    def get_paths(self, start, end_x, end_y, steps):
+        """
+
+        :param x:
+        :param y:
+        :param end_x:
+        :param end_y:
+        :return:
+        """
+        if end_x < 0 or self.board_w <= end_x or end_y < 0 or self.board_h <= end_y \
+                or self.get_number_in_cell(end_x, end_y) != steps + 1:
+            return []
+        
+        return self.get_paths_rec([start], end_x, end_y, steps - 1)
+
+    def get_paths_rec(self, current_path, end_x, end_y, steps):
+        x, y = current_path[-1]
+
+        # If end of steps
+        if steps == 0:
+            # And got to end, return path found
+            if current_path[-1] == (end_x, end_y):
+                return [current_path]
+            # Otherwise, path don't lead to end
+            else:
+                return []
+            
+        # If end is too far for path, don't try going there
+        if manhattan_distance((x, y), (end_x, end_y)) > steps or self.get_number_in_cell(x, y) != 0:
+            return []
+    
+        
+    
+        # collect valid paths from this point
+        paths = []
+        possible_steps = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+    
+        for possible_step in possible_steps:
+            # If point not on board or point already in path, skip it
+            if possible_step[0] < 0 or self.board_w <= possible_step[0] or possible_step[1] < 0 or self.board_h <= \
+                    possible_step[1] or possible_step in current_path:
+                continue
+        
+            paths += self.get_paths_rec(current_path + [possible_step], end_x, end_y, steps - 1)
+    
+        return paths
+
+    def get_number_in_cell(self, x, y):
+        return self.state[x][y][0]
+
+    def get_possable_paths(self, x, y):
+        """
+
+        :param self:
+        :param x:
+        :param y:
+        :return:
+        """
+        paths = []
+        length = self.get_number_in_cell(x, y)
+    
+        # If no path
+        if length == 0:
+            print(f"Got x: {x}, y:{y}, but cell ({x}, {y}) has no number!")
+            return None
+        
+        if length == 1:
+            return [(x, y)]
+    
+        # Odd numbers must have odd manhattan distance between start and end
+        # Even numbers must have even manhattan distance between start and end
+        # This loop will only check possible end coordinates for the path
+        offset = length % 2 == 0
+        # For every possible x
+        for i in range(length + 1):
+            # And every other y such that i + j <= length
+            for j in range(offset, length - i, 2):
+                end_x = x + i
+                end_y = y + j
+            
+                if i != 0:
+                    paths += self.get_paths((x, y), end_x, end_y, length)
+                    paths += self.get_paths((x, y), -end_x, end_y, length)
+                
+                    if j != 0:
+                        paths += self.get_paths((x, y), end_x, -end_y, length)
+                        paths += self.get_paths((x, y), -end_x, -end_y, length)
+            
+                elif j != 0:
+                    paths += self.get_paths((x, y), end_x, end_y, length)
+                    paths += self.get_paths((x, y), end_x, -end_y, length)
+        
+            offset = not offset
+    
+        return paths
+
 
 class Move:
     """
@@ -219,3 +315,5 @@ class Move:
         # )
         # return ''.join(out_str) + "x: " + str(self.x) + " y: " + str(self.y)
         pass
+    
+    
