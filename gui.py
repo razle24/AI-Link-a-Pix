@@ -1,6 +1,7 @@
 import os
 
 import PySimpleGUI as sg
+from util import manhattan_distance
 
 from texts import *
 
@@ -170,7 +171,7 @@ if __name__ == '__main__':
     runGUI(layout)
 
 
-def get_paths(self, x, y, end_x, end_y):
+def get_paths(self, path, end_x, end_y, steps):
     """
 
     :param x:
@@ -179,12 +180,41 @@ def get_paths(self, x, y, end_x, end_y):
     :param end_y:
     :return:
     """
-    if self.get_number_in_cell(end_x, end_y) == length:
-        return []
+    if end_x < 0 or self.w <= end_x or end_y < 0 or self.h <= end_y:
+        return {}
 
-    if end_x < 0 or end_y < 0 or end_x > self.w or end_y > self.h or self.is_connected(end_x,
-                                                                                       end_y):
-        return []
+    return get_paths_rec(path, end_x, end_y, steps)
+
+
+def get_paths_rec(self, current_path, end_x, end_y, steps):
+    x, y = current_path[-1]
+
+    # If end is too far for path, don't try going there
+    if manhattan_distance((x, y), (end_x, end_y)) > steps:
+        return {}
+
+    # If end of steps
+    if steps == 0:
+        # And got to end, return path found
+        if current_path[-1] == (end_x, end_y):
+            return {current_path}
+        # Otherwise, path don't lead to end
+        else:
+            return set()
+
+    # collect valid paths from this point
+    paths = {}
+    possible_steps = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
+
+    for possible_step in possible_steps:
+        # If point not on board or point already in path, skip it
+        if possible_step[0] < 0 or self.w <= possible_step[0] or possible_step[1] < 0 or self.h <= possible_step[1]\
+                or possible_step in current_path:
+            continue
+
+        paths += get_paths_rec(current_path + possible_step, end_x, end_y, steps - 1)
+
+    return paths
 
 
 def get_possable_paths(self, x, y):
@@ -195,7 +225,7 @@ def get_possable_paths(self, x, y):
     :param y:
     :return:
     """
-    paths = []
+    paths = {}
     length = self.get_number_in_cell(x, y)
 
     # If no path
@@ -215,16 +245,16 @@ def get_possable_paths(self, x, y):
             end_y = y + j
 
             if i != 0:
-                paths += self.get_paths(x, y, end_x, end_y)
-                paths += self.get_paths(x, y, -end_x, end_y)
+                paths += self.get_paths((x, y), end_x, end_y, length)
+                paths += self.get_paths((x, y), -end_x, end_y, length)
 
                 if j != 0:
-                    paths += self.get_paths(x, y, end_x, -end_y)
-                    paths += self.get_paths(x, y, -end_x, -end_y)
+                    paths += self.get_paths((x, y), end_x, -end_y, length)
+                    paths += self.get_paths((x, y), -end_x, -end_y, length)
 
             elif j != 0:
-                paths += self.get_paths(x, y, end_x, end_y)
-                paths += self.get_paths(x, y, end_x, -end_y)
+                paths += self.get_paths((x, y), end_x, end_y, length)
+                paths += self.get_paths((x, y), end_x, -end_y, length)
 
         offset = not offset
 
