@@ -192,22 +192,21 @@ class Board:
         cpy_board.scores = self.scores[:]
         return cpy_board
 
-    def get_paths(self, start, end_x, end_y, steps):
+    def get_paths(self, start, end_x, end_y, length):
         """
-
-        :param x:
-        :param y:
+        :param start:
         :param end_x:
         :param end_y:
+        :param length:
         :return:
         """
-        if end_x < 0 or self.board_w <= end_x or end_y < 0 or self.board_h <= end_y \
-                or self.get_number_in_cell(end_x, end_y) != steps + 1:
+        if end_x < 0 or self.board_h <= end_x or end_y < 0 or self.board_w <= end_y \
+                or self.get_number_in_cell(end_x, end_y) != length:
             return []
         
-        return self.get_paths_rec([start], end_x, end_y, steps - 1)
+        return self.get_paths_rec([start], end_x, end_y, length - 1, length)
 
-    def get_paths_rec(self, current_path, end_x, end_y, steps):
+    def get_paths_rec(self, current_path, end_x, end_y, steps, length):
         x, y = current_path[-1]
 
         # If end of steps
@@ -220,22 +219,23 @@ class Board:
                 return []
             
         # If end is too far for path, don't try going there
-        if manhattan_distance((x, y), (end_x, end_y)) > steps or self.get_number_in_cell(x, y) != 0:
+        if manhattan_distance((x, y), (end_x, end_y)) > steps:
             return []
-    
-        
-    
+
+        if steps != length - 1 and self.get_number_in_cell(x, y) != 0:
+            return []
+
         # collect valid paths from this point
         paths = []
         possible_steps = [(x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)]
     
         for possible_step in possible_steps:
             # If point not on board or point already in path, skip it
-            if possible_step[0] < 0 or self.board_w <= possible_step[0] or possible_step[1] < 0 or self.board_h <= \
+            if possible_step[0] < 0 or self.board_h <= possible_step[0] or possible_step[1] < 0 or self.board_w <= \
                     possible_step[1] or possible_step in current_path:
                 continue
         
-            paths += self.get_paths_rec(current_path + [possible_step], end_x, end_y, steps - 1)
+            paths += self.get_paths_rec(current_path + [possible_step], end_x, end_y, steps - 1, length)
     
         return paths
 
@@ -270,19 +270,22 @@ class Board:
             # And every other y such that i + j <= length
             for j in range(offset, length - i, 2):
                 end_x = x + i
+                m_end_x = x - i
+
                 end_y = y + j
+                m_end_y = y - j
             
                 if i != 0:
                     paths += self.get_paths((x, y), end_x, end_y, length)
-                    paths += self.get_paths((x, y), -end_x, end_y, length)
+                    paths += self.get_paths((x, y), m_end_x, end_y, length)
                 
                     if j != 0:
-                        paths += self.get_paths((x, y), end_x, -end_y, length)
-                        paths += self.get_paths((x, y), -end_x, -end_y, length)
+                        paths += self.get_paths((x, y), end_x, m_end_y, length)
+                        paths += self.get_paths((x, y), m_end_x, m_end_y, length)
             
                 elif j != 0:
                     paths += self.get_paths((x, y), end_x, end_y, length)
-                    paths += self.get_paths((x, y), end_x, -end_y, length)
+                    paths += self.get_paths((x, y), end_x, m_end_y, length)
         
             offset = not offset
     
