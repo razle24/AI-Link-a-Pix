@@ -73,7 +73,7 @@ def create_colors_list(color_dict):
     """
     ret = []
     for i in range(len(color_dict)):
-        ret.append(color_dict[i]['@rgb'])
+        ret.append('#' + color_dict[i]['@rgb'])
     return ret
 
 
