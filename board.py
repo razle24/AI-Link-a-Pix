@@ -201,8 +201,8 @@ class Board:
         :return:
         """
         if end_x < 0 or self.board_h <= end_x or end_y < 0 or self.board_w <= end_y \
-                or self.get_number_in_cell(end_x, end_y) != length\
-                or self.get_number_color_in_cell(start[0], start[1]) != self.get_number_color_in_cell(end_x, end_y):
+                or self.get_number_in_cell(end_x, end_y) != length:
+                # or self.get_number_color_in_cell(start[0], start[1]) != self.get_number_color_in_cell(end_x, end_y):
             return []
         
         return self.get_paths_rec([start], end_x, end_y, length - 1, length)
@@ -260,7 +260,7 @@ class Board:
             return None
         
         if length == 1:
-            return [(x, y)]
+            return [[(x, y)]]
     
         # Odd numbers must have odd manhattan distance between start and end
         # Even numbers must have even manhattan distance between start and end
