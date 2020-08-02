@@ -40,9 +40,15 @@ class Game:
                 self.board.state[x][y] = ((cur_num, color), 0)
                 self.board.state[end_x][end_y] = ((cur_num, color), 0)
 
+                self.fill_goal_board(path, cur_num, color)
                 # fill the first and last entries of the path in goal board
-                self.goal_board.state[x][y] = ((cur_num, color), 0)
-                self.goal_board.state[end_x][end_y] = ((cur_num, color), 0)
+                # self.goal_board.state[x][y] = ((cur_num, color), 0)
+                # self.goal_board.state[end_x][end_y] = ((cur_num, color), 0)
+
+    def fill_goal_board(self, path, cur_num, color):
+        for x,y in path:
+            self.goal_board.state[x][y] = ((cur_num, color), 0)
+
 
     def __str__(self):
         """
@@ -135,6 +141,7 @@ def printVarBoard(vars, cols, rows):
             print(" ", end="", flush=True)
         print()
 
+
 if __name__ == '__main__':
     xml = get_xml_from_path('boards/small_bw.xml')
     my_game = Game(xml)
@@ -144,5 +151,4 @@ if __name__ == '__main__':
     vars_goal = get_vars(my_game.goal_board)
     print()
     printVarBoard(vars_goal, 15, 15)
-    # print(my_game.board.state != my_game.goal_board.state)
 
