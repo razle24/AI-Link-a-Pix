@@ -241,7 +241,7 @@ class Board:
         return paths
 
     def get_number_in_cell(self, x, y):
-        return self.state[x][y][0]
+        return self.state[x][y][0][0]
 
     def get_possable_paths(self, x, y):
         """

@@ -119,9 +119,10 @@ def get_heads(board):
     heads = []
     for i in range(board.board_h):
         for j in range(board.board_w):
-            if board.state[i][j][0] != 0 and board.state[i][j][1] != 0:
-                heads.append(board.state[i][j])
+            if board.state[i][j][0][0] != 0 and
+                heads.append((i, j))
     return heads
+
 
 if __name__ == '__main__':
     xml = get_xml_from_path('/Users/razlevi/Documents/Studies/YEAR_2/Semester_B/AI/ai_final_project/boards/small_bw.xml')

@@ -97,9 +97,9 @@ def is_path_legal(path, vars):
         
         return False
     
-    for x, y in path[1:-1]:
+    for x, y in path:
         var = get_var_by_pos((x, y), vars)
-        if get_var_by_pos((x, y), vars).color != 0:
+        if get_var_by_pos((x, y), vars).colored :
             return False
     return True
 
@@ -132,12 +132,13 @@ def uncolor_path(vars, path):
 
 def backtrack(coords, vars, paths, cols):
     i = 0
+    backtrack = False
     while 0 <= i < len(coords):
         # if vars[i].color != 0:
         #     continue
         # get_value = all possible paths from var[i]
         cur_coord = coords[i]
-        if get_var_by_pos(cur_coord, vars).colored:
+        if get_var_by_pos(cur_coord, vars).colored and not backtrack:
             i += 1
             continue
         path = get_value(vars, (cur_coord[0] * cols) + cur_coord[1])
@@ -145,12 +146,13 @@ def backtrack(coords, vars, paths, cols):
             # # ?????
             # if len(paths) == 0:
             #     return FAILURE
+            backtrack = True
             path_to_del = paths.pop(-1)
-            # last_head = get_pos_by_var(path_to_del[0], vars)
             uncolor_path(vars, path_to_del)
-            # vars[i].remove_value()
             i -= 1
+            
         else:
+            backtrack = False
             color_path(vars, path)
             paths += [path]
             i += 1
