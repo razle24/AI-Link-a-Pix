@@ -1,8 +1,10 @@
+import os
+
 from board import *
 
 
-def create_xml_from_board(file_path):
-    pass
+def create_xml_from_board(paths, w, h, name):
+    return 'hii'
 
 
 def build_board_from_image(image, number_of_colors, output_to_board_object=True, file_path=None):
@@ -25,13 +27,15 @@ def build_board_from_image(image, number_of_colors, output_to_board_object=True,
     :param file_path: Keep empty if you want only to output to board object
     :return: If output_to_board_object is True, output board object, otherwise None
     """
-    board = [[((0, 0), 0) for i in range(len(image[0]))] for j in range(len(image))]
+    w = len(image[0])
+    h = len(image)
+    board = [[((0, 0), 0) for i in range(w)] for j in range(h)]
     paths = []
 
     # ...
 
-    if file_path != None:
-        xml = create_xml_from_board(file_path)
+    if file_path is not None:
+        xml = create_xml_from_board(paths, w, h, os.path.basename(file_path))
         with open(file_path, 'w') as file:
             file.write(xml)
 

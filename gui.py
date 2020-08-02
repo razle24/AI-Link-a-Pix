@@ -73,20 +73,6 @@ class BoardGraph:
             pass
 
 
-colors_test = ['white', 'black', 'red']
-# Tuple of (number, color drawn). if 'number'!=0 the second value is number's color.
-# (0, 0) - Empty cell
-# (0, 1) - No number, colored black
-# (2, 1) - Number shown is 2, its color is black
-# (1, 0) = Invalid option
-board_test = [
-    [(3, 2), (2, 1), (2, 1)],
-    [(0, 0), (1, 2), (0, 0)],
-    [(3, 2), (0, 1), (0, 2)],
-    [(0, 0), (0, 0), (0, 0)]
-]
-
-
 def runGUI(layout):
     # Create the Window
     window = sg.Window(APP_NAME, layout, finalize=True)
@@ -94,7 +80,7 @@ def runGUI(layout):
     # Set variables
     run_game = False
 
-    # Event Loop to process "events" and get the "values" of the inputs
+    # Event Loop to process 'events' and get the 'values' of the inputs
     while True:
         event, values = window.read()
 
@@ -102,7 +88,7 @@ def runGUI(layout):
         if event == sg.WIN_CLOSED:
             break
 
-        # If player selects file, update to GUI to show file name
+        # If player selects file, update GUI to show file name
         if event == 'file_path':
             print('File selected:', values['file_path'])
 
@@ -117,8 +103,12 @@ def runGUI(layout):
             window['graph_board'].erase()
             graph = BoardGraph(window['graph_board'], game)
 
+        # Start run the game with given parameters
         if event == 'button_resume':
             print('button_resume')
+
+            game.set_search(values['combo_select'])
+            game.set_heuristic(values['combo_heuristic'])
 
             # Disable combo buttons and puzzle selector
             window.finalize()
@@ -131,10 +121,12 @@ def runGUI(layout):
             # Set game to run
             run_game = True
 
+        # Pause the game from running new steps
         if event == 'button_pause':
             print('button_pause')
             run_game = False
 
+        # Clear the board and reast the current game, unable combo buttons and puzzle selector again
         if event == 'button_reset':
             print('button_reset')
             run_game = False

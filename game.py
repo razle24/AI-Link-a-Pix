@@ -28,9 +28,15 @@ class Game:
         self.moves_counter = 0
 
     def generate_boards(self, xml_dict):
+        """
+        Given xml dictionary, read the beginning and end of each path, and add corresponding value on the board
+        :param xml_dict:
+        :return:
+        """
         for color, paths in xml_dict["paths"].items():
+            # For each path
             for path in paths:
-                # fill the initial board with the (len,color) of the wanted path
+                # Fill the initial board with the ((number, number_color), cell_color) of the wanted path
                 cur_num = len(path)
                 x, y = path[0]
                 end_x, end_y = path[len(path) - 1]
@@ -54,6 +60,12 @@ class Game:
 
     def get_initial_board(self):
         return self.initial_board
+
+    def set_search(self, search):
+        self.search = search
+
+    def get_search(self):
+        return self.search
 
     def set_heuristic(self, heuristic):
         self.heuristic = heuristic
