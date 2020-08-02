@@ -53,6 +53,7 @@ def a_star_search(problem, heuristic):
 def set_domain_values(vars, board):
     for var in vars:
         var.domain = board.get_possable_paths(var.pos[0], var.pos[1])
+        var.legal_paths = board.get_possable_paths(var.pos[0], var.pos[1])
 
 
 def get_vars(board):
@@ -88,7 +89,16 @@ def get_pos_by_var(variable, vars):
 
 
 def is_path_legal(path, vars):
-    for x, y in path[:-1]:
+    if len(path) == 1:
+        num = get_var_by_pos(path[0], vars).number
+        is_head = get_var_by_pos(path[0], vars).head
+        if num == 1 and is_head:
+            return True
+        
+        return False
+    
+    for x, y in path[1:-1]:
+        var = get_var_by_pos((x, y), vars)
         if get_var_by_pos((x, y), vars).color != 0:
             return False
     return True
@@ -102,7 +112,7 @@ def color_path(vars, path):
     :return: doesn't return anything, just updating the vars' array.
     """
     color = get_var_by_pos(path[0], vars).color
-    for x, y in path[1:]:
+    for x, y in path:
         get_var_by_pos((x, y), vars).set_value(color)
         
 
@@ -127,6 +137,9 @@ def backtrack(coords, vars, paths, cols):
         #     continue
         # get_value = all possible paths from var[i]
         cur_coord = coords[i]
+        if get_var_by_pos(cur_coord, vars).colored:
+            i += 1
+            continue
         path = get_value(vars, (cur_coord[0] * cols) + cur_coord[1])
         if path is None:
             # # ?????
@@ -139,7 +152,7 @@ def backtrack(coords, vars, paths, cols):
             i -= 1
         else:
             color_path(vars, path)
-            paths += path
+            paths += [path]
             i += 1
             # if i < len(vars):
             #     vars[i].remove_value()
@@ -165,16 +178,16 @@ def get_value(vars, i):
 
 
 if __name__ == '__main__':
-    mat = [[(1, 1), (7, 2), (0, 0), (1, 2), (1, 3)],
-           [(4, 3), (1, 1), (0, 0), (0, 0), (7, 2)],
+    mat = [[(1, 1), (7, 1), (0, 0), (1, 1), (1, 1)],
+           [(4, 1), (1, 1), (0, 0), (0, 0), (7, 1)],
            [(0, 0), (0, 0), (4, 1), (0, 0), (0, 0)],
-           [(1, 1), (4, 3), (0, 0), (5, 1), (1, 3)],
-           [(3, 3), (4, 1), (0, 0), (0, 0), (5, 1)],
-           [(0, 0), (4, 3), (0, 0), (0, 0), (0, 0)],
-           [(3, 3), (9, 4), (0, 0), (0, 0), (0, 0)],
-           [(0, 0), (0, 0), (4, 3), (5, 4), (0, 0)],
-           [(0, 0), (0, 0), (0, 0), (9, 4), (5, 4)],
-           [(1, 3), (1, 4), (0, 0), (0, 0), (1, 3)]]
+           [(1, 1), (4, 1), (0, 0), (5, 1), (1, 1)],
+           [(3, 1), (4, 1), (0, 0), (0, 0), (5, 1)],
+           [(0, 0), (4, 1), (0, 0), (0, 0), (0, 0)],
+           [(3, 1), (9, 1), (0, 0), (0, 0), (0, 0)],
+           [(0, 0), (0, 0), (4, 1), (5, 1), (0, 0)],
+           [(0, 0), (0, 0), (0, 0), (9, 1), (5, 1)],
+           [(1, 1), (1, 1), (0, 0), (0, 0), (1, 1)]]
     
     heads = [(0, 0), (0, 3), (0, 4), (1, 1), (3, 0), (3, 4), (9, 0), (9, 1), (9, 4), (4, 0), (6, 0),
              (1, 0), (2, 2), (3, 1), (4, 1), (5, 1), (7, 2), (3, 3), (4, 4), (7, 3), (8, 4), (0, 1),
