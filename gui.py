@@ -24,10 +24,8 @@ class BoardGraph:
         # Get list with all color rgb values
         self.colors = game.get_colors()
 
-        # 2D array (w*h) contains the numbers on the board
-        self.board_numbers = self.game.get_current_board()
-        # 2D array (w*h) contains the current coloring of the board (should be all white at init)
-        self.board_coloring = self.game.get_current_board()
+        # 2D array (w*h) contains tuples of ((number, number_color), color) of the board
+        self.board = self.game.get_current_board()
 
         # Dictionary of canvas items, each (x, y) is ID of the correspond item on the canvas
         self.board_canvas = dict()
@@ -49,7 +47,7 @@ class BoardGraph:
                     fill_color=self.colors[0],
                     line_color='gray', line_width=2)
 
-                # self.graph.send_figure_to_back(self.board_canvas[(i, j)])
+                self.graph.send_figure_to_back(self.board_canvas[(i, j)])
 
                 curr_w += self.cell_size
             curr_h += self.cell_size
@@ -57,7 +55,7 @@ class BoardGraph:
     def draw_board_numbers(self):
         for i in range(self.h):
             for j in range(self.w):
-                cell = self.board_numbers[i][j]
+                cell = self.board[i][j][0]
                 if cell[0] != 0:
                     print('i', i, 'j', j)
                     fig = self.graph.DrawText(text=str(cell[0]), color=self.colors[cell[1]],
@@ -67,12 +65,12 @@ class BoardGraph:
                     self.graph.bring_figure_to_front(fig)
 
     def drew_color_on_board(self, x, y, rgb_color):
-        cell_number = self.board_numbers[x][y]
+        cell_number = self.board[x][y][0]
 
         # Change to cell color
 
         # The cell also has number, we also need to print the number again
-        if cell_number != 0:
+        if cell_number[0] != 0:
             pass
 
 

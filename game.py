@@ -9,10 +9,9 @@ class Game:
         """
         :param file: XML file that represents the board
         """
-
-        initial_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
-        cur_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
-        goal_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
+        initial_board = [[((0, 0), 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
+        cur_board = [[((0, 0), 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
+        goal_board = [[((0, 0), 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
         cur_num_of_colors = len(xml_dict["colors"])
 
         self.board = Board(cur_num_of_colors, None, cur_board)
@@ -29,27 +28,18 @@ class Game:
 
     def generate_boards(self, xml_dict):
         for color, paths in xml_dict["paths"].items():
-
             for path in paths:
                 # fill the initial board with the (len,color) of the wanted path
                 cur_num = len(path)
                 start = path[0]
                 end = path[len(path) - 1]
-                self.initial_board.state[start[0]][start[1]] = (cur_num, color)
-                self.initial_board.state[end[0]][end[1]] = (cur_num, color)
+                self.initial_board.state[start[0]][start[1]] = ((cur_num, color), 0)
 
                 # now the we have board to work on
-                self.board.state[start[0]][start[1]] = (cur_num, color)
-                self.board.state[end[0]][end[1]] = (cur_num, color)
+                self.board.state[start[0]][start[1]] = ((cur_num, color), 0)
 
                 # fill the first and last entries of the path in goal board
-                self.goal_board.state[start[0]][start[1]] = (cur_num, color)
-                self.goal_board.state[end[0]][end[1]] = (cur_num, color)
-
-                # fill the rest of the entries of the path with color only
-                # without number
-                for i, j in path[1: (len(path) - 1)]:
-                    self.goal_board.state[i][j] = (0, color)
+                self.goal_board.state[start[0]][start[1]] = ((cur_num, color), 0)
 
     def __str__(self):
         """
@@ -72,7 +62,7 @@ class Game:
         returns the current board object
         :return:
         """
-        return self.board
+        return self.board.state
 
     # TODO get_possible_actions
     def get_all_possible_actions(self, x, y):
