@@ -256,7 +256,7 @@ class Board:
     
         # If no path
         if length == 0:
-            print(f"Got x: {x}, y:{y}, but cell ({x}, {y}) has no number!")
+            # print(f"Got x: {x}, y:{y}, but cell ({x}, {y}) has no number!")
             return None
         
         if length == 1:

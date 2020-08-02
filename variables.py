@@ -4,13 +4,14 @@ class Var:
         self.pos = pos
         self.color = color
         self.path = None
-        self.domain = None
+        self.domain = []
         self.head = False
         self.legal_paths = []
         self.colored = False
 
     def remove_value(self):
-        self.legal_paths = self.domain.copy()
+        if self.head:
+            self.legal_paths = self.domain.copy()
         if not self.head:
             self.color = 0
             self.colored = False

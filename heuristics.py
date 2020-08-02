@@ -1,9 +1,8 @@
+colors_test = ['white', 'black', 'red']
+
+
 def null_heuristic(state, action, successor):
     return 0
-
-
-def csp(state, action, successor):
-    pass
 
 
 def mrv(state, action, successor):

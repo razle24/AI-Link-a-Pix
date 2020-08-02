@@ -123,12 +123,14 @@ def get_heads(board):
     for i in range(board.board_h):
         for j in range(board.board_w):
             if board.state[i][j][0] != (0, 0):
-                heads.append(board.state[i][j][0])
+                heads.append((i, j))
+                # heads.append(board.state[i][j][0])
     return heads
 
 if __name__ == '__main__':
-    xml = get_xml_from_path('/Users/razlevi/Documents/Studies/YEAR_2/Semester_B/AI/ai_final_project/boards/small_bw.xml')
+    xml = get_xml_from_path('boards\small_bw.xml')
     my_game = Game(xml)
     heads = get_heads(my_game.board)
     csp(my_game.board, heads)
+    print(my_game.board.state != my_game.goal_board.state)
 
