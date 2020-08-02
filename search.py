@@ -74,7 +74,6 @@ def csp(state, heads, mrv=False, lcv=False):
     vars = get_vars(state)
     paths = []
     backtrack(heads, vars, paths, state.board_w)
-    x = 4
     return vars
 
 
@@ -101,7 +100,7 @@ def is_path_legal(path, vars):
 
     for x, y in path:
         var = get_var_by_pos((x, y), vars)
-        if get_var_by_pos((x, y), vars).colored :
+        if get_var_by_pos((x, y), vars).colored:
             return False
     return True
 
@@ -118,7 +117,7 @@ def color_path(vars, path):
         get_var_by_pos((x, y), vars).set_value(color)
 
 
-def uncolor_path(vars, path):
+def uncolor_path(vars, path, is_backtrack):
     """
     gets vars' array and a path, and colors it's coordinates in the right color.
     :param vars:
@@ -127,40 +126,50 @@ def uncolor_path(vars, path):
     """
     for x, y in path:
         var = get_var_by_pos((x, y), vars)
-        var.remove_value()
+        var.remove_value(is_backtrack)
 
 
 def backtrack(coords, vars, paths, cols):
     i = 0
+    # j is the index for Vars instead of (i,j)
     j = (coords[i][0] * cols) + coords[i][1]
-    vars[j].remove_value()
-    backtrack = False
+    is_backtrack = False
+    # updates the legal paths through the domain
+    vars[j].remove_value(is_backtrack)
+    
     while 0 <= i < len(coords):
         # get_value = all possible paths from var[i]
         cur_coord = coords[i]
-        if get_var_by_pos(cur_coord, vars).colored and not backtrack:
+        
+        # checks if we colored the cell and didn't backtrack
+        if get_var_by_pos(cur_coord, vars).colored and not is_backtrack:
             i += 1
             if i < len(coords):
                 j = (coords[i][0] * cols) + coords[i][1]
-                vars[j].remove_value()
+                vars[j].remove_value(is_backtrack)
             continue
+            
         path = get_value(vars, (cur_coord[0] * cols) + cur_coord[1])
         if path is None:
             # # ?????
             # if len(paths) == 0:
             #     return FAILURE
-            backtrack = True
+            is_backtrack = True
+            # deletes last path we colored
             path_to_del = paths.pop(-1)
-            uncolor_path(vars, path_to_del)
+            uncolor_path(vars, path_to_del, is_backtrack)
+            # yield path_to_del, 0
+            # get back to the last cell of the last path we colored
             i = get_pos_by_var(get_var_by_pos(path_to_del[0], vars), coords)
         else:
-            backtrack = False
+            is_backtrack = False
             color_path(vars, path)
+            # yield path, path[0][1]
             paths += [path]
             i += 1
             if i < len(coords):
                 j = (coords[i][0] * cols) + coords[i][1]
-                vars[j].remove_value()
+                vars[j].remove_value(is_backtrack)
     if i < 0:
         return FAILURE
     return vars
