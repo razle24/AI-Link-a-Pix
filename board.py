@@ -242,7 +242,7 @@ class Board:
         return paths
 
     def get_number_in_cell(self, x, y):
-        return self.state[x][y][0]
+        return self.state[x][y][0][0]
 
     def get_possible_paths(self, x, y):
         """
@@ -257,7 +257,7 @@ class Board:
 
         # If no path
         if length == 0:
-            print(f"Got x: {x}, y:{y}, but cell ({x}, {y}) has no number!")
+            # print(f"Got x: {x}, y:{y}, but cell ({x}, {y}) has no number!")
             return None
 
         if length == 1:
