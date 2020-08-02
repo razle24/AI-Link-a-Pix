@@ -1,7 +1,7 @@
 import os
 
 import PySimpleGUI as sg
-from util import manhattan_distance
+import game as gm
 
 from texts import *
 
@@ -9,13 +9,26 @@ GRAPH_SIZE = 420
 
 
 class BoardGraph:
-    def __init__(self, graph: sg.Graph, board: list, colors: list, w: int, h: int):
+    def __init__(self, graph: sg.Graph, game: gm.Game):
+        # GUI object, contains canvas to print board to
         self.graph = graph
-        self.board_numbers = board
-        self.colors = colors
-        self.board_colors = dict()
-        self.w = w
-        self.h = h
+        # Contains logic and board state after each move
+        self.game = game
+
+        # Board width
+        self.w = self.game.get_width()
+        # Board height
+        self.h = self.game.get_height()
+
+        # 2D array (w*h) contains the numbers on the board
+        self.board_numbers = self.game.get_current_board()
+
+        # 2D array (w*h) contaibs the current coloring of the board (should be all white at init
+        self.board_coloring = self.game.get_current_board()
+
+        # Get list with all color rgb values
+        self.colors = game.get_colors()
+
         self.cell_size = min(GRAPH_SIZE / self.h, GRAPH_SIZE / self.w, 25)
 
         self.draw_board_borders()
@@ -44,7 +57,7 @@ class BoardGraph:
                 cell = self.board_numbers[i][j]
                 if cell[0] != 0:
                     print('i', i, 'j', j)
-                    fig = self.graph.DrawText(text=str(cell[0]), color=colors_test[cell[1]],
+                    fig = self.graph.DrawText(text=str(cell[0]), color=self.colors[cell[1]],
                                               location=((self.cell_size * i + (self.cell_size / 2)),
                                               (self.cell_size * j + (self.cell_size / 2))))
 
@@ -90,15 +103,20 @@ def runGUI(layout):
             # Show file in GUI
             window['text_puzzle_name'](os.path.basename(values['file_path']))
 
+            # Create game object
+            game = gm.Game(values['file_path'], values['combo_select'], values['combo_heuristic'])
+
             # Create board in GUI
-            graph = BoardGraph(window['graph_board'], board_test, colors_test,
-                               len(board_test[0]), len(board_test))
+            graph = BoardGraph(window['graph_board'], game)
 
         if event == 'button_resume':
             print('button_resume')
+
+            # Disable combo buttons
+
+
             graph = BoardGraph(window['graph_board'], board_test, colors_test,
                                len(board_test[0]), len(board_test))
-
 
         if event == 'button_pause':
             print('button_pause')
