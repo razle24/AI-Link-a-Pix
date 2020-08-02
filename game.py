@@ -25,6 +25,7 @@ class Game:
         self.generate_boards(xml_dict)
 
         self.colors_dict = xml_dict['colors']
+        self.moves_counter = 0
 
     def generate_boards(self, xml_dict):
         for color, paths in xml_dict["paths"].items():
@@ -40,15 +41,9 @@ class Game:
                 self.board.state[x][y] = ((cur_num, color), 0)
                 self.board.state[end_x][end_y] = ((cur_num, color), 0)
 
-                self.fill_goal_board(path, cur_num, color)
                 # fill the first and last entries of the path in goal board
-                # self.goal_board.state[x][y] = ((cur_num, color), 0)
-                # self.goal_board.state[end_x][end_y] = ((cur_num, color), 0)
-
-    def fill_goal_board(self, path, cur_num, color):
-        for x,y in path:
-            self.goal_board.state[x][y] = ((cur_num, color), 0)
-
+                self.goal_board.state[x][y] = ((cur_num, color), 0)
+                self.goal_board.state[end_x][end_y] = ((cur_num, color), 0)
 
     def __str__(self):
         """
@@ -96,7 +91,7 @@ class Game:
         color = self.board[action[0][0]][action[0][1]][1]
         size = len(action)
         result[action[0][0]][action[0][1]] = (size, color)
-        result[action[len(action)-1][0]][action[len(action)-1][1]] = (size, color)
+        result[action[len(action) - 1][0]][action[len(action) - 1][1]] = (size, color)
         for i, j in action[1: (len(action) - 1)]:
             result[i][j] = (0, color)
         return result
@@ -116,13 +111,17 @@ class Game:
     def get_colors(self):
         return self.colors_dict
 
-    # def do_action(self, cur_state, action):
-    #     """
-    #     move
-    #     :param action:
-    #     :return:
-    #     """
-    #     pass
+    def get_moves_counter(self):
+        return self.moves_counter
+
+    def do_move(self, cur_state, action):
+        """
+        move
+        :param action:
+        :return:
+        """
+        self.moves_counter += 1
+
 
 def get_heads(board):
     heads = []
@@ -130,7 +129,6 @@ def get_heads(board):
         for j in range(board.board_w):
             if board.state[i][j][0] != (0, 0):
                 heads.append((i, j))
-                # heads.append(board.state[i][j][0])
     return heads
 
 
@@ -151,4 +149,3 @@ if __name__ == '__main__':
     vars_goal = get_vars(my_game.goal_board)
     print()
     printVarBoard(vars_goal, 15, 15)
-

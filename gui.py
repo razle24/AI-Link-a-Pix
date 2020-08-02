@@ -1,9 +1,9 @@
 import os
 
 import PySimpleGUI as sg
-import game as gm
-import agent as ag
 
+import agent as ag
+import game as gm
 from texts import *
 
 GRAPH_SIZE = 420
@@ -57,10 +57,9 @@ class BoardGraph:
             for j in range(self.w):
                 cell = self.board[i][j][0]
                 if cell[0] != 0:
-                    print('i', i, 'j', j)
                     fig = self.graph.DrawText(text=str(cell[0]), color=self.colors[cell[1]],
                                               location=((self.cell_size * i + (self.cell_size / 2)),
-                                              (self.cell_size * j + (self.cell_size / 2))))
+                                                        (self.cell_size * j + (self.cell_size / 2))))
 
                     self.graph.bring_figure_to_front(fig)
 
@@ -91,6 +90,10 @@ board_test = [
 def runGUI(layout):
     # Create the Window
     window = sg.Window(APP_NAME, layout, finalize=True)
+
+    # Set variables
+    run_game = False
+
     # Event Loop to process "events" and get the "values" of the inputs
     while True:
         event, values = window.read()
@@ -111,26 +114,48 @@ def runGUI(layout):
             game = gm.Game(xml_dict, values['combo_select'], values['combo_heuristic'])
 
             # Create board in GUI
+            window['graph_board'].erase()
             graph = BoardGraph(window['graph_board'], game)
 
         if event == 'button_resume':
             print('button_resume')
 
-            # Disable combo buttons
+            # Disable combo buttons and puzzle selector
+            window.finalize()
+            window['file_selector'].update(disabled=True)
+            window.finalize()
+            window['combo_select'].update(disabled=True)
+            window.finalize()
+            window['combo_heuristic'].update(disabled=True)
 
-
-            graph = BoardGraph(window['graph_board'], board_test, colors_test,
-                               len(board_test[0]), len(board_test))
+            # Set game to run
+            run_game = True
 
         if event == 'button_pause':
             print('button_pause')
+            run_game = False
 
         if event == 'button_reset':
             print('button_reset')
+            run_game = False
+
+            # Reset board
+            window['graph_board'].erase()
             graph = BoardGraph(window['graph_board'], game)
 
-        if event == 'graph_board':
-            print(f'Clicked on x: {values["graph_board"][0]}\t y: {values["graph_board"][1]}')
+            # Allow combo buttons and puzzle selector
+            window.finalize()
+            window['file_selector'].update(disabled=False)
+            window.finalize()
+            window['combo_select'].update(disabled=False)
+            window.finalize()
+            window['combo_heuristic'].update(disabled=False)
+
+        # if event == 'graph_board':
+        #     print(f'Clicked on x: {values["graph_board"][0]}\t y: {values["graph_board"][1]}')
+
+        # if run_game:
+        #     game.do_move()
 
     window.close()
 
@@ -155,7 +180,7 @@ if __name__ == '__main__':
         ],
         [
             sg.InputText(key='file_path', enable_events=True, visible=False),
-            sg.FileBrowse(button_text=FILE_BROWSER_TEXT, initial_folder='./boards', size=(14, 1)),
+            sg.FileBrowse(key='file_selector', button_text=FILE_BROWSER_TEXT, initial_folder='./boards', size=(14, 1)),
             sg.Text(FILE_SELECTED_TEXT),
             sg.Text(key='text_puzzle_name', size=(50, 1), text=NO_PUZZLE_SELECTED_TEXT)
         ],
@@ -192,5 +217,3 @@ if __name__ == '__main__':
     ]
 
     runGUI(layout)
-
-

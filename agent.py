@@ -20,11 +20,11 @@ def get_xml_from_path(path):
     with open(path, 'rb') as file:
         my_dict = dict(xmltodict.parse(file)['puzzle'])
         ret_dict = {
-                    'name': my_dict['header']['properties']['text']['#text'],
-                    'width': int(my_dict['data']['dimensions']['@width']),
-                    'height': int(my_dict['data']['dimensions']['@height']),
-                    'colors': [],
-                    'paths': dict()
+            'name': my_dict['header']['properties']['text']['#text'],
+            'width': int(my_dict['data']['dimensions']['@width']),
+            'height': int(my_dict['data']['dimensions']['@height']),
+            'colors': [],
+            'paths': dict()
         }
 
         color_dict = my_dict['data']['palette']['color']
@@ -36,8 +36,8 @@ def get_xml_from_path(path):
         ret_dict['paths'] = paths_dict
 
         return ret_dict
-        
-        
+
+
 def create_paths_dict(paths_dict, color_list):
     """
     
@@ -50,8 +50,8 @@ def create_paths_dict(paths_dict, color_list):
         color = int(paths_dict[i]['@color'])
         result[color].append(create_tuple_path(str_path))
     return result
-    
-    
+
+
 def create_tuple_path(str_path):
     """
     gets a path as a string - for example : '1 2 3 4' and creates a list of tuples.

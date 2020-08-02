@@ -52,8 +52,8 @@ def a_star_search(problem, heuristic):
 
 def set_domain_values(vars, board):
     for var in vars:
-        var.domain = board.get_possable_paths(var.pos[0], var.pos[1])
-        # var.legal_paths = board.get_possable_paths(var.pos[0], var.pos[1])
+        var.domain = board.get_possible_paths(var.pos[0], var.pos[1])
+        var.legal_paths = board.get_possible_paths(var.pos[0], var.pos[1])
 
 
 def get_vars(board):
@@ -82,8 +82,8 @@ def get_var_by_pos(pos, vars):
     for var in vars:
         if var.pos == pos:
             return var
-      
-        
+
+
 def get_pos_by_var(var, coords):
     for index in range(len(coords)):
         if var.pos == coords[index]:
@@ -96,9 +96,9 @@ def is_path_legal(path, vars):
         is_head = get_var_by_pos(path[0], vars).head
         if num == 1 and is_head:
             return True
-        
+
         return False
-    
+
     for x, y in path:
         var = get_var_by_pos((x, y), vars)
         if get_var_by_pos((x, y), vars).colored :
@@ -116,7 +116,7 @@ def color_path(vars, path):
     color = get_var_by_pos(path[0], vars).color
     for x, y in path:
         get_var_by_pos((x, y), vars).set_value(color)
-        
+
 
 def uncolor_path(vars, path):
     """
@@ -193,11 +193,11 @@ if __name__ == '__main__':
            [(0, 0), (0, 0), (4, 1), (5, 1), (0, 0)],
            [(0, 0), (0, 0), (0, 0), (9, 1), (5, 1)],
            [(1, 1), (1, 1), (0, 0), (0, 0), (1, 1)]]
-    
+
     heads = [(0, 0), (0, 3), (0, 4), (1, 1), (3, 0), (3, 4), (9, 0), (9, 1), (9, 4), (4, 0), (6, 0),
              (1, 0), (2, 2), (3, 1), (4, 1), (5, 1), (7, 2), (3, 3), (4, 4), (7, 3), (8, 4), (0, 1),
              (1, 4), (6, 1), (8, 3)]
-    
+
     board = Board(4, None, mat)
     csp(board, heads)
     # printVarBoard(vars, 5, 10)

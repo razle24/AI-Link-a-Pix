@@ -19,5 +19,3 @@ class Var:
     def set_value(self, color):
         self.color = color
         self.colored = True
-
-
