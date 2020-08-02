@@ -1,10 +1,11 @@
 import copy
 from agent import *
 from search import *
+from board import *
 
 
 class Game:
-    def __init__(self, xml_dict, search_type=False, heuristic=False):
+    def __init__(self, xml_dict, search_type=None, heuristic=None):
         """
         :param file: XML file that represents the board
         """
@@ -13,12 +14,18 @@ class Game:
         cur_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
         goal_board = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
         cur_num_of_colors = len(xml_dict["colors"])
+
         self.board = Board(cur_num_of_colors, None, cur_board)
         self.initial_board = Board(cur_num_of_colors, None, initial_board)
         self.goal_board = Board(cur_num_of_colors, None, goal_board)
-        self.heuristic = None
+
+        self.search = search_type
+        self.heuristic = heuristic
+
         self.successors = []
         self.generate_boards(xml_dict)
+
+        self.colors_dict = xml_dict['colors']
 
     def generate_boards(self, xml_dict):
         for color, paths in xml_dict["paths"].items():
@@ -100,6 +107,15 @@ class Game:
 
     def is_goal_state(self):
         return self.board == self.goal_board
+
+    def get_width(self):
+        return self.initial_board.get_width()
+
+    def get_height(self):
+        return self.initial_board.get_height()
+
+    def get_colors(self):
+        return self.colors_dict
 
     # def do_action(self, cur_state, action):
     #     """

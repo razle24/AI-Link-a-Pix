@@ -17,20 +17,24 @@ def get_xml_from_path(path):
     :param path: Path to xml file
     :return: The above dictionary
     """
-    with open(path, 'rb') as file :
+    with open(path, 'rb') as file:
         my_dict = dict(xmltodict.parse(file)['puzzle'])
-        ret_dict = {'name': my_dict['header']['properties']['text']['#text'], 'width': 0, 'height': 0, 'colors': [],
-                    'paths': {}}
-        my_dict = my_dict['data']
-        ret_dict['width'] = int(my_dict['dimensions']['@width'])
-        ret_dict['height'] = int(my_dict['dimensions']['@height'])
-        color_dict = my_dict['palette']['color']
+        ret_dict = {
+                    'name': my_dict['header']['properties']['text']['#text'],
+                    'width': int(my_dict['data']['dimensions']['@width']),
+                    'height': int(my_dict['data']['dimensions']['@height']),
+                    'colors': [],
+                    'paths': dict()
+        }
+
+        color_dict = my_dict['data']['palette']['color']
         color_list = create_colors_list(color_dict)
         ret_dict['colors'] = color_list
-        my_dict = my_dict['solution']['path']
-        # print(my_dict[0]['@color'])
-        paths_dict = create_paths_dict(my_dict, color_list)
+
+        path_dict = my_dict['data']['solution']['path']
+        paths_dict = create_paths_dict(path_dict, color_list)
         ret_dict['paths'] = paths_dict
+
         return ret_dict
         
         

@@ -292,6 +292,12 @@ class Board:
     
         return paths
 
+    def get_width(self):
+        return self.board_w
+
+    def get_height(self):
+        return self.board_h
+
 
 class Move:
     """

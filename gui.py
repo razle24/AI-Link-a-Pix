@@ -2,6 +2,7 @@ import os
 
 import PySimpleGUI as sg
 import game as gm
+import agent as ag
 
 from texts import *
 
@@ -20,14 +21,16 @@ class BoardGraph:
         # Board height
         self.h = self.game.get_height()
 
-        # 2D array (w*h) contains the numbers on the board
-        self.board_numbers = self.game.get_current_board()
-
-        # 2D array (w*h) contaibs the current coloring of the board (should be all white at init
-        self.board_coloring = self.game.get_current_board()
-
         # Get list with all color rgb values
         self.colors = game.get_colors()
+
+        # 2D array (w*h) contains the numbers on the board
+        self.board_numbers = self.game.get_current_board()
+        # 2D array (w*h) contains the current coloring of the board (should be all white at init)
+        self.board_coloring = self.game.get_current_board()
+
+        # Dictionary of canvas items, each (x, y) is ID of the correspond item on the canvas
+        self.board_canvas = dict()
 
         self.cell_size = min(GRAPH_SIZE / self.h, GRAPH_SIZE / self.w, 25)
 
@@ -39,14 +42,14 @@ class BoardGraph:
         for i in range(self.h):
             curr_w = 0
             for j in range(self.w):
-                self.board_colors[(i, j)] = self.graph.DrawRectangle(
+                self.board_canvas[(i, j)] = self.graph.DrawRectangle(
                     top_left=(curr_h + 1, curr_w + 1),
                     bottom_right=(curr_h + self.cell_size,
                                   curr_w + self.cell_size),
                     fill_color=self.colors[0],
                     line_color='gray', line_width=2)
 
-                self.graph.send_figure_to_back(self.board_colors[(i, j)])
+                # self.graph.send_figure_to_back(self.board_canvas[(i, j)])
 
                 curr_w += self.cell_size
             curr_h += self.cell_size
@@ -63,11 +66,13 @@ class BoardGraph:
 
                     self.graph.bring_figure_to_front(fig)
 
-    def drew_color_on_board(self, x, y, color):
-        cell = self.board_numbers[i][j]
-        if cell[0] == 0:
-            pass
-        else:
+    def drew_color_on_board(self, x, y, rgb_color):
+        cell_number = self.board_numbers[x][y]
+
+        # Change to cell color
+
+        # The cell also has number, we also need to print the number again
+        if cell_number != 0:
             pass
 
 
@@ -104,7 +109,8 @@ def runGUI(layout):
             window['text_puzzle_name'](os.path.basename(values['file_path']))
 
             # Create game object
-            game = gm.Game(values['file_path'], values['combo_select'], values['combo_heuristic'])
+            xml_dict = ag.get_xml_from_path(values['file_path'])
+            game = gm.Game(xml_dict, values['combo_select'], values['combo_heuristic'])
 
             # Create board in GUI
             graph = BoardGraph(window['graph_board'], game)
