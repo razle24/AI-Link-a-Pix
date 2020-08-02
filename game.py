@@ -127,10 +127,22 @@ def get_heads(board):
                 # heads.append(board.state[i][j][0])
     return heads
 
+
+def printVarBoard(vars, cols, rows):
+    for i in range(rows):
+        for j in range(cols):
+            print(vars[i * cols + j].color, end="", flush=True)
+            print(" ", end="", flush=True)
+        print()
+
 if __name__ == '__main__':
-    xml = get_xml_from_path('boards\small_bw.xml')
+    xml = get_xml_from_path('boards/small_bw.xml')
     my_game = Game(xml)
     heads = get_heads(my_game.board)
-    csp(my_game.board, heads)
-    print(my_game.board.state != my_game.goal_board.state)
+    vars = csp(my_game.board, heads)
+    printVarBoard(vars, 15, 15)
+    vars_goal = get_vars(my_game.goal_board)
+    print()
+    printVarBoard(vars_goal, 15, 15)
+    # print(my_game.board.state != my_game.goal_board.state)
 

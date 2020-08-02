@@ -75,6 +75,7 @@ def csp(state, heads, mrv=False, lcv=False):
     paths = []
     backtrack(heads, vars, paths, state.board_w)
     x = 4
+    return vars
 
 
 def get_var_by_pos(pos, vars):
