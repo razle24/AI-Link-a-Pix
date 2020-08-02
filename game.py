@@ -31,15 +31,18 @@ class Game:
             for path in paths:
                 # fill the initial board with the (len,color) of the wanted path
                 cur_num = len(path)
-                start = path[0]
-                end = path[len(path) - 1]
-                self.initial_board.state[start[0]][start[1]] = ((cur_num, color), 0)
+                x, y = path[0]
+                end_x, end_y = path[len(path) - 1]
+                self.initial_board.state[x][y] = ((cur_num, color), 0)
+                self.initial_board.state[end_x][end_y] = ((cur_num, color), 0)
 
                 # now the we have board to work on
-                self.board.state[start[0]][start[1]] = ((cur_num, color), 0)
+                self.board.state[x][y] = ((cur_num, color), 0)
+                self.board.state[end_x][end_y] = ((cur_num, color), 0)
 
                 # fill the first and last entries of the path in goal board
-                self.goal_board.state[start[0]][start[1]] = ((cur_num, color), 0)
+                self.goal_board.state[x][y] = ((cur_num, color), 0)
+                self.goal_board.state[end_x][end_y] = ((cur_num, color), 0)
 
     def __str__(self):
         """
@@ -119,8 +122,8 @@ def get_heads(board):
     heads = []
     for i in range(board.board_h):
         for j in range(board.board_w):
-            if board.state[i][j][0] != 0 and board.state[i][j][1] != 0:
-                heads.append(board.state[i][j])
+            if board.state[i][j][0] != (0, 0):
+                heads.append(board.state[i][j][0])
     return heads
 
 if __name__ == '__main__':

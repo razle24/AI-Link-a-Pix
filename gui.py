@@ -127,6 +127,7 @@ def runGUI(layout):
 
         if event == 'button_reset':
             print('button_reset')
+            graph = BoardGraph(window['graph_board'], game)
 
         if event == 'graph_board':
             print(f'Clicked on x: {values["graph_board"][0]}\t y: {values["graph_board"][1]}')
