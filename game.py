@@ -1,7 +1,6 @@
-import copy
 from agent import *
-from search import *
 from board import *
+from search import *
 
 
 class Game:
@@ -25,6 +24,7 @@ class Game:
         self.generate_boards(xml_dict)
 
         self.colors_dict = xml_dict['colors']
+        self.moves_counter = 0
 
     def generate_boards(self, xml_dict):
         for color, paths in xml_dict["paths"].items():
@@ -90,7 +90,7 @@ class Game:
         color = self.board[action[0][0]][action[0][1]][1]
         size = len(action)
         result[action[0][0]][action[0][1]] = (size, color)
-        result[action[len(action)-1][0]][action[len(action)-1][1]] = (size, color)
+        result[action[len(action) - 1][0]][action[len(action) - 1][1]] = (size, color)
         for i, j in action[1: (len(action) - 1)]:
             result[i][j] = (0, color)
         return result
@@ -110,13 +110,17 @@ class Game:
     def get_colors(self):
         return self.colors_dict
 
-    # def do_action(self, cur_state, action):
-    #     """
-    #     move
-    #     :param action:
-    #     :return:
-    #     """
-    #     pass
+    def get_moves_counter(self):
+        return self.moves_counter
+
+    def do_move(self, cur_state, action):
+        """
+        move
+        :param action:
+        :return:
+        """
+        self.moves_counter += 1
+
 
 def get_heads(board):
     heads = []
@@ -126,9 +130,10 @@ def get_heads(board):
                 heads.append(board.state[i][j][0])
     return heads
 
+
 if __name__ == '__main__':
-    xml = get_xml_from_path('/Users/razlevi/Documents/Studies/YEAR_2/Semester_B/AI/ai_final_project/boards/small_bw.xml')
+    xml = get_xml_from_path(
+        '/Users/razlevi/Documents/Studies/YEAR_2/Semester_B/AI/ai_final_project/boards/small_bw.xml')
     my_game = Game(xml)
     heads = get_heads(my_game.board)
     csp(my_game.board, heads)
-
