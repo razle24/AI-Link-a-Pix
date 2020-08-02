@@ -119,7 +119,7 @@ def get_heads(board):
     heads = []
     for i in range(board.board_h):
         for j in range(board.board_w):
-            if board.state[i][j][0][0] != 0 and
+            if board.state[i][j][0][0] != 0 and board.state[i][j][0][1] != 0:
                 heads.append((i, j))
     return heads
 
