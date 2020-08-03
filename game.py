@@ -161,7 +161,7 @@ if __name__ == '__main__':
     xml = get_xml_from_path('boards/20_20_color.xml')
     my_game = Game(xml)
     heads = get_heads(my_game.board)
-    vars = csp(my_game.board, heads)
+    vars = csp(my_game.board, heads, False, True)
     printVarBoard(vars, 15, 15)
     vars_goal = get_vars(my_game.goal_board)
     print()

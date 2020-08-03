@@ -209,18 +209,24 @@ class Board:
             return []
         
         paths = self.get_paths_rec([start], end_x, end_y, length - 1, length)
-        to_del = []
-        for p_1, p_2 in itertools.combinations(paths, 2):
-            if set(p_1) == set(p_2):
-                if p_1 not in to_del:
-                    to_del += [p_1]
-                if p_2 not in to_del:
-                    to_del += [p_2]
-        
-        for path in to_del:
-            paths.remove(path)
-        
-        return paths
+        all_paths = []
+        for path_1 in paths:
+            if not any([set(path_1) == set(path_2) for path_2 in all_paths if len(path_1) == len(path_2)]):
+                all_paths += [path_1]
+        return all_paths
+
+        # to_del = []
+        # for p_1, p_2 in itertools.combinations(paths, 2):
+        #     if set(p_1) == set(p_2):
+        #         if p_1 not in to_del:
+        #             to_del += [p_1]
+        #         if p_2 not in to_del:
+        #             to_del += [p_2]
+        #
+        # for path in to_del:
+        #     paths.remove(path)
+        #
+        # return paths
 
     def get_paths_rec(self, current_path, end_x, end_y, steps, length):
         x, y = current_path[-1]
@@ -307,9 +313,9 @@ class Board:
                     paths += self.get_paths((x, y), end_x, m_end_y, length)
 
             offset = not offset
-        if x == 18 and y == 4:
-            print(paths)
-            # print(x, y, len(paths))
+        # if x == 18 and y == 4:
+        #     print(paths)
+        #     # print(x, y, len(paths))
         return paths
 
     def get_width(self):

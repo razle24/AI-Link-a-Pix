@@ -52,8 +52,11 @@ def a_star_search(problem, heuristic):
 
 def set_domain_values(vars, board):
     for var in vars:
-        var.domain = board.get_possible_paths(var.pos[0], var.pos[1])
-        var.legal_paths = board.get_possible_paths(var.pos[0], var.pos[1])
+        domain = board.get_possible_paths(var.pos[0], var.pos[1])
+        var.domain = domain
+        # if domain is not None:
+        #     if len(domain) > 600:
+        #         print(var.pos)
 
 
 def get_vars(board):
@@ -70,13 +73,6 @@ def get_vars(board):
     return vars
 
 
-def csp(state, heads, mrv=False, lcv=False):
-    vars = get_vars(state)
-    paths = []
-    backtrack(heads, vars, paths, state.board_w)
-    return vars
-
-
 def get_var_by_pos(pos, vars):
     for var in vars:
         if var.pos == pos:
@@ -85,7 +81,7 @@ def get_var_by_pos(pos, vars):
 
 def get_pos_by_var(var, coords):
     for index in range(len(coords)):
-        if var.pos == coords[index]:
+        if var.pos == coords[index].pos:
             return index
 
 
@@ -129,10 +125,37 @@ def uncolor_path(vars, path, is_backtrack):
         var.remove_value(is_backtrack)
 
 
+def mrv_heuristic(heads, vars):
+    heads.sort(key=lambda x: x.number, reverse=False)
+
+
+def lcv_heuristic(heads, vars):
+    heads.sort(key=lambda x: len(x.domain), reverse=False)
+
+
+def get_heads(heads, vars):
+    heads_vars = []
+    for x, y in heads:
+        heads_vars.append(get_var_by_pos((x, y), vars))
+    return heads_vars
+
+
+def csp(state, heads, mrv=False, lcv=False):
+    vars = get_vars(state)
+    heads_vars = get_heads(heads, vars)
+    paths = []
+    if mrv:
+        mrv_heuristic(heads_vars, vars)
+    if lcv:
+        lcv_heuristic(heads_vars, vars)
+    backtrack(heads_vars, vars, paths, state.board_w)
+    return vars
+
+
 def backtrack(coords, vars, paths, cols):
     i = 0
     # j is the index for Vars instead of (i,j)
-    j = (coords[i][0] * cols) + coords[i][1]
+    j = (coords[i].pos[0] * cols) + coords[i].pos[1]
     is_backtrack = False
     # updates the legal paths through the domain
     vars[j].remove_value(is_backtrack)
@@ -140,20 +163,16 @@ def backtrack(coords, vars, paths, cols):
     while 0 <= i < len(coords):
         # get_value = all possible paths from var[i]
         cur_coord = coords[i]
-        
         # checks if we colored the cell and didn't backtrack
-        if get_var_by_pos(cur_coord, vars).colored and not is_backtrack:
+        if get_var_by_pos(cur_coord.pos, vars).colored and not is_backtrack:
             i += 1
             if i < len(coords):
-                j = (coords[i][0] * cols) + coords[i][1]
+                j = (coords[i].pos[0] * cols) + coords[i].pos[1]
                 vars[j].remove_value(is_backtrack)
             continue
             
-        path = get_value(vars, (cur_coord[0] * cols) + cur_coord[1])
+        path = get_value(vars, (coords[i].pos[0] * cols) + coords[i].pos[1])
         if path is None:
-            # # ?????
-            # if len(paths) == 0:
-            #     return FAILURE
             is_backtrack = True
             # deletes last path we colored
             path_to_del = paths.pop(-1)
@@ -168,7 +187,7 @@ def backtrack(coords, vars, paths, cols):
             paths += [path]
             i += 1
             if i < len(coords):
-                j = (coords[i][0] * cols) + coords[i][1]
+                j = (coords[i].pos[0] * cols) + coords[i].pos[1]
                 vars[j].remove_value(is_backtrack)
     if i < 0:
         return FAILURE
