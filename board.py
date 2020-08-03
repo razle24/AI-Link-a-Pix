@@ -1,8 +1,37 @@
-import itertools
-
 import numpy as np
-
 from util import manhattan_distance
+
+
+class Cell:
+    def __init__(self, pos, number, color):
+        self.number = number
+        self.pos = pos
+        self.color = color
+        self.path = None
+        self.domain = []
+        self.head = False
+        self.legal_paths = []
+        self.colored = False
+
+    def remove_value(self, is_backtrack):
+        if self.head:
+            if is_backtrack:
+                self.colored = False
+                return
+            self.legal_paths = self.domain.copy()
+        if not self.head:
+            self.color = 0
+            self.colored = False
+
+    def set_value(self, color):
+        self.color = color
+        self.colored = True
+
+    def set_number(self, number):
+        self.number = number
+
+    def set_color(self, color):
+        self.color = color
 
 
 class Board:
@@ -26,111 +55,182 @@ class Board:
         self.board_w = len(b_matrix[0])
         self.board_h = len(b_matrix)
         self.num_of_colors = num_of_colors - 1
-        self.state = b_matrix
-        self.paths = paths
+        self.state = dict()
+        self.create_board(b_matrix)
+        # self.paths = paths
 
-    def add_move(self, move):
-        """
-        Try to add <player>'s <move>.
+    def set_domain_values(self):
+        for i in range(self.board_h):
+            for j in range(self.board_w):
+                domain = self.get_possible_paths(i, j)
+                self.state[(i, j)].domain = domain
 
-        If the move is legal, the board state is updated; if it's not legal, a
-        ValueError is raised.
+    def create_board(self, b_matrix):
+        for i in range(self.board_h):
+            for j in range(self.board_w):
+                cur_cell = Cell((i, j), b_matrix[i][j][0][0], b_matrix[i][j][0][1])
+                self.state[(i, j)] = cur_cell
 
-        Returns the number of tiles placed on the board.
-        """
-        if not self.check_move_valid(player, move):
-            raise ValueError("Move is not allowed")
+    def set_number(self, x, y, number):
+        self.state[(x, y)].set_number(number)
 
-        piece = move.piece
-        self.pieces[player, move.piece_index] = False  # mark piece as used
+    def set_color(self, x, y, color):
+        self.state[(x, y)].set_color(color)
 
-        # Update internal state for each tile
-        for (xi, yi) in move.orientation:
-            (x, y) = (xi + move.x, yi + move.y)
-            self.state[y, x] = player
+    def remove_value(self, x, y, is_backtrack):
+        self.state[(x, y)].remove_value(is_backtrack)
 
-            # Nobody can play on this square
-            for p in range(self.num_players):
-                self._legal[p][y][x] = False
+    def set_value(self, x, y, value):
+        self.state[(x, y)].set_value(value)
 
-            # This player can't play next to this square
-            if x > 0:
-                self._legal[player, y, x - 1] = False
-            if x < self.board_w - 1:
-                self._legal[player, y, x + 1] = False
-            if y > 0:
-                self._legal[player, y - 1, x] = False
-            if y < self.board_h - 1:
-                self._legal[player, y + 1, x] = False
+    def set_head(self, x, y):
+        self.state[(x, y)].head = True
 
-            # The diagonals are now attached
-            if x > 0 and y > 0:
-                self.connected[player, y - 1, x - 1] = True
-            if x > 0 and y < self.board_h - 1:
-                self.connected[player, y + 1, x - 1] = True
-            if x < self.board_w - 1 and y < self.board_h - 1:
-                self.connected[player, y + 1, x + 1] = True
-            if x < self.board_w - 1 and y > 0:
-                self.connected[player, y - 1, x + 1] = True
+    def get_var_by_pos(self, pos):
+        return self.state[pos]
 
-        self.scores[player] += piece.get_num_tiles()
-        return piece.get_num_tiles()
+    def get_pos_by_var(self, cell, coords):
+        for index in range(len(coords)):
+            if cell.pos == coords[index].pos:
+                return index
 
-    def do_move(self, player, move):
-        """
-        Performs a move, returning a new board
-        """
-        new_board = self.__copy__()
-        new_board.add_move(player, move)
+    def is_path_legal(self, path):
+        if len(path) == 1:
+            num = self.state[path[0]].number
+            is_head = self.state[path[0]].head
+            if num == 1 and is_head:
+                return True
 
-        return new_board
-
-    def get_legal_moves(self, player):
-        """
-        Returns a list of legal moves for given player for this board state
-        """
-        # Generate all legal moves
-        move_list = []
-        for piece in self.piece_list:
-            for x in range(self.board_w):
-                for y in range(self.board_h):
-                    for ori in piece:
-                        new_move = Move(piece,
-                                        self.piece_list.pieces.index(piece),
-                                        ori, x, y)
-                        if self.check_move_valid(player, new_move):
-                            move_list.append(new_move)
-        return move_list
-
-    def check_move_valid(self, player, move):
-        """
-        Check if <player> can legally perform <move>.
-
-        For a move to be valid, it must:
-        - Use a piece that is available
-        - Be completely in bounds
-        - Not be intersecting any other tiles
-        - Not be adjacent to any of the player's other pieces
-        - Be diagonally attached to one of the player's pieces or their corner
-
-        Return True if the move is legal or False otherwise.
-        """
-        if not self.pieces[player, move.piece_index]:
-            # piece has already been used
             return False
 
-        attached_corner = False
-
-        for (x, y) in move.orientation:
-            # If any tile is illegal, this move isn't valid
-            if not self.check_tile_legal(player, x + move.x, y + move.y):
+        for x, y in path:
+            if self.state[(x, y)].colored:
                 return False
+        return True
 
-            if self.check_tile_attached(player, x + move.x, y + move.y):
-                attached_corner = True
+    def color_path(self, path):
+        """
+        gets vars' array and a path, and colors it's coordinates in the right color.
+        :param vars:
+        :param path:
+        :return: doesn't return anything, just updating the vars' array.
+        """
+        color = self.state[path[0]].color
+        for x, y in path:
+            self.set_value(x, y, color)
 
-            # If at least one tile is attached, this move is valid
-        return attached_corner
+    def uncolor_path(self, path, is_backtrack):
+        """
+        gets vars' array and a path, and colors it's coordinates in the right color.
+        :param vars:
+        :param path:
+        :return: doesn't return anything, just updating the vars' array.
+        """
+        for x, y in path:
+            self.remove_value(x, y, is_backtrack)
+
+    # def add_move(self, move):
+    #     """
+    #     Try to add <player>'s <move>.
+    #
+    #     If the move is legal, the board state is updated; if it's not legal, a
+    #     ValueError is raised.
+    #
+    #     Returns the number of tiles placed on the board.
+    #     """
+        # if not self.check_move_valid(player, move):
+        #     raise ValueError("Move is not allowed")
+        #
+        # piece = move.piece
+        # self.pieces[player, move.piece_index] = False  # mark piece as used
+        #
+        # # Update internal state for each tile
+        # for (xi, yi) in move.orientation:
+        #     (x, y) = (xi + move.x, yi + move.y)
+        #     self.state[y, x] = player
+        #
+        #     # Nobody can play on this square
+        #     for p in range(self.num_players):
+        #         self._legal[p][y][x] = False
+        #
+        #     # This player can't play next to this square
+        #     if x > 0:
+        #         self._legal[player, y, x - 1] = False
+        #     if x < self.board_w - 1:
+        #         self._legal[player, y, x + 1] = False
+        #     if y > 0:
+        #         self._legal[player, y - 1, x] = False
+        #     if y < self.board_h - 1:
+        #         self._legal[player, y + 1, x] = False
+        #
+        #     # The diagonals are now attached
+        #     if x > 0 and y > 0:
+        #         self.connected[player, y - 1, x - 1] = True
+        #     if x > 0 and y < self.board_h - 1:
+        #         self.connected[player, y + 1, x - 1] = True
+        #     if x < self.board_w - 1 and y < self.board_h - 1:
+        #         self.connected[player, y + 1, x + 1] = True
+        #     if x < self.board_w - 1 and y > 0:
+        #         self.connected[player, y - 1, x + 1] = True
+        #
+        # self.scores[player] += piece.get_num_tiles()
+        # return piece.get_num_tiles()
+
+    # def do_move(self, player, move):
+    #     """
+    #     Performs a move, returning a new board
+    #     """
+    #     new_board = self.__copy__()
+    #     new_board.add_move(player, move)
+    #
+    #     return new_board
+    #
+    # def get_legal_moves(self, player):
+    #     """
+    #     Returns a list of legal moves for given player for this board state
+    #     """
+    #     # Generate all legal moves
+    #     move_list = []
+    #     for piece in self.piece_list:
+    #         for x in range(self.board_w):
+    #             for y in range(self.board_h):
+    #                 for ori in piece:
+    #                     new_move = Move(piece,
+    #                                     self.piece_list.pieces.index(piece),
+    #                                     ori, x, y)
+    #                     if self.check_move_valid(player, new_move):
+    #                         move_list.append(new_move)
+    #     return move_list
+    #
+    # def check_move_valid(self, player, move):
+    #     """
+    #     Check if <player> can legally perform <move>.
+    #
+    #     For a move to be valid, it must:
+    #     - Use a piece that is available
+    #     - Be completely in bounds
+    #     - Not be intersecting any other tiles
+    #     - Not be adjacent to any of the player's other pieces
+    #     - Be diagonally attached to one of the player's pieces or their corner
+    #
+    #     Return True if the move is legal or False otherwise.
+    #     """
+    #     if not self.pieces[player, move.piece_index]:
+    #         # piece has already been used
+    #         return False
+    #
+    #     attached_corner = False
+    #
+    #     for (x, y) in move.orientation:
+    #         # If any tile is illegal, this move isn't valid
+    #         if not self.check_tile_legal(player, x + move.x, y + move.y):
+    #             return False
+    #
+    #         if self.check_tile_attached(player, x + move.x, y + move.y):
+    #             attached_corner = True
+    #
+    #         # If at least one tile is attached, this move is valid
+    #     return attached_corner
 
     # def check_tile_legal(self, player, x, y):
     #     """
@@ -167,7 +267,7 @@ class Board:
     #     return self.connected[player, y, x]
 
     def get_position(self, x, y):
-        return self.state[y, x]
+        return self.state[(x, y)]
 
     def __eq__(self, other):
         return np.array_equal(self.state, other.state) and np.array_equal(self.pieces, other.pieces)
@@ -215,19 +315,6 @@ class Board:
                 all_paths += [path_1]
         return all_paths
 
-        # to_del = []
-        # for p_1, p_2 in itertools.combinations(paths, 2):
-        #     if set(p_1) == set(p_2):
-        #         if p_1 not in to_del:
-        #             to_del += [p_1]
-        #         if p_2 not in to_del:
-        #             to_del += [p_2]
-        #
-        # for path in to_del:
-        #     paths.remove(path)
-        #
-        # return paths
-
     def get_paths_rec(self, current_path, end_x, end_y, steps, length):
         x, y = current_path[-1]
 
@@ -262,10 +349,10 @@ class Board:
         return paths
 
     def get_number_in_cell(self, x, y):
-        return self.state[x][y][0][0]
+        return self.state[(x, y)].number
 
     def get_number_color_in_cell(self,x, y):
-        return self.state[x][y][0][1]
+        return self.state[(x, y)].color
 
     def get_possible_paths(self, x, y):
         """
