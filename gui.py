@@ -104,7 +104,7 @@ def runGUI(layout):
 
             # Create game object
             xml_dict = ag.get_xml_from_path(values['file_path'])
-            game = gm.Game(xml_dict, values['combo_select'], values['combo_heuristic'])
+            game = gm.Game(xml_dict)
 
             # Create board in GUI
             window['graph_board'].erase()
