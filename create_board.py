@@ -3,6 +3,15 @@ import os
 from board import *
 
 
+def evaluate_board(board):
+    board_value = 0
+    for i in board.board_h:
+        for j in board.board_w:
+            board_value += board.get_number_in_cell(i, j) ** 1.15
+
+    return board_value
+
+
 def create_xml_from_board(paths, w, h, name):
     return 'hii'
 

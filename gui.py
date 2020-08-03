@@ -86,7 +86,10 @@ def runGUI(layout):
 
     # Event Loop to process 'events' and get the 'values' of the inputs
     while True:
-        event, values = window.read()
+        if run_game is True:
+            event, values = window.finalize()
+        else:
+            event, values = window.read()
 
         # If user closes window, close the program
         if event == sg.WIN_CLOSED:
@@ -111,19 +114,20 @@ def runGUI(layout):
         if event == 'button_resume':
             print('button_resume')
 
-            game.set_search(values['combo_select'])
-            game.set_heuristic(values['combo_heuristic'])
+            if values['file_path'] != '':
+                game.set_search(values['combo_select'])
+                game.set_heuristic(values['combo_heuristic'])
 
-            # Disable combo buttons and puzzle selector
-            window.finalize()
-            window['file_selector'].update(disabled=True)
-            window.finalize()
-            window['combo_select'].update(disabled=True)
-            window.finalize()
-            window['combo_heuristic'].update(disabled=True)
+                # Disable combo buttons and puzzle selector
+                window.finalize()
+                window['file_selector'].update(disabled=True)
+                window.finalize()
+                window['combo_select'].update(disabled=True)
+                window.finalize()
+                window['combo_heuristic'].update(disabled=True)
 
-            # Set game to run
-            run_game = True
+                # Set game to run
+                run_game = True
 
         # Pause the game from running new steps
         if event == 'button_pause':
@@ -147,11 +151,14 @@ def runGUI(layout):
             window.finalize()
             window['combo_heuristic'].update(disabled=False)
 
-        # if event == 'graph_board':
-        #     print(f'Clicked on x: {values["graph_board"][0]}\t y: {values["graph_board"][1]}')
+        if event == 'graph_board':
+            x, y = values["graph_board"]
+            print(f'Clicked on x: {x}\t y: {y}')
+            print(f'Figures in location {window["graph_board"].get_figures_at_location((x, y))}')
 
-        # if run_game:
-        #     game.do_move()
+        if run_game:
+            print(f'Turn: {game.get_moves_counter()}')
+            game.do_move()
 
     window.close()
 
