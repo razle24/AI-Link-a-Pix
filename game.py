@@ -3,7 +3,6 @@ from agent import *
 from search import *
 from board import *
 from time import *
-
 class Game:
     def __init__(self, xml_dict, search_type=None, heuristic=None):
         """
@@ -40,21 +39,35 @@ class Game:
                 cur_num = len(path)
                 x, y = path[0]
                 end_x, end_y = path[len(path) - 1]
-                self.initial_board.state[x][y] = ((cur_num, color), 0)
-                self.initial_board.state[end_x][end_y] = ((cur_num, color), 0)
+                self.initial_board.set_number(x, y, cur_num)
+                self.initial_board.set_number(end_x, end_y, cur_num)
+                self.initial_board.set_color(x, y, color)
+                self.initial_board.set_color(end_x, end_y, color)
+                self.initial_board.set_head(x, y)
+                self.initial_board.set_head(end_x, end_y)
             
                 # now the we have board to work on
-                self.board.state[x][y] = ((cur_num, color), 0)
-                self.board.state[end_x][end_y] = ((cur_num, color), 0)
-            
+                self.board.set_number(x, y, cur_num)
+                self.board.set_number(end_x, end_y, cur_num)
+                self.board.set_color(x, y, color)
+                self.board.set_color(end_x, end_y, color)
+                self.board.set_head(x, y)
+                self.board.set_head(end_x, end_y)
+
                 self.fill_goal_board(path, color)
                 # fill the first and last entries of the path in goal board
-                self.goal_board.state[x][y] = ((cur_num, color), color)
-                self.goal_board.state[end_x][end_y] = ((cur_num, color), color)
+                self.goal_board.set_number(x, y, cur_num)
+                self.goal_board.set_number(end_x, end_y, cur_num)
+                self.goal_board.set_color(x, y, color)
+                self.goal_board.set_color(end_x, end_y, color)
+                self.goal_board.set_head(x, y)
+                self.goal_board.set_head(end_x, end_y)
+                # to add self.colored???
+        self.board.set_domain_values()
 
     def fill_goal_board(self, path, color):
         for x, y in path:
-            self.goal_board.state[x][y] = ((0, color), color)
+            self.goal_board.set_color(x, y, color)
 
     def __str__(self):
         """
@@ -144,28 +157,30 @@ def get_heads(board):
     heads = []
     for i in range(board.board_h):
         for j in range(board.board_w):
-            if board.state[i][j][0] != (0, 0):
-                heads.append((i, j))
+            if board.state[(i, j)].head:
+                heads.append(board.state[(i, j)])
     return heads
 
 
-def printVarBoard(vars, cols, rows):
+def printVarBoard(board, cols, rows):
     for i in range(rows):
         for j in range(cols):
-            print(vars[i * cols + j].color, end="", flush=True)
+            print(board.state[(i, j)].color, end="", flush=True)
             print(" ", end="", flush=True)
         print()
 
 
 if __name__ == '__main__':
     start = time()
-    xml = get_xml_from_path('boards/20_20_color.xml')
+    xml = get_xml_from_path('boards/small_color.xml')
     my_game = Game(xml)
     heads = get_heads(my_game.board)
-    vars = csp(my_game.board, heads, False, True)
+    csp(my_game.board, heads, True)
+    # printVarBoard(my_game.board, 20, 20)
     end = time()
-    print("TIME :", end - start)
-    printVarBoard(vars, 20, 20)
-    vars_goal = get_vars(my_game.goal_board)
+    printVarBoard(my_game.board, 15, 15)
     print()
-    printVarBoard(vars_goal, 20, 20)
+    printVarBoard(my_game.goal_board, 15, 15)
+    print("TIME :", end - start)
+    # printVarBoard(vars, 20, 20)
+
