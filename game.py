@@ -2,7 +2,7 @@ import copy
 from agent import *
 from search import *
 from board import *
-
+from time import *
 
 class Game:
     def __init__(self, xml_dict, search_type=None, heuristic=None):
@@ -158,11 +158,14 @@ def printVarBoard(vars, cols, rows):
 
 
 if __name__ == '__main__':
+    start = time()
     xml = get_xml_from_path('boards/20_20_color.xml')
     my_game = Game(xml)
     heads = get_heads(my_game.board)
     vars = csp(my_game.board, heads, False, True)
-    printVarBoard(vars, 15, 15)
+    end = time()
+    print("TIME :", end - start)
+    printVarBoard(vars, 20, 20)
     vars_goal = get_vars(my_game.goal_board)
     print()
-    printVarBoard(vars_goal, 15, 15)
+    printVarBoard(vars_goal, 20, 20)

@@ -12,7 +12,7 @@ def build_board_from_image(image, number_of_colors, output_to_board_object=True,
     To create board from an image, we want to meet the following requirements:
 
     * The game must have SINGLE solution
-    * We shouldn't keep colored cell without a path going through him.
+    * We shouldn't keep colored cell without a path going through it.
     * We shouldn't make a path thought empty space or different color
     * As there are many options to build a game, some of them not interesting (for example fill all colored cells
       with number 1, which makes the game trivial). We want to maximize the following formula:

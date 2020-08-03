@@ -125,6 +125,7 @@ def uncolor_path(vars, path, is_backtrack):
         var.remove_value(is_backtrack)
 
 
+
 def mrv_heuristic(heads, vars):
     heads.sort(key=lambda x: x.number, reverse=False)
 
@@ -152,6 +153,7 @@ def csp(state, heads, mrv=False, lcv=False):
     return vars
 
 
+# TODO - gets board, coords
 def backtrack(coords, vars, paths, cols):
     i = 0
     # j is the index for Vars instead of (i,j)
