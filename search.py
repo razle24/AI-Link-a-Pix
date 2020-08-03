@@ -68,7 +68,7 @@ def backtrack(coords, board, paths):
     i = 0
     is_backtrack = False
     # updates the legal paths through the domain
-    board.remove_value(coords[i].pos[0], coords[i].pos[1], is_backtrack)
+    board.remove_value(coords[i].get_x_coordinte(), coords[i].get_y_coordinte(), is_backtrack)
     
     while 0 <= i < len(coords):
         # get_value = all possible paths from var[i]
@@ -77,9 +77,9 @@ def backtrack(coords, board, paths):
         if cur_coord.colored and not is_backtrack:
             i += 1
             if i < len(coords):
-                board.remove_value(coords[i].pos[0], coords[i].pos[1], is_backtrack)
+                board.remove_value(coords[i].get_x_coordinte(), coords[i].get_y_coordinte(), is_backtrack)
             continue
-        path = get_value(board, cur_coord.pos)
+        path = get_value(board, cur_coord.get_coordinates())
         if path is None:
             is_backtrack = True
             # deletes last path we colored

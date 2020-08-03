@@ -34,12 +34,15 @@ def generate_matrix_from_xml_dict(xml_dict, return_goal_matrix=False):
 
 
 class Cell:
-    def __init__(self, number, number_color, cell_color=0):
+    def __init__(self, x, y, number, number_color, cell_color=0):
+        self.x = x
+        self.y = y
         self.number = number
         self.number_color = number_color
         self.cell_color = cell_color
         self.colored = False
 
+        self.head = None
         self.domain = []
         self.legal_paths = []
 
@@ -54,38 +57,27 @@ class Cell:
     def set_domain(self, domain):
         self.domain = domain
 
-#
-# class Cell:
-#     def __init__(self, pos, number, color):
-#         self.number = number
-#         self.pos = pos
-#         self.color = color
-#         self.path = None
-#         self.domain = []
-#         self.head = False
-#         self.legal_paths = []
-#         self.colored = False
-#
-#     def remove_value(self, is_backtrack):
-#         if self.head:
-#             if is_backtrack:
-#                 self.colored = False
-#                 return
-#             self.legal_paths = self.domain.copy()
-#         if not self.head:
-#             self.color = 0
-#             self.colored = False
-#
-#     def set_value(self, color):
-#         self.color = color
-#         self.colored = True
-#
-#     def set_number(self, number):
-#         self.number = number
-#
-#     def set_color(self, color):
-#         self.color = color
+    def remove_value(self, is_backtrack):
+        if self.number != 0:
+            if is_backtrack:
+                self.colored = False
+                return
+            self.legal_paths = self.domain.copy()
+        else:
+            self.cell_color = 0
+            self.colored = False
 
+    def get_coordinates(self):
+        return (self.x, self.y)
+
+    def get_x_coordinte(self):
+        return self.x
+
+    def get_y_coordinte(self):
+        return self.y
+
+    def get_number(self):
+        return self.number
 
 class Board:
     """
@@ -95,15 +87,10 @@ class Board:
 
     The Board stores:
     - board_w/board_h: the width and height of the playing area
-    - state: a matrix (2D list) of tuples (int, int) where t[0]- the number of
-    the current entry (0 = empty), t[1]- the index of the color in self colors
-    of the current entry
-    - colors: the number of the colors (the max value(-1) available for colors)
-    - paths - dictionary where the keys are the colors and the values are
-    lists of lists of paths in the key color
-    { RED : [[(i1,j1), (i2,j2)...], [(i3,j3), (i4, j4)...]...]}
+    - state: a matrix (2D list) of cells
+    - matrix: a matrix (2D list) of ((number, number_color), cell_color)
+    - colors: the number of the colors
     """
-
     def __init__(self, num_of_colors, b_matrix):
         self.board_w = len(b_matrix[0])
         self.board_h = len(b_matrix)
@@ -112,12 +99,15 @@ class Board:
         self.state = dict()
         self.create_board(b_matrix)
 
+    # TODO: Not our function
     def __eq__(self, other):
         return np.array_equal(self.state, other.state) and np.array_equal(self.pieces, other.pieces)
 
+    # TODO: Not our function
     def __hash__(self):
         return hash(str(self.state))
 
+    # TODO: Not our function
     def __str__(self):
         out_str = []
         for row in range(self.board_h):
@@ -129,6 +119,7 @@ class Board:
             out_str.append('\n')
         return ''.join(out_str)
 
+    # TODO: Not our function
     def __copy__(self):
         cpy_board = Board(self.board_w, self.board_h, self.num_players, self.piece_list)
         cpy_board.state = np.copy(self.state)
@@ -142,7 +133,8 @@ class Board:
         for i in range(self.board_h):
             for j in range(self.board_w):
                 number, number_color = b_matrix[i][j][0]
-                self.state[(i, j)] = Cell(number, number_color)
+                self.state[(i, j)] = Cell(i, j, number, number_color)
+                self.state[(i, j)].set_domain(self.get_possible_paths(i, j))
 
     def remove_value(self, x, y, is_backtrack):
         self.state[(x, y)].remove_value(is_backtrack)
@@ -336,10 +328,10 @@ class Board:
                 return index
 
     def get_number_in_cell(self, x, y):
-        return self.state[(x, y)].number
+        return self.matrix[x][y][0][0]
 
     def get_number_color_in_cell(self, x, y):
-        return self.state[(x, y)].color
+        return self.matrix[x][y][0][1]
 
     def get_cell_color(self, x, y):
         return self.matrix[x][y][1]
@@ -351,11 +343,6 @@ class Board:
         return self.board_h
 
     # ** Setters ** #
-    def set_domain_values(self):
-        for i in range(self.board_h):
-            for j in range(self.board_w):
-                self.state[(i, j)].set_domain(self.get_possible_paths(i, j))
-
     def set_cell_color(self, x, y, cell_color):
         self.matrix[x][y][1] = cell_color
         self.state[(x, y)].set_cell_color(cell_color)
