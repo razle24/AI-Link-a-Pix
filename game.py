@@ -28,22 +28,33 @@ class Game:
         self.moves_counter = 0
 
     def generate_boards(self, xml_dict):
+        """
+        Given xml dictionary, read the beginning and end of each path, and add corresponding value on the board
+        :param xml_dict:
+        :return:
+        """
         for color, paths in xml_dict["paths"].items():
+            # For each path
             for path in paths:
-                # fill the initial board with the (len,color) of the wanted path
+                # Fill the initial board with the ((number, number_color), cell_color) of the wanted path
                 cur_num = len(path)
                 x, y = path[0]
                 end_x, end_y = path[len(path) - 1]
                 self.initial_board.state[x][y] = ((cur_num, color), 0)
                 self.initial_board.state[end_x][end_y] = ((cur_num, color), 0)
-
+            
                 # now the we have board to work on
                 self.board.state[x][y] = ((cur_num, color), 0)
                 self.board.state[end_x][end_y] = ((cur_num, color), 0)
-
+            
+                self.fill_goal_board(path, color)
                 # fill the first and last entries of the path in goal board
-                self.goal_board.state[x][y] = ((cur_num, color), 0)
-                self.goal_board.state[end_x][end_y] = ((cur_num, color), 0)
+                self.goal_board.state[x][y] = ((cur_num, color), color)
+                self.goal_board.state[end_x][end_y] = ((cur_num, color), color)
+
+    def fill_goal_board(self, path, color):
+        for x, y in path:
+            self.goal_board.state[x][y] = ((0, color), color)
 
     def __str__(self):
         """
@@ -54,6 +65,12 @@ class Game:
 
     def get_initial_board(self):
         return self.initial_board
+
+    def set_search(self, search):
+        self.search = search
+
+    def get_search(self):
+        return self.search
 
     def set_heuristic(self, heuristic):
         self.heuristic = heuristic
@@ -141,7 +158,7 @@ def printVarBoard(vars, cols, rows):
 
 
 if __name__ == '__main__':
-    xml = get_xml_from_path('boards/small_bw.xml')
+    xml = get_xml_from_path('boards/20_20_color.xml')
     my_game = Game(xml)
     heads = get_heads(my_game.board)
     vars = csp(my_game.board, heads)

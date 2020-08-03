@@ -28,26 +28,28 @@ class BoardGraph:
         self.board = self.game.get_current_board()
 
         # Dictionary of canvas items, each (x, y) is ID of the correspond item on the canvas
-        self.board_canvas = dict()
+        self.canvas_background = dict()
+        self.canvas_numbers = dict()
 
         self.cell_size = min(GRAPH_SIZE / self.h, GRAPH_SIZE / self.w, 25)
 
         self.draw_board_borders()
         self.draw_board_numbers()
+        self.drew_color_on_board(7, 3, '#fab340')
 
     def draw_board_borders(self):
         curr_h = 0
         for i in range(self.h):
             curr_w = 0
             for j in range(self.w):
-                self.board_canvas[(i, j)] = self.graph.DrawRectangle(
+                self.canvas_background[(i, j)] = self.graph.DrawRectangle(
                     top_left=(curr_h + 1, curr_w + 1),
                     bottom_right=(curr_h + self.cell_size,
                                   curr_w + self.cell_size),
                     fill_color=self.colors[0],
                     line_color='gray', line_width=2)
 
-                self.graph.send_figure_to_back(self.board_canvas[(i, j)])
+                self.graph.send_figure_to_back(self.canvas_background[(i, j)])
 
                 curr_w += self.cell_size
             curr_h += self.cell_size
@@ -57,34 +59,35 @@ class BoardGraph:
             for j in range(self.w):
                 cell = self.board[i][j][0]
                 if cell[0] != 0:
-                    fig = self.graph.DrawText(text=str(cell[0]), color=self.colors[cell[1]],
-                                              location=((self.cell_size * i + (self.cell_size / 2)),
-                                                        (self.cell_size * j + (self.cell_size / 2))))
+                    self.canvas_numbers[(i, j)] = self.graph.DrawText(text=str(cell[0]),
+                                                                      color=self.colors[cell[1]],
+                                                                      location=((self.cell_size * i + (self.cell_size / 2)),
+                         (self.cell_size * j + (self.cell_size / 2))))
 
-                    self.graph.bring_figure_to_front(fig)
+                    self.graph.bring_figure_to_front(self.canvas_numbers[(i, j)])
 
     def drew_color_on_board(self, x, y, rgb_color):
         cell_number = self.board[x][y][0]
 
-        # Change to cell color
+        # Get cell coordinates
+        upper_left, lower_right = self.graph.get_bounding_box(self.canvas_background[(x, y)])
+
+        # Delete old figure
+        self.graph.delete_figure(self.canvas_background[(x, y)])
+
+        # Create and add new figure
+        self.canvas_background[(x, y)] = self.graph.DrawRectangle(
+            top_left=(upper_left[0], upper_left[1]),
+            bottom_right=(lower_right[0], lower_right[1]),
+            fill_color=rgb_color,
+            line_color='gray', line_width=2)
+
+        self.graph.send_figure_to_back(self.canvas_background[(x, y)])
 
         # The cell also has number, we also need to print the number again
         if cell_number[0] != 0:
-            pass
+            self.graph.tk_canvas.itemconfigure(self.canvas_numbers[(x, y)], text='hii')
 
-
-colors_test = ['white', 'black', 'red']
-# Tuple of (number, color drawn). if 'number'!=0 the second value is number's color.
-# (0, 0) - Empty cell
-# (0, 1) - No number, colored black
-# (2, 1) - Number shown is 2, its color is black
-# (1, 0) = Invalid option
-board_test = [
-    [(3, 2), (2, 1), (2, 1)],
-    [(0, 0), (1, 2), (0, 0)],
-    [(3, 2), (0, 1), (0, 2)],
-    [(0, 0), (0, 0), (0, 0)]
-]
 
 
 def runGUI(layout):
@@ -94,7 +97,7 @@ def runGUI(layout):
     # Set variables
     run_game = False
 
-    # Event Loop to process "events" and get the "values" of the inputs
+    # Event Loop to process 'events' and get the 'values' of the inputs
     while True:
         event, values = window.read()
 
@@ -102,7 +105,7 @@ def runGUI(layout):
         if event == sg.WIN_CLOSED:
             break
 
-        # If player selects file, update to GUI to show file name
+        # If player selects file, update GUI to show file name
         if event == 'file_path':
             print('File selected:', values['file_path'])
 
@@ -117,8 +120,12 @@ def runGUI(layout):
             window['graph_board'].erase()
             graph = BoardGraph(window['graph_board'], game)
 
+        # Start run the game with given parameters
         if event == 'button_resume':
             print('button_resume')
+
+            game.set_search(values['combo_select'])
+            game.set_heuristic(values['combo_heuristic'])
 
             # Disable combo buttons and puzzle selector
             window.finalize()
@@ -131,10 +138,12 @@ def runGUI(layout):
             # Set game to run
             run_game = True
 
+        # Pause the game from running new steps
         if event == 'button_pause':
             print('button_pause')
             run_game = False
 
+        # Clear the board and reast the current game, unable combo buttons and puzzle selector again
         if event == 'button_reset':
             print('button_reset')
             run_game = False
