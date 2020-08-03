@@ -47,20 +47,31 @@ def a_star_search(problem, heuristic):
     return None
 
 
-def mrv_heuristic(heads, vars):
-    heads.sort(key=lambda x: x.number, reverse=False)
+def mrv_heuristic(heads):
+    """
+    Sort the list by number value (from small to big)
+    :param heads:
+    :return:
+    """
+    heads.sort(key=lambda x: x[0], reverse=False)
 
 
-def lcv_heuristic(heads, vars):
+def lcv_heuristic(heads, board):
+    """
+    Sort list by amount of possible paths
+    :param heads:
+    :param vars:
+    :return:
+    """
     heads.sort(key=lambda x: len(x.domain), reverse=False)
 
 
 def csp(board, heads, mrv=False, lcv=False):
     paths = []
     if mrv:
-        mrv_heuristic(heads, board)
-    if lcv:
-        lcv_heuristic(heads, board)
+        mrv_heuristic(heads)
+    # if lcv:
+    #     lcv_heuristic(heads, board)
     backtrack(heads, board, paths)
 
 
@@ -68,18 +79,18 @@ def backtrack(coords, board, paths):
     i = 0
     is_backtrack = False
     # updates the legal paths through the domain
-    board.remove_value(coords[i].get_x_coordinte(), coords[i].get_y_coordinte(), is_backtrack)
+    board.remove_value(coords[i][0], coords[i][1], is_backtrack)
     
     while 0 <= i < len(coords):
         # get_value = all possible paths from var[i]
         cur_coord = coords[i]
         # checks if we colored the cell and didn't backtrack
-        if cur_coord.colored and not is_backtrack:
+        if cur_coord[1] and not is_backtrack:
             i += 1
             if i < len(coords):
-                board.remove_value(coords[i].get_x_coordinte(), coords[i].get_y_coordinte(), is_backtrack)
+                board.remove_value(coords[i][0], coords[i][1], is_backtrack)
             continue
-        path = get_value(board, cur_coord.get_coordinates())
+        path = get_value(board, cur_coord)
         if path is None:
             is_backtrack = True
             # deletes last path we colored

@@ -82,6 +82,9 @@ class Game:
     def get_moves_counter(self):
         return self.moves_counter
 
+    def get_list_of_numbered_cells(self):
+        return self.board.get_list_of_numbered_cells()
+
     # **  Setters  ** #
     def set_search(self, search):
         self.search = search
@@ -90,29 +93,13 @@ class Game:
         self.heuristic = heuristic
 
 
-def get_heads(board):
-    heads = []
-    for i in range(board.board_h):
-        for j in range(board.board_w):
-            if board.is_numbered_cell(i, j):
-                heads.append(board.state[(i, j)])
-    return heads
-
-
-def print_var_board(board, cols, rows):
-    for i in range(rows):
-        for j in range(cols):
-            print(board.state[(i, j)].color, end="", flush=True)
-            print(" ", end="", flush=True)
-        print()
-
-
 if __name__ == '__main__':
     xml = get_xml_from_path('boards/small_color.xml')
     my_game = Game(xml)
-    heads = get_heads(my_game.board)
+    heads = my_game.get_list_of_numbered_cells()
     csp(my_game.board, heads, True)
 
-    print_var_board(my_game.board, 15, 15)
-    print()
-    print_var_board(my_game.goal_board, 15, 15)
+    print("Our board:")
+    print(my_game.board)
+    print("Goal board:")
+    print(my_game.goal_board)

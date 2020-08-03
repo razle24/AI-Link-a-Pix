@@ -46,17 +46,6 @@ class Cell:
         self.domain = []
         self.legal_paths = []
 
-    def set_cell_color(self, color):
-        self.cell_color = color
-
-        if color == 0:
-            self.colored = False
-        else:
-            self.colored = True
-
-    def set_domain(self, domain):
-        self.domain = domain
-
     def remove_value(self, is_backtrack):
         if self.number != 0:
             if is_backtrack:
@@ -67,17 +56,30 @@ class Cell:
             self.cell_color = 0
             self.colored = False
 
+    # ** Getters ** #
     def get_coordinates(self):
-        return (self.x, self.y)
+        return self.x, self.y
 
-    def get_x_coordinte(self):
+    def get_x_coordinate(self):
         return self.x
 
-    def get_y_coordinte(self):
+    def get_y_coordinate(self):
         return self.y
 
     def get_number(self):
         return self.number
+
+    # ** Setters ** #
+    def set_cell_color(self, color):
+        self.cell_color = color
+
+        if color == 0:
+            self.colored = False
+        else:
+            self.colored = True
+
+    def set_domain(self, domain):
+        self.domain = domain
 
 class Board:
     """
@@ -99,25 +101,22 @@ class Board:
         self.state = dict()
         self.create_board(b_matrix)
 
-    # TODO: Not our function
-    def __eq__(self, other):
-        return np.array_equal(self.state, other.state) and np.array_equal(self.pieces, other.pieces)
+        # Fill only when used
+        self.numbered_cells = None
 
-    # TODO: Not our function
-    def __hash__(self):
-        return hash(str(self.state))
-
-    # TODO: Not our function
     def __str__(self):
         out_str = []
-        for row in range(self.board_h):
-            for col in range(self.board_w):
-                if self.state[col, row] == -1:
-                    out_str.append('_')
-                else:
-                    out_str.append(str(self.state[col, row]))
+        for i in range(self.board_h):
+            for j in range(self.board_w):
+                out_str.append(str(self.matrix[i][j][1]))
             out_str.append('\n')
         return ''.join(out_str)
+
+    def __eq__(self, other):
+        return self.matrix == other.matrix
+
+    def __hash__(self):
+        return hash(str(self.matrix))
 
     # TODO: Not our function
     def __copy__(self):
@@ -341,6 +340,17 @@ class Board:
 
     def get_height(self):
         return self.board_h
+
+    def get_list_of_numbered_cells(self):
+        if self.numbered_cells is None:
+            self.numbered_cells = []
+            for i in range(self.board_h):
+                for j in range(self.board_w):
+                    if self.is_numbered_cell(i, j):
+                        self.numbered_cells.append((i, j))
+            return self.numbered_cells
+        else:
+            return self.numbered_cells
 
     # ** Setters ** #
     def set_cell_color(self, x, y, cell_color):
