@@ -35,7 +35,6 @@ class BoardGraph:
 
         self.draw_board_borders()
         self.draw_board_numbers()
-        self.drew_color_on_board(7, 3, '#fab340')
 
     def draw_board_borders(self):
         curr_h = 0
@@ -67,27 +66,15 @@ class BoardGraph:
                     self.graph.bring_figure_to_front(self.canvas_numbers[(i, j)])
 
     def drew_color_on_board(self, x, y, rgb_color):
-        cell_number = self.board[x][y][0]
+        self.graph.tk_canvas.itemconfigure(self.canvas_background[(x, y)], fill=rgb_color)
 
-        # Get cell coordinates
-        upper_left, lower_right = self.graph.get_bounding_box(self.canvas_background[(x, y)])
-
-        # Delete old figure
-        self.graph.delete_figure(self.canvas_background[(x, y)])
-
-        # Create and add new figure
-        self.canvas_background[(x, y)] = self.graph.DrawRectangle(
-            top_left=(upper_left[0], upper_left[1]),
-            bottom_right=(lower_right[0], lower_right[1]),
-            fill_color=rgb_color,
-            line_color='gray', line_width=2)
-
-        self.graph.send_figure_to_back(self.canvas_background[(x, y)])
-
-        # The cell also has number, we also need to print the number again
-        if cell_number[0] != 0:
-            self.graph.tk_canvas.itemconfigure(self.canvas_numbers[(x, y)], text='hii')
-
+        # The cell also has number, we also need to change the color to the text
+        if self.board[x][y][0][0] != 0:
+            if rgb_color == '#ffffff':
+                color = self.colors[self.board[x][y][0][1]]
+                self.graph.tk_canvas.itemconfigure(self.canvas_numbers[(x, y)], fill=color)
+            else:
+                self.graph.tk_canvas.itemconfigure(self.canvas_numbers[(x, y)], fill='white')
 
 
 def runGUI(layout):
