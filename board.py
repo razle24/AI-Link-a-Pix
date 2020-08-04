@@ -1,4 +1,3 @@
-import numpy as np
 from util import manhattan_distance
 
 
@@ -7,10 +6,10 @@ def generate_matrix_from_xml_dict(xml_dict, return_goal_matrix=False):
     Given xml dictionary, read the beginning and end of each path, add corresponding coordinates to the board
     :param xml_dict: As explained at agent.py
     :param return_goal_matrix: True if we want the matrix to be filled with the answer, otherwise False.
-    :return: Matrix (w*h) with the following values ((number, number_color), cell_color).
-             If no number in cell the tuple will be filled with zeros ((0, 0), 0)
+    :return: Matrix (w*h) with the following values [(number, number_color), cell_color].
+             If no number in cell the tuple will be filled with zeros [(0, 0), 0]
     """
-    matrix = [[((0, 0), 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
+    matrix = [[[(0, 0), 0] for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
     for number_color, paths in xml_dict["paths"].items():
         # For each path
         for path in paths:
@@ -22,64 +21,16 @@ def generate_matrix_from_xml_dict(xml_dict, return_goal_matrix=False):
                 cell_color = number_color
                 for cell in path:
                     x, y = cell
-                    matrix[x][y] = ((0, 0), cell_color)
+                    matrix[x][y] = [(0, 0), cell_color]
 
-            # Fill the matrix with the ((number, number_color), cell_color) of the wanted path
+            # Fill the matrix with the [(number, number_color), cell_color] of the wanted path
             x, y = path[0]
             end_x, end_y = path[len(path) - 1]
-            matrix[x][y] = ((number, number_color), cell_color)
-            matrix[end_x][end_y] = ((number, number_color), cell_color)
+            matrix[x][y] = [(number, number_color), cell_color]
+            matrix[end_x][end_y] = [(number, number_color), cell_color]
 
     return matrix
 
-
-class Cell:
-    def __init__(self, x, y, number, number_color, cell_color=0):
-        self.x = x
-        self.y = y
-        self.number = number
-        self.number_color = number_color
-        self.cell_color = cell_color
-        self.colored = False
-
-        self.head = None
-        self.domain = []
-        self.legal_paths = []
-
-    def remove_value(self, is_backtrack):
-        if self.number != 0:
-            if is_backtrack:
-                self.colored = False
-                return
-            self.legal_paths = self.domain.copy()
-        else:
-            self.cell_color = 0
-            self.colored = False
-
-    # ** Getters ** #
-    def get_coordinates(self):
-        return self.x, self.y
-
-    def get_x_coordinate(self):
-        return self.x
-
-    def get_y_coordinate(self):
-        return self.y
-
-    def get_number(self):
-        return self.number
-
-    # ** Setters ** #
-    def set_cell_color(self, color):
-        self.cell_color = color
-
-        if color == 0:
-            self.colored = False
-        else:
-            self.colored = True
-
-    def set_domain(self, domain):
-        self.domain = domain
 
 class Board:
     """
@@ -90,25 +41,25 @@ class Board:
     The Board stores:
     - board_w/board_h: the width and height of the playing area
     - state: a matrix (2D list) of cells
-    - matrix: a matrix (2D list) of ((number, number_color), cell_color)
+    - matrix: a matrix (2D list) of [(number, number_color), cell_color]
     - colors: the number of the colors
     """
+
     def __init__(self, num_of_colors, b_matrix):
         self.board_w = len(b_matrix[0])
         self.board_h = len(b_matrix)
         self.num_of_colors = num_of_colors
         self.matrix = b_matrix
-        self.state = dict()
-        self.create_board(b_matrix)
 
         # Fill only when used
         self.numbered_cells = None
+        self.board_score = None
 
     def __str__(self):
         out_str = []
         for i in range(self.board_h):
             for j in range(self.board_w):
-                out_str.append(str(self.matrix[i][j][1]))
+                out_str.append(str(self.matrix[i][j]))
             out_str.append('\n')
         return ''.join(out_str)
 
@@ -118,221 +69,25 @@ class Board:
     def __hash__(self):
         return hash(str(self.matrix))
 
-    # TODO: Not our function
     def __copy__(self):
-        cpy_board = Board(self.board_w, self.board_h, self.num_players, self.piece_list)
-        cpy_board.state = np.copy(self.state)
-        cpy_board._legal = np.copy(self._legal)
-        cpy_board.connected = np.copy(self.connected)
-        cpy_board.pieces = np.copy(self.pieces)
-        cpy_board.scores = self.scores[:]
+        cpy_board = Board(self.num_of_colors, self.matrix)
         return cpy_board
-
-    def create_board(self, b_matrix):
-        for i in range(self.board_h):
-            for j in range(self.board_w):
-                number, number_color = b_matrix[i][j][0]
-                self.state[(i, j)] = Cell(i, j, number, number_color)
-                self.state[(i, j)].set_domain(self.get_possible_paths(i, j))
-
-    def remove_value(self, x, y, is_backtrack):
-        self.state[(x, y)].remove_value(is_backtrack)
-
-    def is_path_legal(self, path):
-        if len(path) == 1:
-            num = self.state[path[0]].number
-            is_head = self.state[path[0]].head
-            if num == 1 and is_head:
-                return True
-
-            return False
-
-        for x, y in path:
-            if self.state[(x, y)].colored:
-                return False
-        return True
-
-    def color_path(self, path):
-        """
-        gets vars' array and a path, and colors it's coordinates in the right color.
-        :param vars:
-        :param path:
-        :return: doesn't return anything, just updating the vars' array.
-        """
-        color = self.state[path[0]].color
-        for x, y in path:
-            self.set_cell_color(x, y, color)
-
-    def uncolor_path(self, path, is_backtrack):
-        """
-        gets vars' array and a path, and colors it's coordinates in the right color.
-        :param vars:
-        :param path:
-        :return: doesn't return anything, just updating the vars' array.
-        """
-        for x, y in path:
-            self.remove_value(x, y, is_backtrack)
-
-    # def add_move(self, move):
-    #     """
-    #     Try to add <player>'s <move>.
-    #
-    #     If the move is legal, the board state is updated; if it's not legal, a
-    #     ValueError is raised.
-    #
-    #     Returns the number of tiles placed on the board.
-    #     """
-    # if not self.check_move_valid(player, move):
-    #     raise ValueError("Move is not allowed")
-    #
-    # piece = move.piece
-    # self.pieces[player, move.piece_index] = False  # mark piece as used
-    #
-    # # Update internal state for each tile
-    # for (xi, yi) in move.orientation:
-    #     (x, y) = (xi + move.x, yi + move.y)
-    #     self.state[y, x] = player
-    #
-    #     # Nobody can play on this square
-    #     for p in range(self.num_players):
-    #         self._legal[p][y][x] = False
-    #
-    #     # This player can't play next to this square
-    #     if x > 0:
-    #         self._legal[player, y, x - 1] = False
-    #     if x < self.board_w - 1:
-    #         self._legal[player, y, x + 1] = False
-    #     if y > 0:
-    #         self._legal[player, y - 1, x] = False
-    #     if y < self.board_h - 1:
-    #         self._legal[player, y + 1, x] = False
-    #
-    #     # The diagonals are now attached
-    #     if x > 0 and y > 0:
-    #         self.connected[player, y - 1, x - 1] = True
-    #     if x > 0 and y < self.board_h - 1:
-    #         self.connected[player, y + 1, x - 1] = True
-    #     if x < self.board_w - 1 and y < self.board_h - 1:
-    #         self.connected[player, y + 1, x + 1] = True
-    #     if x < self.board_w - 1 and y > 0:
-    #         self.connected[player, y - 1, x + 1] = True
-    #
-    # self.scores[player] += piece.get_num_tiles()
-    # return piece.get_num_tiles()
-
-    # def do_move(self, player, move):
-    #     """
-    #     Performs a move, returning a new board
-    #     """
-    #     new_board = self.__copy__()
-    #     new_board.add_move(player, move)
-    #
-    #     return new_board
-    #
-    # def get_legal_moves(self, player):
-    #     """
-    #     Returns a list of legal moves for given player for this board state
-    #     """
-    #     # Generate all legal moves
-    #     move_list = []
-    #     for piece in self.piece_list:
-    #         for x in range(self.board_w):
-    #             for y in range(self.board_h):
-    #                 for ori in piece:
-    #                     new_move = Move(piece,
-    #                                     self.piece_list.pieces.index(piece),
-    #                                     ori, x, y)
-    #                     if self.check_move_valid(player, new_move):
-    #                         move_list.append(new_move)
-    #     return move_list
-    #
-    # def check_move_valid(self, player, move):
-    #     """
-    #     Check if <player> can legally perform <move>.
-    #
-    #     For a move to be valid, it must:
-    #     - Use a piece that is available
-    #     - Be completely in bounds
-    #     - Not be intersecting any other tiles
-    #     - Not be adjacent to any of the player's other pieces
-    #     - Be diagonally attached to one of the player's pieces or their corner
-    #
-    #     Return True if the move is legal or False otherwise.
-    #     """
-    #     if not self.pieces[player, move.piece_index]:
-    #         # piece has already been used
-    #         return False
-    #
-    #     attached_corner = False
-    #
-    #     for (x, y) in move.orientation:
-    #         # If any tile is illegal, this move isn't valid
-    #         if not self.check_tile_legal(player, x + move.x, y + move.y):
-    #             return False
-    #
-    #         if self.check_tile_attached(player, x + move.x, y + move.y):
-    #             attached_corner = True
-    #
-    #         # If at least one tile is attached, this move is valid
-    #     return attached_corner
-
-    # def check_tile_legal(self, player, x, y):
-    #     """
-    #     Check if it's legal for <player> to place one tile at (<x>, <y>).
-    #
-    #     Legal tiles:
-    #     - Are in bounds
-    #     - Don't intersect with existing tiles
-    #     - Aren't adjacent to the player's existing tiles
-    #
-    #     Returns True if legal or False if not.
-    #     """
-    #
-    #     # Make sure tile in bounds
-    #     if x < 0 or x >= self.board_w or y < 0 or y >= self.board_h:
-    #         return False
-    #
-    #     # Otherwise, it's in the lookup table
-    #     return self._legal[player, y, x]
-
-    # def check_tile_attached(self, player, x, y):
-    #     """Check if (<x>, <y>) is diagonally attached to <player>'s moves.
-    #
-    #     Note that this does not check if this move is legal.
-    #
-    #     Returns True if attached or False if not.
-    #     """
-    #
-    #     # Make sure tile in bounds
-    #     if x < 0 or x >= self.board_w or y < 0 or y >= self.board_h:
-    #         return False
-    #
-    #     # Otherwise, it's in the lookup table
-    #     return self.connected[player, y, x]
 
     # ** Boolean Getters ** #
     def is_numbered_cell(self, x, y):
         return self.get_number_in_cell(x, y) != 0
 
     def is_colored_cell(self, x, y):
-        return self.get_cell_color(x, y) != 0
+        return self.get_cell_coloring(x, y) != 0
 
     # ** Getters ** #
-    def get_var_by_pos(self, pos):
-        return self.state[pos]
-
-    def get_pos_by_var(self, cell, coords):
-        for index in range(len(coords)):
-            if cell.pos == coords[index].pos:
-                return index
-
     def get_number_in_cell(self, x, y):
         return self.matrix[x][y][0][0]
 
     def get_number_color_in_cell(self, x, y):
         return self.matrix[x][y][0][1]
 
-    def get_cell_color(self, x, y):
+    def get_cell_coloring(self, x, y):
         return self.matrix[x][y][1]
 
     def get_width(self):
@@ -352,28 +107,42 @@ class Board:
         else:
             return self.numbered_cells
 
+    def get_board_score(self):
+        return self.board_score
+
     # ** Setters ** #
-    def set_cell_color(self, x, y, cell_color):
+    def set_cell_coloring(self, x, y, cell_color):
         self.matrix[x][y][1] = cell_color
-        self.state[(x, y)].set_cell_color(cell_color)
+
+    def set_cells_coloring(self, cells, cell_color):
+        """
+        Fill all the cells in list with the given color
+        :param cells: List of cells (x, y)
+        :param cell_color: Color indicator
+        """
+        for cell in cells:
+            self.matrix[cell[0]][cell[1]][1] = cell_color
+
+    def set_board_score(self, score):
+        self.board_score = score
 
     # ** Possible Paths Finder ** #
     def get_possible_paths(self, x, y):
         """
         Get all possible paths from the cell (x, y).
-        If cell is not number (has value 0), return None
+        If cell is not number (has value 0), return empty list
         If cell is number (has value different from 0), return all valid paths to all (end_x, end_y) such that
         the number and number_color are the same.
         :param x: Row selector.
         :param y: Column selector.
-        :return: List of paths. Path is a list of ((number, number_color), cell_color).
+        :return: List of paths. Path is a list of [(number, number_color), cell_color].
         """
         paths = []
         length = self.get_number_in_cell(x, y)
 
         # If no path
         if length == 0:
-            return None
+            return []
 
         # If path contains only 1 cell, return the only possible path
         if length == 1:
@@ -418,18 +187,17 @@ class Board:
         :param end_x: Row selector for end position.
         :param end_y: Column selector for end position.
         :param length: Length of path to look for.
-        :return: List of paths. Path is a list of ((number, number_color), cell_color).
+        :return: List of paths. Path is a list of [(number, number_color), cell_color].
         """
         # If function parameters are not valid, return empty list
         if end_x < 0 or self.board_h <= end_x or end_y < 0 or self.board_w <= end_y \
-                or self.get_number_in_cell(x, y) != length \
                 or self.get_number_in_cell(end_x, end_y) != length \
                 or self.get_number_color_in_cell(x, y) != self.get_number_color_in_cell(end_x, end_y):
             return []
 
         # Run recursive search on board
         paths = self.get_paths_rec([(x, y)], end_x, end_y, length - 1, length)
-        paths_mask = [True for i in range(len([paths]))]
+        paths_mask = [True for i in range(len(paths))]
 
         # Remove paths with same footprint. The board must have only 1 solution, so if 2 or more paths cover
         # the same cells, all of must be invalid (Assume one of them is the right path => The other is also valid =>
@@ -456,7 +224,8 @@ class Board:
 
         # If end is too far for path or we got to a number (we checked earlier and this is not the end point)
         #  don't continue search for this direction
-        if manhattan_distance((x, y), (end_x, end_y)) > steps or self.get_number_in_cell(x, y) != 0:
+        if manhattan_distance((x, y), (end_x, end_y)) > steps \
+                or (self.get_number_in_cell(x, y) != 0 and length - 1 != steps):
             return []
 
         # Collect valid paths from this point
@@ -472,5 +241,3 @@ class Board:
             paths += self.get_paths_rec(current_path + [possible_step], end_x, end_y, steps - 1, length)
 
         return paths
-
-

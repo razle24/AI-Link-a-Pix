@@ -82,9 +82,6 @@ class Game:
     def get_moves_counter(self):
         return self.moves_counter
 
-    def get_list_of_numbered_cells(self):
-        return self.board.get_list_of_numbered_cells()
-
     # **  Setters  ** #
     def set_search(self, search):
         self.search = search
@@ -94,12 +91,12 @@ class Game:
 
 
 if __name__ == '__main__':
-    xml = get_xml_from_path('boards/small_color.xml')
+    xml = get_xml_from_path('boards/small_bw.xml')
     my_game = Game(xml)
-    heads = my_game.get_list_of_numbered_cells()
-    csp(my_game.board, heads, True)
+    heads = my_game.board.get_list_of_numbered_cells()
+    done_board = csp(my_game.board, heads, True)
 
     print("Our board:")
-    print(my_game.board)
+    print(done_board)
     print("Goal board:")
     print(my_game.goal_board)

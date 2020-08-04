@@ -1,7 +1,4 @@
-import sys
-import xml.etree.ElementTree as ET
 import xmltodict
-from xml.dom import minidom
 
 
 def get_xml_from_path(path):
@@ -61,7 +58,7 @@ def create_tuple_path(str_path):
     result = []
     path_list = str_path.split()
     for i in range(0, len(path_list), 2):
-        result.append((int(path_list[i+1]), int(path_list[i])))
+        result.append((int(path_list[i + 1]), int(path_list[i])))
     return result
 
 

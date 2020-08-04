@@ -60,8 +60,9 @@ class BoardGraph:
                 if cell[0] != 0:
                     self.canvas_numbers[(i, j)] = self.graph.DrawText(text=str(cell[0]),
                                                                       color=self.colors[cell[1]],
-                                                                      location=((self.cell_size * i + (self.cell_size / 2)),
-                         (self.cell_size * j + (self.cell_size / 2))))
+                                                                      location=(
+                                                                      (self.cell_size * i + (self.cell_size / 2)),
+                                                                      (self.cell_size * j + (self.cell_size / 2))))
 
                     self.graph.bring_figure_to_front(self.canvas_numbers[(i, j)])
 
