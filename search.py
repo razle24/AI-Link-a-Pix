@@ -70,7 +70,7 @@ def csp(board, heads, mrv=False, lcv=False):
     """
     Works as follows:
         state - Board state (what cells are filled and with what color). Since there are many invalid board states,
-                we decided to search for paths instead of individual cells, skipping many invalid states.
+                we decided to search for paths instead of individual cells, skipping many invalid routes.
         goal state - Given Board which is filled correctly.
         variables - Cell (x,y) on the board. Some of them has color coded number.
         domain - Different paths from (x,y) in length of the cell's number.
@@ -82,7 +82,7 @@ def csp(board, heads, mrv=False, lcv=False):
         Search - We use backtracking to for the search. Each time we find a path for 2 numbered cells at a time.
                  So we skip many invalid states.
 
-        variable selection - We can choose the order of the cells assignment by changing the order of heads
+        variable selection - We can choose the order of the cells assignment by changing the order of 'heads'
         domain selection - Each path can be scored using heuristic and than ordered from best to worst.
                            We can also remove path that will cause inevitable failure (blocking a cell from
                            forming a path)

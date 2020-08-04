@@ -59,7 +59,7 @@ class Board:
         out_str = []
         for i in range(self.board_h):
             for j in range(self.board_w):
-                out_str.append(str(self.matrix[i][j]))
+                out_str.append(str(self.matrix[i][j][1]))
             out_str.append('\n')
         return ''.join(out_str)
 

@@ -100,3 +100,4 @@ if __name__ == '__main__':
     print(done_board)
     print("Goal board:")
     print(my_game.goal_board)
+    print(f'Same: {done_board == my_game.goal_board}')
