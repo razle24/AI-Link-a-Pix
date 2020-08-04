@@ -25,7 +25,7 @@ class BoardGraph:
         self.colors = game.get_colors()
 
         # 2D array (w*h) contains tuples of ((number, number_color), color) of the board
-        self.board = self.game.get_current_board()
+        self.board = self.game.get_current_matrix()
 
         # Dictionary of canvas items, each (x, y) is ID of the correspond item on the canvas
         self.canvas_background = dict()
@@ -87,10 +87,10 @@ def runGUI(layout):
 
     # Event Loop to process 'events' and get the 'values' of the inputs
     while True:
-        if run_game is True:
-            event, values = window.finalize()
-        else:
-            event, values = window.read()
+        # if run_game is True:
+        #     event, values = window.finalize()
+        # else:
+        event, values = window.read()
 
         # If user closes window, close the program
         if event == sg.WIN_CLOSED:
@@ -159,7 +159,9 @@ def runGUI(layout):
 
         if run_game:
             print(f'Turn: {game.get_moves_counter()}')
-            game.do_move()
+            path, color = game.do_move()
+            for cell in path:
+                graph.drew_color_on_board(cell[0], cell[1], color)
 
     window.close()
 
@@ -216,7 +218,8 @@ if __name__ == '__main__':
         [sg.HorizontalSeparator()],
         [sg.Text(STATS_TEXT)],
         [
-            sg.Output(key='textbox_stats', size=(100, 10))
+            # TODO: uncomment when done debugging
+            # sg.Output(key='textbox_stats', size=(100, 10))
         ]
     ]
 
