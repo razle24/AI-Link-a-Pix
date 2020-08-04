@@ -80,6 +80,13 @@ class Board:
     def is_colored_cell(self, x, y):
         return self.get_cell_coloring(x, y) != 0
 
+    def is_valid_path(self, path):
+        for cell in path:
+            if self.is_colored_cell(cell[0], cell[1]):
+                return False
+
+        return True
+
     # ** Getters ** #
     def get_number_in_cell(self, x, y):
         return self.matrix[x][y][0][0]
@@ -98,14 +105,10 @@ class Board:
 
     def get_list_of_numbered_cells(self):
         if self.numbered_cells is None:
-            self.numbered_cells = []
-            for i in range(self.board_h):
-                for j in range(self.board_w):
-                    if self.is_numbered_cell(i, j):
-                        self.numbered_cells.append((i, j))
-            return self.numbered_cells
-        else:
-            return self.numbered_cells
+            self.numbered_cells = [(i, j) for i in range(self.board_h) for j in range(self.board_w)
+                                   if self.is_numbered_cell(i, j)]
+
+        return self.numbered_cells
 
     def get_board_score(self):
         return self.board_score
@@ -200,8 +203,8 @@ class Board:
         paths_mask = [True for i in range(len(paths))]
 
         # Remove paths with same footprint. The board must have only 1 solution, so if 2 or more paths cover
-        # the same cells, all of must be invalid (Assume one of them is the right path => The other is also valid =>
-        # => There is more than one solution to the board).
+        # the same cells in different order, all of them must be invalid (Assume one of them is the right path =>
+        # => The other is also valid => There is more than one solution to the board).
         for i, path_A in enumerate(paths):
             for j, path_B in enumerate(paths[i + 1:], start=(i + 1)):
                 if paths_mask[j] is True and len(path_A) == len(path_B) and set(path_A) == set(path_B):

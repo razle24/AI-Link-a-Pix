@@ -116,7 +116,7 @@ def backtrack(board, i, numbered_cells):
 
     for path in paths:
         end_x, end_y = path[-1]
-        if not board.is_colored_cell(end_x, end_y):
+        if board.is_valid_path(path):
             next_board = copy.deepcopy(board)
             next_board.set_cells_coloring(path, board.get_number_color_in_cell(x, y))
             done_board = backtrack(next_board, i + 1, numbered_cells)

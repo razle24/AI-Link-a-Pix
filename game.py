@@ -91,7 +91,7 @@ class Game:
 
 
 if __name__ == '__main__':
-    xml = get_xml_from_path('boards/small_bw.xml')
+    xml = get_xml_from_path('boards/small_color.xml')
     my_game = Game(xml)
     heads = my_game.board.get_list_of_numbered_cells()
     done_board = csp(my_game.board, heads, True)
