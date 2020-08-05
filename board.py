@@ -1,5 +1,5 @@
 from util import manhattan_distance
-
+from copy import copy, deepcopy
 
 def generate_matrix_from_xml_dict(xml_dict, return_goal_matrix=False):
     """
@@ -49,11 +49,11 @@ class Board:
         self.num_of_colors = num_of_colors
         self.matrix = b_matrix
 
-
         # Fill only when used
-        self.numbered_cells = None
         self.board_score = None
-        self.possible_paths = [[None for i in range(self.board_w)] for j in range(self.board_h)]
+        self.numbered_cells = [(i, j) for i in range(self.get_width()) for j in range(self.get_height())
+                               if self.is_numbered_cell(i, j)]
+        self.possible_paths = [[None for i in range(self.get_width())] for j in range(self.get_height())]
 
     def __str__(self):
         out_str = []
@@ -72,6 +72,9 @@ class Board:
     def __copy__(self):
         cpy_board = Board(self.num_of_colors, self.matrix)
         cpy_board.__dict__.update(self.__dict__)
+        cpy_board.matrix = deepcopy(self.matrix)
+
+        return cpy_board
 
     # ** Boolean Getters ** #
     def is_numbered_cell(self, x, y):
@@ -104,10 +107,6 @@ class Board:
         return len(self.matrix)
 
     def get_list_of_numbered_cells(self):
-        if self.numbered_cells is None:
-            self.numbered_cells = [(i, j) for i in range(self.board_h) for j in range(self.board_w)
-                                   if self.is_numbered_cell(i, j)]
-
         return self.numbered_cells
 
     def get_board_score(self):

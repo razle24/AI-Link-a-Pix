@@ -166,7 +166,7 @@ def backtrack(board, i, numbered_cells):
             if invalid_state(board, path):
                 continue
 
-            next_board = copy.deepcopy(board)
+            next_board = copy.copy(board)
             next_board.set_cells_coloring(path, board.get_number_color_in_cell(x, y))
 
             yield next_board, path, board.get_number_color_in_cell(x, y)

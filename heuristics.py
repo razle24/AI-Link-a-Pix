@@ -19,7 +19,7 @@ def invalid_state(board, path):
     if not board.is_valid_path(path):
         return float('-inf')
 
-    board_copy = copy.deepcopy(board)
+    board_copy = copy.copy(board)
     color = board.get_number_color_in_cell(path[0][0], path[0][1])
     board_copy.set_cells_coloring(path, color)
 
