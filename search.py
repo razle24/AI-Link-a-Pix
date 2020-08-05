@@ -29,10 +29,9 @@ class Problem:
     """
     represents the problem we want to solve.
     """
-    def __init__(self, board, goal_board, starting_point=(0, 0)):
+    def __init__(self, board, goal_board):
         self.board = board
         self.goal_state = goal_board
-        self.starting_point = starting_point
         self.expanded = 0
     
     # TODO - check if needed
@@ -49,7 +48,7 @@ class Problem:
         """
         return state == self.goal_state
 
-    def get_successors(self, state):
+    def get_successors(self, board):
         """
         state: Search state
 
@@ -59,38 +58,41 @@ class Problem:
         required to get there, and 'stepCost' is the incremental
         cost of expanding to that successor
         """
-        # # Note that for the search problem, there is only one player - #0
-        # self.expanded = self.expanded + 1
-        # numbered_cells = state.numbered_cells
-        # for i, j in numbered_cells:
-        #     paths = state.get_possible_moves(i, j)
-        #     for path in paths:
-        pass
-
+        successors = []
+        self.expanded = self.expanded + 1
+        numbered_cells = board.numbered_cells
+        for i, j in numbered_cells:
+            paths = board.get_possible_moves(i, j)
+            for path in paths:
+                cur_board = copy.copy(board)
+                # color = board.get_cell_coloring(path[0][0], path[0][1])
+                # cur_board.set_cells_coloring(path, color)
+                successors += [(cur_board, path)]
+        return successors
+        
 
 def a_star_search(problem, heuristic):
     """
     Search the node that has the lowest combined cost and heuristic first.
     """
-    i = 0
     explored = set()
     queue = util.PriorityQueue()
 
     # Contains 'state', 'total cost from start to state' and 'list of actions to the state'
-    queue.push(StateNode(problem.get_start_state(), []), 0)
+    queue.push(problem.board, 0)
 
     while not queue.isEmpty():
-        current, actions_to_current = queue.pop()
+        cur_board = queue.pop()
 
-        if problem.is_goal_state(current):
-            return actions_to_current
-
-        for child_state, action, step_cost in problem.get_successors(current):
-            if child_state not in explored:
-                total_cost = step_cost + heuristic(child_state, problem)
-                if total_cost != math.inf:
-                    queue.push(StateNode(child_state, actions_to_current + [action]), total_cost)
-        explored.add(current)
+        if problem.is_goal_state(cur_board):
+            return cur_board
+        succ = problem.get_successors(cur_board)
+        for next_board, next_path in succ:
+            if next_board not in explored:
+                total_cost = heuristic(next_board, next_path)
+                if total_cost != float('-inf'):
+                    queue.push(next_board, total_cost)
+        explored.add(cur_board)
     return None
 
 
@@ -160,7 +162,8 @@ def backtrack(board, i, numbered_cells):
     paths = board.get_possible_paths(x, y)
     if len(paths) > 1:
         lcv_heuristic(board)
-        paths.sort(key=lambda path: count_possible_paths(board, path), reverse=True)
+        # paths.sort(key=lambda path: count_possible_paths(board, path), reverse=True)
+        paths.sort(key=lambda path: stick_to_path_wall_heuristic(board, path), reverse=True)
 
     for path in paths:
         end_x, end_y = path[-1]
