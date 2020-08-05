@@ -129,6 +129,22 @@ class Board:
     def set_board_score(self, score):
         self.board_score = score
 
+    def get_possible_moves(self, x, y):
+        """
+        returns all valid paths from the head (x, y)
+        :param x:
+        :param y:
+        :return:
+        """
+        ret = []
+        paths = self.get_possible_paths(x, y)
+        for path in paths:
+            if self.is_valid_path(path):
+                ret += [path]
+        if ret:
+            return ret
+        return None
+    
     # ** Possible Paths Finder ** #
     def get_possible_paths(self, x, y):
         """
@@ -180,7 +196,7 @@ class Board:
             offset = not offset
 
         return paths
-
+    
     def get_paths(self, x, y, end_x, end_y, length):
         """
         Find all valid paths from (x, y) to (end_x, end_y).

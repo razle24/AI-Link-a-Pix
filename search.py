@@ -1,50 +1,98 @@
 import copy
+import math
+from heuristics import *
+import util
+from board import Board
 
 FAILURE = 'Failure'
 
 
-# class StateNode:
-#     """
-#     Fix problem with util.PriorityQueue which tried (and failed) to use '<' operator on a tuple.
-#     This class is basically the same tuple with overloaded '<' operator.
-#     """
-#
-#     def __init__(self, state, actions):
-#         self.state = state
-#         self.actions = actions
-#
-#     def __lt__(self, other):
-#         return self.state.score(0) < other.score(0)
-#
-#     def __iter__(self):
-#         yield self.state
-#         yield self.actions
-#
-#
-# def a_star_search(problem, heuristic):
-#     """
-#     Search the node that has the lowest combined cost and heuristic first.
-#     """
-#     i = 0
-#     explored = set()
-#     queue = util.PriorityQueue()
-#
-#     # Contains 'state', 'total cost from start to state' and 'list of actions to the state'
-#     queue.push(StateNode(problem.get_start_state(), []), 0)
-#
-#     while not queue.isEmpty():
-#         current, actions_to_current = queue.pop()
-#
-#         if problem.is_goal_state(current):
-#             return actions_to_current
-#
-#         for child_state, action, step_cost in problem.get_successors(current):
-#             if child_state not in explored:
-#                 total_cost = step_cost + heuristic(child_state, problem)
-#                 if total_cost != math.inf:
-#                     queue.push(StateNode(child_state, actions_to_current + [action]), total_cost)
-#         explored.add(current)
-#     return None
+
+class StateNode:
+    """
+    Fix problem with util.PriorityQueue which tried (and failed) to use '<' operator on a tuple.
+    This class is basically the same tuple with overloaded '<' operator.
+    """
+
+    def __init__(self, state, actions):
+        self.state = state
+        self.actions = actions
+
+    def __lt__(self, other):
+        return self.state.score(0) < other.score(0)
+
+    def __iter__(self):
+        yield self.state
+        yield self.actions
+
+
+class Problem:
+    """
+    represents the problem we want to solve.
+    """
+    def __init__(self, board, goal_board, starting_point=(0, 0)):
+        self.board = board
+        self.goal_state = goal_board
+        self.starting_point = starting_point
+        self.expanded = 0
+    
+    # TODO - check if needed
+    def get_start_state(self):
+        """
+        Returns the start state for the search problem
+        """
+        return self.board
+
+    def is_goal_state(self, state):
+        """
+        state: Search state
+        Returns True if and only if the state is a valid goal state
+        """
+        return state == self.goal_state
+
+    def get_successors(self, state):
+        """
+        state: Search state
+
+        For a given state, this should return a list of triples,
+        (successor, action, stepCost), where 'successor' is a
+        successor to the current state, 'action' is the action
+        required to get there, and 'stepCost' is the incremental
+        cost of expanding to that successor
+        """
+        # # Note that for the search problem, there is only one player - #0
+        # self.expanded = self.expanded + 1
+        # numbered_cells = state.numbered_cells
+        # for i, j in numbered_cells:
+        #     paths = state.get_possible_moves(i, j)
+        #     for path in paths:
+        pass
+
+
+def a_star_search(problem, heuristic):
+    """
+    Search the node that has the lowest combined cost and heuristic first.
+    """
+    i = 0
+    explored = set()
+    queue = util.PriorityQueue()
+
+    # Contains 'state', 'total cost from start to state' and 'list of actions to the state'
+    queue.push(StateNode(problem.get_start_state(), []), 0)
+
+    while not queue.isEmpty():
+        current, actions_to_current = queue.pop()
+
+        if problem.is_goal_state(current):
+            return actions_to_current
+
+        for child_state, action, step_cost in problem.get_successors(current):
+            if child_state not in explored:
+                total_cost = step_cost + heuristic(child_state, problem)
+                if total_cost != math.inf:
+                    queue.push(StateNode(child_state, actions_to_current + [action]), total_cost)
+        explored.add(current)
+    return None
 
 
 def mrv_heuristic(heads):
@@ -111,8 +159,9 @@ def backtrack(board, i, numbered_cells):
         return backtrack(board, i + 1, numbered_cells)
 
     paths = board.get_possible_paths(x, y)
-
-    # TODO: sort paths base on heuristic score
+    if len(paths) > 1:
+        paths.sort(key=lambda path: invalid_state(path, board), reverse=True)
+    # sorted(paths, key=lambda path: invalid_state(board, path), reverse=True)
 
     for path in paths:
         end_x, end_y = path[-1]
@@ -124,6 +173,10 @@ def backtrack(board, i, numbered_cells):
                 return done_board
 
     return None
+
+
+search_dict = {"CSP" : csp, "A*": a_star_search}
+
 
 #
 # def backtrack(coords, board, paths):
