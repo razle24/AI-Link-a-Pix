@@ -1,6 +1,7 @@
 from agent import *
 from board import *
 from search import *
+from heuristics import *
 
 
 class Game:
@@ -21,7 +22,7 @@ class Game:
         self.search = search_type
         self.heuristic = heuristic
 
-        self.successors = []
+        # self.successors = []
         self.moves_counter = 0
 
         self.boards_generator = None
@@ -99,11 +100,12 @@ class Game:
 if __name__ == '__main__':
     xml = get_xml_from_path('boards/20_20_color.xml')
     my_game = Game(xml)
+    # print("count empty: ", count_empty_cells(my_game.board))
     heads = my_game.board.get_list_of_numbered_cells()
     done_board = csp(my_game.board, heads, True)
-
     print("Our board:")
     print(done_board)
     print("Goal board:")
     print(my_game.goal_board)
+    # print("count empty: ", count_empty_cells(done_board))
     print(f'Same: {done_board == my_game.goal_board}')
