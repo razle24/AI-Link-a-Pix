@@ -94,13 +94,13 @@ def a_star_search(problem, heuristic):
     return None
 
 
-def mrv_heuristic(heads):
+def mrv_heuristic(board ):
     """
     Sort the list by number value (from small to big)
     :param heads:
     :return:
     """
-    heads.sort(key=lambda x: x[0], reverse=False)
+    board.numbered_cells.sort(key=lambda coord: board.get_number_in_cell(coord[0], coord[1]), reverse=False)
 
 
 def lcv_heuristic(heads, board):
@@ -141,7 +141,7 @@ def csp(board, heads, mrv=False, lcv=False):
     """
     paths = []
     if mrv:
-        mrv_heuristic(heads)
+        mrv_heuristic(board)
 
     if lcv:
         lcv_heuristic(heads, board)
