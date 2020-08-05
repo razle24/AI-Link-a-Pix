@@ -6,7 +6,7 @@ import agent as ag
 import game as gm
 from texts import *
 
-GRAPH_SIZE = 600
+GRAPH_SIZE = 700
 MAX_SIZE_TO_SHOW_NUMBERS = 25
 
 class BoardGraph:
@@ -38,9 +38,9 @@ class BoardGraph:
 
     def draw_board_borders(self):
         curr_w = 0
-        for i in range(self.w):
+        for i in range(self.h):
             curr_h = 0
-            for j in range(self.h):
+            for j in range(self.w):
                 self.canvas_background[(i, j)] = self.graph.DrawRectangle(
                     top_left=(curr_h + 1, curr_w + 1),
                     bottom_right=(curr_h + self.cell_size,
@@ -54,8 +54,8 @@ class BoardGraph:
             curr_w += self.cell_size
 
     def draw_board_numbers(self):
-        for i in range(self.w):
-            for j in range(self.h):
+        for i in range(self.h):
+            for j in range(self.w):
                 cell = self.board[i][j][0]
                 if cell[0] != 0:
                     self.canvas_numbers[(i, j)] = self.graph.DrawText(text=str(cell[0]),

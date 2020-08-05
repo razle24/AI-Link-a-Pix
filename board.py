@@ -51,7 +51,7 @@ class Board:
 
         # Fill only when used
         self.board_score = None
-        self.numbered_cells = [(i, j) for i in range(self.get_width()) for j in range(self.get_height())
+        self.numbered_cells = [(i, j) for i in range(self.get_height()) for j in range(self.get_width())
                                if self.is_numbered_cell(i, j)]
         self.possible_paths = [[None for i in range(self.get_width())] for j in range(self.get_height())]
 

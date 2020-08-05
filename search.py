@@ -156,10 +156,12 @@ def backtrack(board, i, numbered_cells):
     if board.is_colored_cell(x, y):
         yield board, [(x, y)], board.get_number_color_in_cell(x, y)
         yield from backtrack(board, i + 1, numbered_cells)
-    lcv_heuristic(board)
+
     paths = board.get_possible_paths(x, y)
     if len(paths) > 1:
+        lcv_heuristic(board)
         paths.sort(key=lambda path: count_possible_paths(board, path), reverse=True)
+
     for path in paths:
         end_x, end_y = path[-1]
         if board.is_valid_path(path):
