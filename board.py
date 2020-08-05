@@ -54,6 +54,7 @@ class Board:
         # Fill only when used
         self.numbered_cells = None
         self.board_score = None
+        self.possible_paths = [[None for i in range(self.board_w)] for j in range(self.board_h)]
 
     def __str__(self):
         out_str = []
@@ -71,6 +72,8 @@ class Board:
 
     def __copy__(self):
         cpy_board = Board(self.num_of_colors, self.matrix)
+        cpy_board.numbered_cells = self.numbered_cells
+        cpy_board.possible_paths = self.possible_paths
         return cpy_board
 
     # ** Boolean Getters ** #
@@ -140,46 +143,49 @@ class Board:
         :param y: Column selector.
         :return: List of paths. Path is a list of [(number, number_color), cell_color].
         """
-        paths = []
-        length = self.get_number_in_cell(x, y)
+        if self.possible_paths[x][y] is None:
+            paths = []
+            length = self.get_number_in_cell(x, y)
 
-        # If no path
-        if length == 0:
-            return []
+            # If no path
+            if length == 0:
+                return []
 
-        # If path contains only 1 cell, return the only possible path
-        if length == 1:
-            return [[(x, y)]]
+            # If path contains only 1 cell, return the only possible path
+            if length == 1:
+                return [[(x, y)]]
 
-        # Odd numbers must have odd manhattan distance between start and end
-        # Even numbers must have even manhattan distance between start and end
-        # This loop will only check possible end coordinates for the path
-        offset = length % 2 == 0
-        # For every possible x
-        for i in range(length + 1):
-            # And every other y such that i + j <= length
-            for j in range(offset, length - i, 2):
-                end_x = x + i
-                m_end_x = x - i
+            # Odd numbers must have odd manhattan distance between start and end
+            # Even numbers must have even manhattan distance between start and end
+            # This loop will only check possible end coordinates for the path
+            offset = length % 2 == 0
+            # For every possible x
+            for i in range(length + 1):
+                # And every other y such that i + j <= length
+                for j in range(offset, length - i, 2):
+                    end_x = x + i
+                    m_end_x = x - i
 
-                end_y = y + j
-                m_end_y = y - j
+                    end_y = y + j
+                    m_end_y = y - j
 
-                if i != 0:
-                    paths += self.get_paths(x, y, end_x, end_y, length)
-                    paths += self.get_paths(x, y, m_end_x, end_y, length)
+                    if i != 0:
+                        paths += self.get_paths(x, y, end_x, end_y, length)
+                        paths += self.get_paths(x, y, m_end_x, end_y, length)
 
-                    if j != 0:
+                        if j != 0:
+                            paths += self.get_paths(x, y, end_x, m_end_y, length)
+                            paths += self.get_paths(x, y, m_end_x, m_end_y, length)
+
+                    elif j != 0:
+                        paths += self.get_paths(x, y, end_x, end_y, length)
                         paths += self.get_paths(x, y, end_x, m_end_y, length)
-                        paths += self.get_paths(x, y, m_end_x, m_end_y, length)
 
-                elif j != 0:
-                    paths += self.get_paths(x, y, end_x, end_y, length)
-                    paths += self.get_paths(x, y, end_x, m_end_y, length)
+                offset = not offset
 
-            offset = not offset
+            self.possible_paths[x][y] = paths
 
-        return paths
+        return self.possible_paths[x][y]
 
     def get_paths(self, x, y, end_x, end_y, length):
         """

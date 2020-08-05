@@ -17,6 +17,7 @@ DROP_DOWN_HEURISTIC_LIST = ['Select heuristic', 'Null heuristic', 'MRV']
 BUTTON_RESUME_TEXT = 'Run'
 BUTTON_PAUSE_TEXT = 'Pause'
 BUTTON_RESET_TEXT = 'Reset'
+BUTTON_NEXT_MOVE_TEXT = 'Next Move'
 SLIDER_SPEED_TEXT = 'Speeds: normal/fast/instant'
 
 STATS_TEXT = 'Run statistics:'

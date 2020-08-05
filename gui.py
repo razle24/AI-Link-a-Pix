@@ -6,8 +6,8 @@ import agent as ag
 import game as gm
 from texts import *
 
-GRAPH_SIZE = 420
-
+GRAPH_SIZE = 600
+MAX_SIZE_TO_SHOW_NUMBERS = 25
 
 class BoardGraph:
     def __init__(self, graph: sg.Graph, game: gm.Game):
@@ -37,10 +37,10 @@ class BoardGraph:
         self.draw_board_numbers()
 
     def draw_board_borders(self):
-        curr_h = 0
-        for i in range(self.h):
-            curr_w = 0
-            for j in range(self.w):
+        curr_w = 0
+        for i in range(self.w):
+            curr_h = 0
+            for j in range(self.h):
                 self.canvas_background[(i, j)] = self.graph.DrawRectangle(
                     top_left=(curr_h + 1, curr_w + 1),
                     bottom_right=(curr_h + self.cell_size,
@@ -50,19 +50,19 @@ class BoardGraph:
 
                 self.graph.send_figure_to_back(self.canvas_background[(i, j)])
 
-                curr_w += self.cell_size
-            curr_h += self.cell_size
+                curr_h += self.cell_size
+            curr_w += self.cell_size
 
     def draw_board_numbers(self):
-        for i in range(self.h):
-            for j in range(self.w):
+        for i in range(self.w):
+            for j in range(self.h):
                 cell = self.board[i][j][0]
                 if cell[0] != 0:
                     self.canvas_numbers[(i, j)] = self.graph.DrawText(text=str(cell[0]),
                                                                       color=self.colors[cell[1]],
                                                                       location=(
-                                                                      (self.cell_size * i + (self.cell_size / 2)),
-                                                                      (self.cell_size * j + (self.cell_size / 2))))
+                                                                      (self.cell_size * j + (self.cell_size / 2)),
+                                                                      (self.cell_size * i + (self.cell_size / 2))))
 
                     self.graph.bring_figure_to_front(self.canvas_numbers[(i, j)])
 
@@ -128,6 +128,7 @@ def runGUI(layout):
                 window['combo_heuristic'].update(disabled=True)
 
                 # Set game to run
+                game.set_boards_generator()
                 run_game = True
 
         # Pause the game from running new steps
@@ -135,7 +136,7 @@ def runGUI(layout):
             print('button_pause')
             run_game = False
 
-        # Clear the board and reast the current game, unable combo buttons and puzzle selector again
+        # Clear the board and reset the current game, unable combo buttons and puzzle selector again
         if event == 'button_reset':
             print('button_reset')
             run_game = False
@@ -152,16 +153,30 @@ def runGUI(layout):
             window.finalize()
             window['combo_heuristic'].update(disabled=False)
 
+        if event == 'button_next_move':
+            while True:
+                print(f'Turn: {game.get_moves_counter()}')
+                path, color = game.do_move()
+
+                print(path, color)
+                for cell in path:
+                    window.finalize()
+                    graph.drew_color_on_board(cell[0], cell[1], graph.colors[color])
+
+                if game.is_goal_state():
+                    break
+
         if event == 'graph_board':
             x, y = values["graph_board"]
             print(f'Clicked on x: {x}\t y: {y}')
             print(f'Figures in location {window["graph_board"].get_figures_at_location((x, y))}')
 
-        if run_game:
-            print(f'Turn: {game.get_moves_counter()}')
-            path, color = game.do_move()
-            for cell in path:
-                graph.drew_color_on_board(cell[0], cell[1], color)
+        # if run_game:
+        #     print(f'Turn: {game.get_moves_counter()}')
+        #     path, color = game.do_move()
+        #     print(path, color)
+        #     for cell in path:
+        #         graph.drew_color_on_board(cell[0], cell[1], graph.colors[color])
 
     window.close()
 
@@ -201,7 +216,8 @@ if __name__ == '__main__':
         [
             sg.Button(key='button_resume', button_text=BUTTON_RESUME_TEXT, size=(8, 1)),
             sg.Button(key='button_pause', button_text=BUTTON_PAUSE_TEXT, size=(8, 1)),
-            sg.Button(key='button_reset', button_text=BUTTON_RESET_TEXT, size=(8, 1))
+            sg.Button(key='button_reset', button_text=BUTTON_RESET_TEXT, size=(8, 1)),
+            sg.Button(key='button_next_move', button_text=BUTTON_NEXT_MOVE_TEXT, size=(8, 1))
 
             # sg.Sizer(400),
             #

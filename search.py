@@ -108,7 +108,8 @@ def backtrack(board, i, numbered_cells):
 
     x, y = numbered_cells[i]
     if board.is_colored_cell(x, y):
-        return backtrack(board, i + 1, numbered_cells)
+        yield board, [(x, y)], board.get_number_color_in_cell(x, y)
+        yield from backtrack(board, i + 1, numbered_cells)
 
     paths = board.get_possible_paths(x, y)
 
@@ -119,9 +120,12 @@ def backtrack(board, i, numbered_cells):
         if board.is_valid_path(path):
             next_board = copy.deepcopy(board)
             next_board.set_cells_coloring(path, board.get_number_color_in_cell(x, y))
+
+            yield next_board, path, board.get_number_color_in_cell(x, y)
             done_board = backtrack(next_board, i + 1, numbered_cells)
             if done_board is not None:
-                return done_board
+                yield from done_board
+            yield board, path, 0
 
     return None
 

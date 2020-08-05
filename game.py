@@ -24,6 +24,8 @@ class Game:
         self.successors = []
         self.moves_counter = 0
 
+        self.boards_generator = None
+
     def __str__(self):
         """
         prints the board
@@ -46,12 +48,13 @@ class Game:
         """
         self.moves_counter += 1
 
-        if x is not None:
-            self.board.update_cell(x, y, cell_color)
-            return [((x, y), cell_color)]
-
+        # If player controls the game
+        if x is None:
+            self.board, path, color = next(self.boards_generator, (None, None))
+            return path, color
         else:
-            pass
+            self.board.set_cell_coloring(x, y, cell_color)
+            return [((x, y), cell_color)]
 
     def is_goal_state(self):
         return self.board == self.goal_board
@@ -89,9 +92,12 @@ class Game:
     def set_heuristic(self, heuristic):
         self.heuristic = heuristic
 
+    def set_boards_generator(self):
+        self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), True)
+
 
 if __name__ == '__main__':
-    xml = get_xml_from_path('boards/small_color.xml')
+    xml = get_xml_from_path('boards/20_20_color.xml')
     my_game = Game(xml)
     heads = my_game.board.get_list_of_numbered_cells()
     done_board = csp(my_game.board, heads, True)
