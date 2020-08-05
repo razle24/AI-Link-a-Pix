@@ -49,7 +49,7 @@ class Game:
 
         # If player controls the game
         if x is None:
-            self.board, path, color = next(self.boards_generator, (None, None))
+            self.board, path, color = next(self.boards_generator, (None, None, None))
             return path, color
         else:
             self.board.set_cell_coloring(x, y, cell_color)
@@ -100,10 +100,15 @@ if __name__ == '__main__':
     my_game = Game(xml)
     # print("count empty: ", count_empty_cells(my_game.board))
     heads = my_game.board.get_list_of_numbered_cells()
-    done_board = csp(my_game.board, heads, True)
+    my_game.set_boards_generator()
+    while True:
+        my_game.do_move()
+        if my_game.is_goal_state():
+            break
+    # done_board = csp(my_game.board, heads, True)
     print("Our board:")
-    print(done_board)
+    print(my_game)
     print("Goal board:")
     print(my_game.goal_board)
     # print("count empty: ", count_empty_cells(done_board))
-    print(f'Same: {done_board == my_game.goal_board}')
+    print(f'Same: {my_game.is_goal_state()}')
