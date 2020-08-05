@@ -85,6 +85,7 @@ class Board:
 
     def is_valid_path(self, path):
         for cell in path:
+            # Directly check matrix to improve performance
             if self.matrix[cell[0]][cell[1]][1]:
                 return False
 
