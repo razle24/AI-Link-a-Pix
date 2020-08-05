@@ -1,7 +1,8 @@
 from util import manhattan_distance
-from copy import copy, deepcopy
+import copy
 
-def generate_matrix_from_xml_dict(xml_dict, return_goal_matrix=False):
+
+def generate_matrix_from_xml_dict(xml_dict):
     """
     Given xml dictionary, read the beginning and end of each path, add corresponding coordinates to the board
     :param xml_dict: As explained at agent.py
@@ -9,27 +10,23 @@ def generate_matrix_from_xml_dict(xml_dict, return_goal_matrix=False):
     :return: Matrix (w*h) with the following values [(number, number_color), cell_color].
              If no number in cell the tuple will be filled with zeros [(0, 0), 0]
     """
-    matrix = [[[(0, 0), 0] for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
+    numbers_matrix = [[(0, 0) for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
+    coloring_matrix = [[0 for i in range(xml_dict["width"])] for j in range(xml_dict["height"])]
     for number_color, paths in xml_dict["paths"].items():
         # For each path
         for path in paths:
             number = len(path)
-
-            cell_color = 0
-            # If want to return goal matrix, color also the path itself
-            if return_goal_matrix:
-                cell_color = number_color
-                for cell in path:
-                    x, y = cell
-                    matrix[x][y] = [(0, 0), cell_color]
-
             # Fill the matrix with the [(number, number_color), cell_color] of the wanted path
             x, y = path[0]
             end_x, end_y = path[len(path) - 1]
-            matrix[x][y] = [(number, number_color), cell_color]
-            matrix[end_x][end_y] = [(number, number_color), cell_color]
+            numbers_matrix[x][y] = (number, number_color)
+            numbers_matrix[end_x][end_y] = (number, number_color)
 
-    return matrix
+            for cell in path:
+                x, y = cell
+                coloring_matrix[x][y] = number_color
+
+    return numbers_matrix, coloring_matrix
 
 
 class Board:
@@ -45,34 +42,38 @@ class Board:
     - colors: the number of the colors
     """
 
-    def __init__(self, num_of_colors, b_matrix):
+    def __init__(self, num_of_colors, numbers_matrix, coloring_matrix=None):
         self.num_of_colors = num_of_colors
-        self.matrix = b_matrix
+        self.numbers_matrix = numbers_matrix
 
-        # Fill only when used
+        if coloring_matrix is None:
+            self.coloring_matrix = [[0 for i in range(self.get_width())] for j in range(self.get_height())]
+        else:
+            self.coloring_matrix = coloring_matrix
+
         self.board_score = None
+        self.possible_paths = [[None for i in range(self.get_width())] for j in range(self.get_height())]
         self.numbered_cells = [(i, j) for i in range(self.get_height()) for j in range(self.get_width())
                                if self.is_numbered_cell(i, j)]
-        self.possible_paths = [[None for i in range(self.get_width())] for j in range(self.get_height())]
 
     def __str__(self):
         out_str = []
         for i in range(self.get_width()):
             for j in range(self.get_height()):
-                out_str.append(str(self.matrix[i][j][1]))
+                out_str.append(str(self.coloring_matrix[i][j]))
             out_str.append('\n')
         return ''.join(out_str)
 
     def __eq__(self, other):
-        return self.matrix == other.matrix
+        return self.coloring_matrix == other.coloring_matrix
 
     def __hash__(self):
-        return hash(str(self.matrix))
+        return hash(str(self.numbers_matrix) + str(self.coloring_matrix))
 
     def __copy__(self):
         cpy_board = self.__new__(self.__class__)  # Create empty object
         cpy_board.__dict__.update(self.__dict__)  # Shallow copy everything
-        cpy_board.matrix = deepcopy(self.matrix)  # Deep copy the matrix
+        cpy_board.coloring_matrix = copy.deepcopy(self.coloring_matrix)  # Deep copy only the coloring matrix
 
         return cpy_board
 
@@ -86,26 +87,26 @@ class Board:
     def is_valid_path(self, path):
         for cell in path:
             # Directly check matrix to improve performance
-            if self.matrix[cell[0]][cell[1]][1]:
+            if self.coloring_matrix[cell[0]][cell[1]]:
                 return False
 
         return True
 
     # ** Getters ** #
     def get_number_in_cell(self, x, y):
-        return self.matrix[x][y][0][0]
+        return self.numbers_matrix[x][y][0]
 
     def get_number_color_in_cell(self, x, y):
-        return self.matrix[x][y][0][1]
+        return self.numbers_matrix[x][y][1]
 
     def get_cell_coloring(self, x, y):
-        return self.matrix[x][y][1]
+        return self.coloring_matrix[x][y]
 
     def get_width(self):
-        return len(self.matrix[0])
+        return len(self.numbers_matrix[0])
 
     def get_height(self):
-        return len(self.matrix)
+        return len(self.numbers_matrix)
 
     def get_list_of_numbered_cells(self):
         return self.numbered_cells
@@ -115,7 +116,7 @@ class Board:
 
     # ** Setters ** #
     def set_cell_coloring(self, x, y, cell_color):
-        self.matrix[x][y][1] = cell_color
+        self.coloring_matrix[x][y] = cell_color
 
     def set_cells_coloring(self, cells, cell_color):
         """
@@ -124,7 +125,7 @@ class Board:
         :param cell_color: Color indicator
         """
         for cell in cells:
-            self.matrix[cell[0]][cell[1]][1] = cell_color
+            self.coloring_matrix[cell[0]][cell[1]] = cell_color
 
     def set_board_score(self, score):
         self.board_score = score

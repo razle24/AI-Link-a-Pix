@@ -15,12 +15,11 @@ class Game:
         self.number_of_colors = len(xml_dict["colors"])
         self.colors_dict = xml_dict['colors']
 
-        start_matrix = generate_matrix_from_xml_dict(xml_dict)
-        goal_matrix = generate_matrix_from_xml_dict(xml_dict, True)
+        numbers_matrix, coloring_matrix = generate_matrix_from_xml_dict(xml_dict)
 
-        self.board = Board(self.number_of_colors, start_matrix)
-        self.initial_board = Board(self.number_of_colors, start_matrix)
-        self.goal_board = Board(self.number_of_colors, goal_matrix)
+        self.board = Board(self.number_of_colors, numbers_matrix)
+        self.initial_board = Board(self.number_of_colors, numbers_matrix)
+        self.goal_board = Board(self.number_of_colors, numbers_matrix, coloring_matrix)
 
         self.search = search_type
         self.heuristic = heuristic
@@ -68,12 +67,15 @@ class Game:
     def get_heuristic(self):
         return self.heuristic
 
-    def get_current_matrix(self):
+    def get_current_numbers_matrix(self):
         """
         returns the current board matrix
         :return: Matrix of size (w*h) which contains ((number, number_color), cell_color)
         """
-        return self.board.matrix
+        return self.board.numbers_matrix
+
+    def get_current_coloring_matrix(self):
+        return self.board.coloring_matrix
 
     def get_width(self):
         return self.initial_board.get_width()
@@ -100,7 +102,7 @@ class Game:
         self.boards_generator = a_star_search(prob, invalid_state)
 
 if __name__ == '__main__':
-    xml = get_xml_from_path('boards/small_color.xml')
+    xml = get_xml_from_path('boards/25_25_color_2.xml')
     my_game = Game(xml)
     # print("count empty: ", count_empty_cells(my_game.board))
     heads = my_game.board.get_list_of_numbered_cells()
