@@ -7,7 +7,6 @@ from board import Board
 FAILURE = 'Failure'
 
 
-
 class StateNode:
     """
     Fix problem with util.PriorityQueue which tried (and failed) to use '<' operator on a tuple.
@@ -160,13 +159,13 @@ def backtrack(board, i, numbered_cells):
         yield from backtrack(board, i + 1, numbered_cells)
 
     paths = board.get_possible_paths(x, y)
-    if len(paths) > 1:
-        paths.sort(key=lambda path: invalid_state(path, board), reverse=True)
-    # sorted(paths, key=lambda path: invalid_state(board, path), reverse=True)
 
     for path in paths:
         end_x, end_y = path[-1]
         if board.is_valid_path(path):
+            if invalid_state(board, path):
+                continue
+
             next_board = copy.deepcopy(board)
             next_board.set_cells_coloring(path, board.get_number_color_in_cell(x, y))
 
@@ -176,10 +175,8 @@ def backtrack(board, i, numbered_cells):
                 yield from done_board
             yield board, path, 0
 
-    return None
 
-
-search_dict = {"CSP" : csp, "A*": a_star_search}
+search_dict = {"CSP": csp, "A*": a_star_search}
 
 
 #

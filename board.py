@@ -46,10 +46,9 @@ class Board:
     """
 
     def __init__(self, num_of_colors, b_matrix):
-        self.board_w = len(b_matrix[0])
-        self.board_h = len(b_matrix)
         self.num_of_colors = num_of_colors
         self.matrix = b_matrix
+
 
         # Fill only when used
         self.numbered_cells = None
@@ -72,9 +71,7 @@ class Board:
 
     def __copy__(self):
         cpy_board = Board(self.num_of_colors, self.matrix)
-        cpy_board.numbered_cells = self.numbered_cells
-        cpy_board.possible_paths = self.possible_paths
-        return cpy_board
+        cpy_board.__dict__.update(self.__dict__)
 
     # ** Boolean Getters ** #
     def is_numbered_cell(self, x, y):
@@ -101,10 +98,10 @@ class Board:
         return self.matrix[x][y][1]
 
     def get_width(self):
-        return self.board_w
+        return len(self.matrix[0])
 
     def get_height(self):
-        return self.board_h
+        return len(self.matrix)
 
     def get_list_of_numbered_cells(self):
         if self.numbered_cells is None:
@@ -144,9 +141,9 @@ class Board:
         for path in paths:
             if self.is_valid_path(path):
                 ret += [path]
-        if ret:
-            return ret
-        return None
+                continue
+
+        return ret
 
     # ** Possible Paths Finder ** #
     def get_possible_paths(self, x, y):
@@ -215,7 +212,7 @@ class Board:
         :return: List of paths. Path is a list of [(number, number_color), cell_color].
         """
         # If function parameters are not valid, return empty list
-        if end_x < 0 or self.board_h <= end_x or end_y < 0 or self.board_w <= end_y \
+        if end_x < 0 or self.get_height() <= end_x or end_y < 0 or self.get_width() <= end_y \
                 or self.get_number_in_cell(end_x, end_y) != length \
                 or self.get_number_color_in_cell(x, y) != self.get_number_color_in_cell(end_x, end_y):
             return []
@@ -259,8 +256,8 @@ class Board:
 
         for possible_step in possible_steps:
             # If point not on board or point already in path, skip it
-            if possible_step[0] < 0 or self.board_h <= possible_step[0] or possible_step[1] < 0 or self.board_w <= \
-                    possible_step[1] or possible_step in current_path:
+            if possible_step[0] < 0 or self.get_height() <= possible_step[0] or possible_step[1] < 0 \
+                    or self.get_width() <= possible_step[1] or possible_step in current_path:
                 continue
 
             paths += self.get_paths_rec(current_path + [possible_step], end_x, end_y, steps - 1, length)

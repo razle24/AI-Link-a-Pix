@@ -155,10 +155,10 @@ def runGUI(layout):
 
         if event == 'button_next_move':
             while True:
-                print(f'Turn: {game.get_moves_counter()}')
+                # print(f'Turn: {game.get_moves_counter()}')
                 path, color = game.do_move()
 
-                print(path, color)
+                # print(path, color)
                 for cell in path:
                     window.finalize()
                     graph.drew_color_on_board(cell[0], cell[1], graph.colors[color])

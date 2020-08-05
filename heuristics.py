@@ -8,26 +8,26 @@ def null_heuristic(state):
     return 0
 
 
-def invalid_state(path, board):
+def invalid_state(board, path):
     """
     checks if the board is valid. If not - returns -infinity. else - returns 0.
     :param path:
     :param board:
     :return:
     """
-    board_copy = copy.deepcopy(board)
-    color = board.get_number_color_in_cell(path[0][0], path[0][1])
-    
     # if path is not legal
     if not board.is_valid_path(path):
         return float('-inf')
-    
+
+    board_copy = copy.deepcopy(board)
+    color = board.get_number_color_in_cell(path[0][0], path[0][1])
     board_copy.set_cells_coloring(path, color)
+
     numbered_cells = board_copy.numbered_cells
     for i, j in numbered_cells:
         if board_copy.is_colored_cell(i, j):
             continue
-        if board_copy.get_possible_moves(i, j) is None:
+        if len(board_copy.get_possible_moves(i, j)) == 0:
             return float('-inf')
     return 0
 

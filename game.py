@@ -7,7 +7,10 @@ from heuristics import *
 class Game:
     def __init__(self, xml_dict, search_type=None, heuristic=None):
         """
-        :param file: XML file that represents the board
+
+        :param xml_dict:
+        :param search_type:
+        :param heuristic:
         """
         self.number_of_colors = len(xml_dict["colors"])
         self.colors_dict = xml_dict['colors']
@@ -22,9 +25,9 @@ class Game:
         self.search = search_type
         self.heuristic = heuristic
 
-        # self.successors = []
         self.moves_counter = 0
 
+        # Filled only when used
         self.boards_generator = None
 
     def __str__(self):
@@ -49,7 +52,7 @@ class Game:
 
         # If player controls the game
         if x is None:
-            self.board, path, color = next(self.boards_generator, (None, None))
+            self.board, path, color = next(self.boards_generator, (None, None, None))
             return path, color
         else:
             self.board.set_cell_coloring(x, y, cell_color)
@@ -68,7 +71,7 @@ class Game:
     def get_current_matrix(self):
         """
         returns the current board matrix
-        :return: Matrix of size (w*h) which contains ((numner, number_color), cell_color)
+        :return: Matrix of size (w*h) which contains ((number, number_color), cell_color)
         """
         return self.board.matrix
 
