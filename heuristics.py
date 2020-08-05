@@ -36,10 +36,15 @@ def invalid_state(board, path):
 def count_possible_paths(board, path):
     x, y = path[0]
     end_x, end_y = path[-1]
-    
-    if len(board.get_possible_moves(x, y)) != 0 and len(board.get_possible_moves(end_x, end_y)) != 0:
-        return max(1/len(board.get_possible_moves(x, y)), 1/len(board.get_possible_moves(end_x, end_y)))
-    return float('-inf')
+
+    start_moves = board.get_possible_moves(x, y)
+    if len(start_moves) == 0:
+        return float('-inf')
+    end_moves = board.get_possible_moves(end_x, end_y)
+    if len(end_moves) == 0:
+        return float('-inf')
+
+    return max(1/len(board.get_possible_moves(x, y)), 1/len(board.get_possible_moves(end_x, end_y)))
 
 
 def count_empty_cells(state):

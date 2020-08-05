@@ -101,7 +101,7 @@ class Game:
 
 
 if __name__ == '__main__':
-    xml = get_xml_from_path('boards/25_25_color_2.xml')
+    xml = get_xml_from_path('boards/25_25_color.xml')
     my_game = Game(xml)
     # print("count empty: ", count_empty_cells(my_game.board))
     heads = my_game.board.get_list_of_numbered_cells()

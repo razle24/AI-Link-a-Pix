@@ -92,6 +92,14 @@ class Board:
 
         return True
 
+    def has_possible_moves(self, x, y):
+        paths = self.get_possible_paths(x, y)
+        for path in paths:
+            if self.is_valid_path(path):
+                return True
+
+        return False
+
     # ** Getters ** #
     def get_number_in_cell(self, x, y):
         return self.numbers_matrix[x][y][0]
