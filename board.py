@@ -57,8 +57,8 @@ class Board:
 
     def __str__(self):
         out_str = []
-        for i in range(self.board_h):
-            for j in range(self.board_w):
+        for i in range(self.get_width()):
+            for j in range(self.get_height()):
                 out_str.append(str(self.matrix[i][j][1]))
             out_str.append('\n')
         return ''.join(out_str)
