@@ -92,4 +92,4 @@ def all_heuristics(state):
 
 
 heuristics = {"Null Heuristic": null_heuristic, "Invalid State Heuristic": invalid_state,
-              "Count Empty Cells": count_empty_cells, "MRV": mrv_heuristic, "LCV": lcv_heuristic}
+              "Count Empty Cells": count_empty_cells}
