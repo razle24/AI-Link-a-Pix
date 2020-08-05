@@ -58,7 +58,39 @@ def stick_to_path_wall_heuristic(board, path):
     :param path:
     :return:
     """
-    return sum([1 for i, j in path if i == 0 or i == board.board_h - 1 or j == 0 or j == board.board_w - 1])
+    stick_to_walls = sum([1 for i, j in path if i == 0 or i == board.get_height() - 1 or
+                          j == 0 or j == board.get_width() - 1])
+    # stick_to_path = get_stick_to_path(board, path)
+    stick_to_path = 0
+    return stick_to_path + stick_to_walls
+
+
+def get_stick_to_path(board, path):
+    """
+    gets a path and counts how many cells in it touches another colored path
+    :param board:
+    :param path:
+    :return: the number of cells in the path that touches another colored path
+    """
+    counter = 0
+    for x, y in path:
+        flag = False
+        if x + 1 < board.get_height():
+            if board.is_colored_cell(x+1, y):
+                flag = True
+        if x - 1 >= 0:
+            if board.is_colored_cell(x - 1, y):
+                flag = True
+        if y + 1 < board.get_width():
+            if board.is_colored_cell(x, y + 1):
+                flag = True
+        if y - 1 >= 0:
+            if board.is_colored_cell(x, y - 1):
+                flag = True
+        if flag:
+            counter += 1
+    return counter
+        
 
 
 def photo_recognition(state, action, successor):
@@ -91,5 +123,5 @@ def all_heuristics(state):
     pass
 
 
-heuristics = {"Null Heuristic": null_heuristic, "Invalid State Heuristic": invalid_state,
-              "Count Empty Cells": count_empty_cells}
+# heuristics = {"Null Heuristic": null_heuristic, "Invalid State Heuristic": invalid_state,
+#               "Count Empty Cells": count_empty_cells, "MRV": mrv_heuristic, "LCV": lcv_heuristic}
