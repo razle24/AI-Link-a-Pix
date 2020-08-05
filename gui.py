@@ -25,7 +25,7 @@ class BoardGraph:
         self.colors = game.get_colors()
 
         # 2D array (w*h) contains tuples of ((number, number_color), color) of the board
-        self.board = self.game.get_current_matrix()
+        self.board = self.game.get_current_numbers_matrix()
 
         # Dictionary of canvas items, each (x, y) is ID of the correspond item on the canvas
         self.canvas_background = dict()
@@ -56,7 +56,7 @@ class BoardGraph:
     def draw_board_numbers(self):
         for i in range(self.h):
             for j in range(self.w):
-                cell = self.board[i][j][0]
+                cell = self.board[i][j]
                 if cell[0] != 0:
                     self.canvas_numbers[(i, j)] = self.graph.DrawText(text=str(cell[0]),
                                                                       color=self.colors[cell[1]],
@@ -70,9 +70,9 @@ class BoardGraph:
         self.graph.tk_canvas.itemconfigure(self.canvas_background[(x, y)], fill=rgb_color)
 
         # The cell also has number, we also need to change the color to the text
-        if self.board[x][y][0][0] != 0:
+        if self.board[x][y][0] != 0:
             if rgb_color == '#ffffff':
-                color = self.colors[self.board[x][y][0][1]]
+                color = self.colors[self.board[x][y][1]]
                 self.graph.tk_canvas.itemconfigure(self.canvas_numbers[(x, y)], fill=color)
             else:
                 self.graph.tk_canvas.itemconfigure(self.canvas_numbers[(x, y)], fill='white')
