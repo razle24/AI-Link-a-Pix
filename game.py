@@ -32,10 +32,8 @@ class Game:
         prints the board
         :return:
         """
-        print(f'Search: {self.search}')
-        print(f'Heuristic: {self.heuristic}')
-        print(f'Moves counter: {self.moves_counter}')
-        print(f'Board:\n{self.board}')
+        return (f'Search: {self.search}\nHeuristic: {self.heuristic}\nMoves counter: {self.moves_counter}'
+                f'\nBoard:\n{self.board}')
 
     def do_move(self, x=None, y=None, cell_color=None):
         """
