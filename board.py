@@ -71,6 +71,7 @@ class Board:
 
     def __copy__(self):
         cpy_board = Board(self.num_of_colors, self.matrix)
+        # cpy_board = type(self)
         cpy_board.__dict__.update(self.__dict__)
         cpy_board.matrix = deepcopy(self.matrix)
 
@@ -85,7 +86,7 @@ class Board:
 
     def is_valid_path(self, path):
         for cell in path:
-            if self.is_colored_cell(cell[0], cell[1]):
+            if self.get_cell_coloring(cell[0], cell[1]):
                 return False
 
         return True

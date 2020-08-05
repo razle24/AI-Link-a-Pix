@@ -95,11 +95,11 @@ class Game:
         self.heuristic = heuristic
 
     def set_boards_generator(self):
-        self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), True)
+        self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
 
 
 if __name__ == '__main__':
-    xml = get_xml_from_path('boards/medium_color.xml')
+    xml = get_xml_from_path('boards/small_color.xml')
     my_game = Game(xml)
     # print("count empty: ", count_empty_cells(my_game.board))
     heads = my_game.board.get_list_of_numbered_cells()
