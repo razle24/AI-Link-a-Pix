@@ -95,7 +95,7 @@ class Game:
         self.heuristic = heuristic
 
     def set_boards_generator(self):
-        self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), True)
+        self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
 
 
 if __name__ == '__main__':

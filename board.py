@@ -85,7 +85,7 @@ class Board:
 
     def is_valid_path(self, path):
         for cell in path:
-            if self.is_colored_cell(cell[0], cell[1]):
+            if self.matrix[cell[0]][cell[1]][1]:
                 return False
 
         return True

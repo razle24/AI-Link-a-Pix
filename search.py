@@ -94,7 +94,7 @@ def a_star_search(problem, heuristic):
     return None
 
 
-def mrv_heuristic(board ):
+def mrv_heuristic(board):
     """
     Sort the list by number value (from small to big)
     :param heads:
@@ -103,14 +103,14 @@ def mrv_heuristic(board ):
     board.numbered_cells.sort(key=lambda coord: board.get_number_in_cell(coord[0], coord[1]), reverse=False)
 
 
-def lcv_heuristic(heads, board):
+def lcv_heuristic(board):
     """
     Sort list by amount of possible paths
     :param heads:
     :param vars:
     :return:
     """
-    heads.sort(key=lambda x: len(x.domain), reverse=False)
+    board.numbered_cells.sort(key=lambda coord: len(board.get_possible_moves(coord[0], coord[1])), reverse=False)
 
 
 def csp(board, heads, mrv=False, lcv=False):
@@ -144,7 +144,7 @@ def csp(board, heads, mrv=False, lcv=False):
         mrv_heuristic(board)
 
     if lcv:
-        lcv_heuristic(heads, board)
+        lcv_heuristic(board)
 
     return backtrack(board, 0, heads)
 
@@ -152,14 +152,14 @@ def csp(board, heads, mrv=False, lcv=False):
 def backtrack(board, i, numbered_cells):
     if i == len(numbered_cells):
         return board
-
     x, y = numbered_cells[i]
     if board.is_colored_cell(x, y):
         yield board, [(x, y)], board.get_number_color_in_cell(x, y)
         yield from backtrack(board, i + 1, numbered_cells)
-
+    lcv_heuristic(board)
     paths = board.get_possible_paths(x, y)
-
+    if len(paths) > 1:
+        paths.sort(key=lambda path: count_possible_paths(board, path), reverse=True)
     for path in paths:
         end_x, end_y = path[-1]
         if board.is_valid_path(path):

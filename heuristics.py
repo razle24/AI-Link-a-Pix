@@ -1,5 +1,6 @@
 import math
 import copy
+from search import *
 
 colors_test = ['white', 'black', 'red']
 
@@ -32,6 +33,15 @@ def invalid_state(board, path):
     return 0
 
 
+def count_possible_paths(board, path):
+    x, y = path[0]
+    end_x, end_y = path[-1]
+    
+    if len(board.get_possible_moves(x, y)) != 0 and len(board.get_possible_moves(end_x, end_y)) != 0:
+        return max(1/len(board.get_possible_moves(x, y)), 1/len(board.get_possible_moves(end_x, end_y)))
+    return float('-inf')
+
+
 def count_empty_cells(state):
     """
     counts the number of empty cells on the board
@@ -41,12 +51,14 @@ def count_empty_cells(state):
     return len([1 for i in range(state.board_h) for j in range(state.board_w) if not state.is_colored_cell(i, j)])
 
 
-def mrv(state):
-    pass
-
-
-def lcv(state, action, successor):
-    pass
+def stick_to_path_wall_heuristic(board, path):
+    """
+    returns the number of cells in the path that are closer to the walls of the board
+    :param board:
+    :param path:
+    :return:
+    """
+    return sum([1 for i, j in path if i == 0 or i == board.board_h - 1 or j == 0 or j == board.board_w - 1])
 
 
 def photo_recognition(state, action, successor):
@@ -74,9 +86,10 @@ def compact_path(state, action, successor):
     """
     pass
 
+
 def all_heuristics(state):
     pass
 
 
 heuristics = {"Null Heuristic": null_heuristic, "Invalid State Heuristic": invalid_state,
-              "Count Empty Cells": count_empty_cells}
+              "Count Empty Cells": count_empty_cells, "MRV": mrv_heuristic, "LCV": lcv_heuristic}
