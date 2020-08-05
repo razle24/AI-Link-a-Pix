@@ -70,9 +70,9 @@ class Board:
         return hash(str(self.matrix))
 
     def __copy__(self):
-        cpy_board = Board(self.num_of_colors, self.matrix)
-        cpy_board.__dict__.update(self.__dict__)
-        cpy_board.matrix = deepcopy(self.matrix)
+        cpy_board = self.__new__(self.__class__)  # Create empty object
+        cpy_board.__dict__.update(self.__dict__)  # Shallow copy everything
+        cpy_board.matrix = deepcopy(self.matrix)  # Deep copy the matrix
 
         return cpy_board
 
