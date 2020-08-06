@@ -57,8 +57,8 @@ def a_star_search(game, heuristic):
 def mrv_heuristic(board):
     """
     Sort the list by number value (from small to big)
-    :param heads:
-    :return:
+    :param board: board object
+    :return: doesn't return anything. Sorts the numbered_cells list in the board.
     """
     board.numbered_cells.sort(key=lambda coord: board.get_number_in_cell(coord[0], coord[1]), reverse=False)
 
@@ -66,8 +66,7 @@ def mrv_heuristic(board):
 def lcv_heuristic(board):
     """
     Sort list by amount of possible paths
-    :param heads:
-    :param vars:
+    :param board:
     :return:
     """
     board.numbered_cells.sort(key=lambda coord: len(board.get_possible_moves(coord[0], coord[1])), reverse=False)
@@ -109,6 +108,13 @@ def csp(board, variable_selection, heuristic):
 
 
 def backtrack(board, i, numbered_cells):
+    """
+    Colors paths according to numbered_cells order, using different heuristics in order to color the whole board.w
+    :param board:
+    :param i:
+    :param numbered_cells:
+    :return:
+    """
     if i == len(numbered_cells):
         return board
     x, y = numbered_cells[i]

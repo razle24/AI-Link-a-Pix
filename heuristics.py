@@ -6,15 +6,21 @@ colors_test = ['white', 'black', 'red']
 
 
 def null_heuristic(board=None, path=None):
+    """
+    A heuristic function that estimates the cost of the current board. This heuristic is trivial.
+    :param board: The current board
+    :return: 0 for every board
+    """
     return 0
 
 
 def invalid_state(board, path=None):
     """
-    Checks if every uncolored cell has at least one valid path.
-    :param path:
-    :param board:
-    :return: If board is valid - return 0, otherwise return '-infinity'
+    A heuristic function that estimates the cost of the current board.
+    Checks if the board is valid.
+    :param path: The current path we want to color
+    :param board: The current board
+    :return: -infinity if the board is not valid,  else - 0.
     """
     numbered_cells = board.numbered_cells
     for i, j in numbered_cells:
@@ -38,35 +44,41 @@ def count_possible_paths(board, path):
     return max(1/len(board.get_possible_moves(x, y)), 1/len(board.get_possible_moves(end_x, end_y)))
 
 
-def count_empty_cells(state):
+def count_empty_cells(board):
     """
-    counts the number of empty cells on the board
-    :param state:
-    :return:
+    A heuristic function that estimates the cost of the current board.
+    Counts the number of empty cells on the board.
+    :param board: The current board
+    :return: The number of empty cells on the board.
     """
-    return len([1 for i in range(state.board_h) for j in range(state.board_w) if not state.is_colored_cell(i, j)])
+    return len([1 for i in range(board.get_height()) for j in range(board.get_width())
+                if not board.is_colored_cell(i, j)])
+
+def stick_to_wall(board, path):
+    """
+    A heuristic function that estimates the cost of the current board.
+    Counts the number of cells in the path that are closer to the walls of the board.
+    :param path: The current path we want to color
+    :param board: The current board
+    :return: The number of cells in the path that are closer to the walls of the board
+    """
+    counter = 0
+    for i, j in path:
+        walls_dist = []
 
 
-def stick_to_path_wall_heuristic(board, path):
-    """
-    returns the number of cells in the path that are closer to the walls of the board
-    :param board:
-    :param path:
-    :return:
-    """
-    stick_to_walls = sum([1 for i, j in path if i == 0 or i == board.get_height() - 1 or
+
+    return sum([1 for i, j in path if i == 0 or i == board.get_height() - 1 or
                           j == 0 or j == board.get_width() - 1])
-    # stick_to_path = get_stick_to_path(board, path)
-    stick_to_path = 0
-    return stick_to_path + stick_to_walls
 
 
-def get_stick_to_path(board, path):
+def stick_to_path(board, path):
     """
-    gets a path and counts how many cells in it touches another colored path
-    :param board:
-    :param path:
-    :return: the number of cells in the path that touches another colored path
+    A heuristic function that estimates the cost of the current board.
+    Counts how many cells in the path touches another colored path
+    :param path: The current path we want to color
+    :param board: The current board
+    :return: The number of cells in the path that touches another colored path
     """
     counter = 0
     for x, y in path:
@@ -86,37 +98,43 @@ def get_stick_to_path(board, path):
         if flag:
             counter += 1
     return counter
-        
 
 
-def photo_recognition(state, action, successor):
-    pass
+# def photo_recognition(board, action, successor):
+#     pass
 
 
-def stick_to_same_color(state, action, successor):
+# def stick_to_same_color(board, action, successor):
+#     """
+#     heuristic 4
+#     :param state:
+#     :param action:
+#     :param successor:
+#     :return:
+#     """
+#     pass
+#
+#
+# def compact_path(board, action, successor):
+#     """
+#     heuristic 5
+#     :param state:
+#     :param action:
+#     :param successor:
+#     :return:
+#     """
+#     pass
+
+
+def all_heuristics(board, path):
     """
-    heuristic 4
-    :param state:
-    :param action:
-    :param successor:
-    :return:
+    A heuristic function that estimates the cost of the current board.
+    Combines different heuristics in different weights
+    :param path:
+    :param board: The current board
+    :return: The linear combination of all the heuristics used
     """
-    pass
-
-
-def compact_path(state, action, successor):
-    """
-    heuristic 5
-    :param state:
-    :param action:
-    :param successor:
-    :return:
-    """
-    pass
-
-
-def all_heuristics(state):
-    pass
+    return (-0.5) * count_empty_cells(board) + 10 * stick_to_wall(board, path) + 2 * stick_to_path(board, path)
 
 
 heuristics_dict = {

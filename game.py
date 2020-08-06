@@ -5,12 +5,16 @@ from heuristics import *
 
 
 class Game:
-    def __init__(self, xml_dict):
+    """
+    Game engine class stores the current game state and controls when to
+    get input/draw output
+    """
+    def __init__(self, xml_dict, search_type=None, heuristic=None):
         """
-
-        :param xml_dict:
-        :param search_type:
-        :param heuristic:
+        :param xml_dict: dictionary with the following items: Puzzle name, Puzzle width, Puzzle height,
+        List of RGB values, paths, lists of lists of paths in the key color
+        :param search_type: The current search type - CSP or A*
+        :param heuristic: The current heuristic type
         """
         self.number_of_colors = len(xml_dict["colors"])
         self.colors_dict = xml_dict['colors']
@@ -33,7 +37,6 @@ class Game:
     def __str__(self):
         """
         prints the board
-        :return:
         """
         return (f'Search: {self.search}\nHeuristic: {self.heuristic}\nMoves counter: {self.moves_counter}'
                 f'\nBoard:\n{self.board}')
@@ -74,6 +77,9 @@ class Game:
         return self.board.coloring_matrix
 
     def is_goal_state(self):
+        """
+        :return: True if we reached the goal state, else False
+        """
         return self.board == self.goal_board
 
     # **  Getters  ** #
@@ -81,6 +87,9 @@ class Game:
         return self.search
 
     def get_heuristic(self):
+        """
+        :return: The current heuristic type
+        """
         return self.heuristic
 
     def get_current_numbers_matrix(self):
@@ -91,18 +100,33 @@ class Game:
         return self.board.numbers_matrix
 
     def get_current_coloring_matrix(self):
+        """
+        :return: The current colors matrix
+        """
         return self.board.coloring_matrix
 
     def get_width(self):
+        """
+        :return: The board's width
+        """
         return self.initial_board.get_width()
 
     def get_height(self):
+        """
+        :return: The board's height
+        """
         return self.initial_board.get_height()
 
     def get_colors(self):
+        """
+        :return: All the colors of the board
+        """
         return self.colors_dict
 
     def get_moves_counter(self):
+        """
+        :return: The number of moves made
+        """
         return self.moves_counter
 
     def get_initial_board(self):
@@ -110,12 +134,20 @@ class Game:
 
     # **  Setters  ** #
     def set_search(self, search):
+        """
+        :param search: The current search type
+        Set the board's search type to the given parameter
+        """
         self.search = search
 
     def set_variable_selection(self, variable_selection):
         self.variable_selection = variable_selection
 
     def set_heuristic(self, heuristic):
+        """
+        :param heuristic: The current heuristic type
+        Set the board's heuristic type to the given parameter
+        """
         self.heuristic = heuristic
 
     def set_boards_generator(self):
