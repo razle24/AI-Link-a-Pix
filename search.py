@@ -89,37 +89,32 @@ def csp(game, variable_selection, heuristic):
 
 
 def backtrack(board, i, variable_selection, heuristic):
-    # Entire board is filled, return finished board
-    if i == len(board.get_list_of_numbered_cells()):
-        return board
-
     x, y = variable_selection(board)
 
     # If cell is already colored (by path created earlier) move to next cell
     if board.is_colored_cell(x, y):
-        yield board, [(x, y)], board.get_number_color_in_cell(x, y)
+        # yield board, [(x, y)], board.get_number_color_in_cell(x, y)
         yield from backtrack(board, i + 1, variable_selection, heuristic)
 
     # Get list of all possible paths from the cell. sort next cell using variable selection and paths using heuristic
-    paths = board.get_possible_paths(x, y)
+    paths = board.get_possible_moves(x, y)
+
     # variable_selection(board)
     if len(paths) > 1:
         paths.sort(key=lambda path: heuristic(board, path), reverse=True)
 
     for path in paths:
-        end_x, end_y = path[-1]
-        if board.is_valid_path(path):
-            if not invalid_state(board):
-                next_board = copy.copy(board)
-                next_board.set_cells_coloring(path, board.get_number_color_in_cell(x, y))
+        next_board = copy.copy(board)
+        next_board.set_cells_coloring(path, board.get_number_color_in_cell(x, y))
 
-                yield next_board, path, board.get_number_color_in_cell(x, y)
-                done_board = backtrack(next_board, i + 1, variable_selection, heuristic)
-                if done_board is not None:
-                    yield from done_board
+        if not invalid_state(next_board):
+            yield next_board, path, board.get_number_color_in_cell(x, y)
+            done_board = backtrack(next_board, i + 1, variable_selection, heuristic)
+            if done_board is not None:
+                yield from done_board
 
-                # Return back the old board and the path we deleted
-                yield board, path, 0
+            # Return back the old board and the path we deleted
+            yield board, path, 0
 
 
 search_dict = {

@@ -7,7 +7,8 @@ def invalid_state(board, path=None):
     :param board: The current board
     :return: -infinity if the board is not valid,  else - 0.
     """
-    numbered_cells = board.numbered_cells
+    numbered_cells = board.get_list_of_numbered_cells()
+
     for i, j in numbered_cells:
         if not board.is_colored_cell(i, j) and len(board.get_possible_moves(i, j)) == 0:
             return float('-inf')
