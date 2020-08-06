@@ -148,7 +148,7 @@ def backtrack(board, i, numbered_cells):
     if len(paths) > 1:
         lcv_heuristic(board)
         # paths.sort(key=lambda path: count_possible_paths(board, path), reverse=True)
-        paths.sort(key=lambda path: stick_to_path_wall_heuristic(board, path), reverse=True)
+        paths.sort(key=lambda path: all_heuristics(board, path), reverse=True)
 
     for path in paths:
         end_x, end_y = path[-1]

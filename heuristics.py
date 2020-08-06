@@ -60,10 +60,11 @@ def count_empty_cells(board):
     :param board: The current board
     :return: The number of empty cells on the board.
     """
-    return len([1 for i in range(board.board_h) for j in range(board.board_w) if not board.is_colored_cell(i, j)])
+    return len([1 for i in range(board.get_height()) for j in range(board.get_width())
+                if not board.is_colored_cell(i, j)])
 
 
-def stick_to_path_wall_heuristic(board, path):
+def stick_to_wall(board, path):
     """
     A heuristic function that estimates the cost of the current board.
     Counts the number of cells in the path that are closer to the walls of the board.
@@ -71,14 +72,17 @@ def stick_to_path_wall_heuristic(board, path):
     :param board: The current board
     :return: The number of cells in the path that are closer to the walls of the board
     """
-    stick_to_walls = sum([1 for i, j in path if i == 0 or i == board.get_height() - 1 or
+    counter = 0
+    for i, j in path:
+        walls_dist = []
+        
+        
+    
+    return sum([1 for i, j in path if i == 0 or i == board.get_height() - 1 or
                           j == 0 or j == board.get_width() - 1])
-    # stick_to_path = get_stick_to_path(board, path)
-    stick_to_path = 0
-    return stick_to_path + stick_to_walls
 
 
-def get_stick_to_path(board, path):
+def stick_to_path(board, path):
     """
     A heuristic function that estimates the cost of the current board.
     Counts how many cells in the path touches another colored path
@@ -132,14 +136,15 @@ def get_stick_to_path(board, path):
 #     pass
 
 
-def all_heuristics(board):
+def all_heuristics(board, path):
     """
     A heuristic function that estimates the cost of the current board.
     Combines different heuristics in different weights
+    :param path:
     :param board: The current board
     :return: The linear combination of all the heuristics used
     """
-    pass
+    return (-0.5) * count_empty_cells(board) + 10 * stick_to_wall(board, path) + 2 * stick_to_path(board, path)
 
 
 # heuristics = {"Null Heuristic": null_heuristic, "Invalid State Heuristic": invalid_state,
