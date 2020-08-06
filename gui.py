@@ -155,13 +155,22 @@ def runGUI(layout):
 
         if event == 'button_next_move':
             while True:
-                # print(f'Turn: {game.get_moves_counter()}')
                 path, color = game.do_move()
 
-                # print(path, color)
                 for cell in path:
                     window.finalize()
                     graph.drew_color_on_board(cell[0], cell[1], graph.colors[color])
+
+                if game.is_goal_state():
+                    break
+
+        if event == 'button_next_move_a_star':
+            while True:
+                matrix = game.do_move_a_star()
+                for i in range(len(matrix)):
+                    for j in range(len(matrix[0])):
+                        window.finalize()
+                        graph.drew_color_on_board(i, j, graph.colors[matrix[i][j]])
 
                 if game.is_goal_state():
                     break
@@ -217,7 +226,8 @@ if __name__ == '__main__':
             sg.Button(key='button_resume', button_text=BUTTON_RESUME_TEXT, size=(8, 1)),
             sg.Button(key='button_pause', button_text=BUTTON_PAUSE_TEXT, size=(8, 1)),
             sg.Button(key='button_reset', button_text=BUTTON_RESET_TEXT, size=(8, 1)),
-            sg.Button(key='button_next_move', button_text=BUTTON_NEXT_MOVE_TEXT, size=(8, 1))
+            sg.Button(key='button_next_move', button_text=BUTTON_NEXT_MOVE_TEXT, size=(8, 1)),
+            sg.Button(key='button_next_move_a_star', button_text=BUTTON_NEXT_MOVE_TEXT, size=(8, 1))
 
             # sg.Sizer(400),
             #

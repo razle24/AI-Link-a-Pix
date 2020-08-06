@@ -57,6 +57,22 @@ class Game:
             self.board.set_cell_coloring(x, y, cell_color)
             return [((x, y), cell_color)]
 
+    def do_move_a_star(self, x=None, y=None, cell_color=None):
+        """
+        If no coordinates given, do the next move of the backtrack.
+        If coordinates are given, color the cell (x, y) with the color of 'cell_color'
+        Will increment moves counter by 1.
+        :param x: Row selection
+        :param y: Column selection
+        :param cell_color: Color index
+        :return: List of all changed cells, with their new colors (list of ((number, color_number), cell_color))
+        """
+        self.moves_counter += 1
+
+        self.board = next(self.boards_generator, None)
+        return self.board.coloring_matrix
+
+
     def is_goal_state(self):
         return self.board == self.goal_board
 
@@ -73,14 +89,15 @@ class Game:
         cost of expanding to that successor
         """
         successors = []
-        numbered_cells = board.numbered_cells
+        numbered_cells = board.get_list_of_numbered_cells()
+
         for i, j in numbered_cells:
             paths = board.get_possible_moves(i, j)
             for path in paths:
-                cur_board = copy.copy(board)
-                # color = board.get_cell_coloring(path[0][0], path[0][1])
-                # cur_board.set_cells_coloring(path, color)
-                successors += [(cur_board, path)]
+                current_board = copy.copy(board)
+                color = current_board.get_number_color_in_cell(path[0][0], path[0][1])
+                current_board.set_cells_coloring(path, color)
+                successors += [(current_board, path)]
         return successors
 
     def get_search(self):
@@ -111,6 +128,9 @@ class Game:
     def get_moves_counter(self):
         return self.moves_counter
 
+    def get_initial_board(selfs):
+        return selfs.initial_board
+
     # **  Setters  ** #
     def set_search(self, search):
         self.search = search
@@ -119,9 +139,9 @@ class Game:
         self.heuristic = heuristic
 
     def set_boards_generator(self):
-        self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
-        # prob = Problem(self.board, self.goal_board)
-        # self.boards_generator = a_star_search(prob, invalid_state)
+        # self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
+        self.boards_generator = a_star_search(self, invalid_state)
+
 
 if __name__ == '__main__':
     xml = get_xml_from_path('boards/tiny_color.xml')

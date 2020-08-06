@@ -7,48 +7,6 @@ from board import Board
 FAILURE = 'Failure'
 
 
-class StateNode:
-    """
-    Fix problem with util.PriorityQueue which tried (and failed) to use '<' operator on a tuple.
-    This class is basically the same tuple with overloaded '<' operator.
-    """
-
-    def __init__(self, state, actions):
-        self.state = state
-        self.actions = actions
-
-    def __lt__(self, other):
-        return self.state.score(0) < other.score(0)
-
-    def __iter__(self):
-        yield self.state
-        yield self.actions
-
-#
-# class Problem:
-#     """
-#     represents the problem we want to solve.
-#     """
-#     def __init__(self, board, goal_board):
-#         self.board = board
-#         self.goal_state = goal_board
-#         self.expanded = 0
-#
-#     # TODO - check if needed
-#     def get_start_state(self):
-#         """
-#         Returns the start state for the search problem
-#         """
-#         return self.board
-#
-#     def is_goal_state(self, state):
-#         """
-#         state: Search state
-#         Returns True if and only if the state is a valid goal state
-#         """
-#         return state == self.goal_state
-#
-
 def a_star_search(game, heuristic):
     """
     Search the node that has the lowest combined cost and heuristic first.
@@ -56,21 +14,25 @@ def a_star_search(game, heuristic):
     explored = set()
     queue = util.PriorityQueue()
 
-    # Contains 'state', 'total cost from start to state' and 'list of actions to the state'
-    queue.push(game.board, 0)
+    queue.push(game.get_initial_board(), 0)
 
     while not queue.isEmpty():
-        cur_board = queue.pop()
+        current_board = queue.pop()
+        yield current_board
 
         if game.is_goal_state():
-            return cur_board
-        succ = game.get_successors(cur_board)
-        for next_board, next_path in succ:
+            return current_board
+
+        successor = game.get_successors(current_board)
+
+        for next_board, next_path in successor:
             if next_board not in explored:
                 total_cost = heuristic(next_board, next_path)
-                if total_cost != float('-inf'):
+                if total_cost > float('-inf'):
                     queue.push(next_board, total_cost)
-        explored.add(cur_board)
+
+        explored.add(current_board)
+
     return None
 
 
@@ -146,7 +108,7 @@ def backtrack(board, i, numbered_cells):
     for path in paths:
         end_x, end_y = path[-1]
         if board.is_valid_path(path):
-            if invalid_state(board, path):
+            if invalid_state(board):
                 continue
 
             next_board = copy.copy(board)
@@ -160,49 +122,3 @@ def backtrack(board, i, numbered_cells):
 
 
 search_dict = {"CSP": csp, "A*": a_star_search}
-
-
-#
-# def backtrack(coords, board, paths):
-#     i = 0
-#     is_backtrack = False
-#     # updates the legal paths through the domain
-#     board.remove_value(coords[i][0], coords[i][1], is_backtrack)
-#
-#     while 0 <= i < len(coords):
-#         # get_value = all possible paths from var[i]
-#         cur_coord = coords[i]
-#         # checks if we colored the cell and didn't backtrack
-#         if cur_coord[1] and not is_backtrack:
-#             i += 1
-#             if i < len(coords):
-#                 board.remove_value(coords[i][0], coords[i][1], is_backtrack)
-#             continue
-#         path = get_value(board, cur_coord)
-#         if path is None:
-#             is_backtrack = True
-#             # deletes last path we colored
-#             path_to_del = paths.pop(-1)
-#             board.uncolor_path(path_to_del, is_backtrack)
-#             # yield path_to_del, 0
-#             # get back to the last cell of the last path we colored
-#             i = board.get_pos_by_var(board.get_var_by_pos(path_to_del[0]), coords)
-#         else:
-#             is_backtrack = False
-#             board.color_path(path)
-#             # yield path, path[0][1]
-#             paths += [path]
-#             i += 1
-#             if i < len(coords):
-#                 board.remove_value(coords[i].pos[0], coords[i].pos[1], is_backtrack)
-#     if i < 0:
-#         return FAILURE
-#
-#
-# def get_value(board, pos):
-#     cell = board.get_var_by_pos(pos)
-#     while len(cell.legal_paths) > 0:
-#         path = cell.legal_paths.pop(0)
-#         if board.is_path_legal(path):
-#             return path
-#     return None
