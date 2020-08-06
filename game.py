@@ -97,9 +97,9 @@ class Game:
         self.heuristic = heuristic
 
     def set_boards_generator(self):
-        # self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
-        prob = Problem(self.board, self.goal_board)
-        self.boards_generator = a_star_search(prob, invalid_state)
+        self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
+        # prob = Problem(self.board, self.goal_board)
+        # self.boards_generator = a_star_search(prob, invalid_state)
 
 if __name__ == '__main__':
     xml = get_xml_from_path('boards/25_25_color.xml')
