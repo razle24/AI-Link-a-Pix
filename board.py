@@ -1,5 +1,6 @@
-from util import manhattan_distance
 import copy
+
+from util import manhattan_distance
 
 
 def generate_matrix_from_xml_dict(xml_dict):
@@ -40,6 +41,7 @@ class Board:
     - matrix: a matrix (2D list) of [(number, number_color), cell_color]
     - colors: the number of the colors
     """
+
     def __init__(self, num_of_colors, numbers_matrix, coloring_matrix=None):
         self.num_of_colors = num_of_colors
         self.numbers_matrix = numbers_matrix

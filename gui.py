@@ -4,11 +4,10 @@ import PySimpleGUI as sg
 
 import agent as ag
 import game as gm
-from texts import *
-
-from search import search_dict
-from variable_selection import variable_selection_dict
 from heuristics import heuristics_dict
+from search import search_dict
+from texts import *
+from variable_selection import variable_selection_dict
 
 GRAPH_SIZE = 700
 MAX_SIZE_TO_SHOW_NUMBERS = 25
@@ -82,6 +81,7 @@ class BoardGraph:
     """
     The board's GUI class
     """
+
     def __init__(self, graph: sg.Graph, game: gm.Game):
         # GUI object, contains canvas to print board to
         self.graph = graph
@@ -140,8 +140,8 @@ class BoardGraph:
                     self.canvas_numbers[(i, j)] = self.graph.DrawText(text=str(cell[0]),
                                                                       color=self.colors[cell[1]],
                                                                       location=(
-                                                                      (self.cell_size * j + (self.cell_size / 2)),
-                                                                      (self.cell_size * i + (self.cell_size / 2))))
+                                                                          (self.cell_size * j + (self.cell_size / 2)),
+                                                                          (self.cell_size * i + (self.cell_size / 2))))
 
                     self.graph.bring_figure_to_front(self.canvas_numbers[(i, j)])
 
@@ -169,7 +169,6 @@ class BoardGraph:
 
         for number in self.canvas_numbers:
             self.graph.tk_canvas.itemconfigure(self.canvas_numbers[number], fill='black')
-
 
 
 def runGUI(layout):

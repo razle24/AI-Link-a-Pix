@@ -1,9 +1,7 @@
-from agent import *
 from board import *
-
+from heuristics import heuristics_dict
 from search import search_dict
 from variable_selection import variable_selection_dict
-from heuristics import heuristics_dict
 
 
 class Game:
@@ -11,6 +9,7 @@ class Game:
     Game engine class stores the current game state and controls when to
     get input/draw output
     """
+
     def __init__(self, xml_dict):
         """
         :param xml_dict: dictionary with the following items: Puzzle name, Puzzle width, Puzzle height,

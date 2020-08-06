@@ -1,6 +1,3 @@
-from search import *
-
-
 # ** Used every time ** #
 def invalid_state(board, path=None):
     """
@@ -40,7 +37,7 @@ def count_possible_paths(board, path):
     if len(end_moves) == 0:
         return float('-inf')
 
-    return max(1/len(board.get_possible_moves(x, y)), 1/len(board.get_possible_moves(end_x, end_y)))
+    return max(1 / len(board.get_possible_moves(x, y)), 1 / len(board.get_possible_moves(end_x, end_y)))
 
 
 def count_empty_cells(board, path=None):
@@ -78,7 +75,7 @@ def stick_to_path(board, path):
     for x, y in path:
         flag = False
         if x + 1 < board.get_height():
-            if board.is_colored_cell(x+1, y):
+            if board.is_colored_cell(x + 1, y):
                 flag = True
         if x - 1 >= 0:
             if board.is_colored_cell(x - 1, y):

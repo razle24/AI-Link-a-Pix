@@ -1,7 +1,8 @@
 import copy
-import util
 
+import util
 from heuristics import invalid_state
+
 
 # *** A star *** #
 def a_star_search(game, variable_selection, heuristic):

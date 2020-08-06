@@ -1,6 +1,7 @@
 def top_to_bottom(board):
     pass
 
+
 def mrv(board):
     """
     Sort the list by number value (from small to big)
