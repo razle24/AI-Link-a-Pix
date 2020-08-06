@@ -14,15 +14,35 @@ GRAPH_SIZE = 700
 MAX_SIZE_TO_SHOW_NUMBERS = 25
 
 
+# *** CSP *** #
 def run_paths_based_search_with_animation(window, graph, game):
     while not game.is_goal_state():
-        path, color = game.do_move()
+        path, color = game.do_move_csp()
 
         for cell in path:
             window.finalize()
             graph.drew_color_on_board(cell[0], cell[1], graph.colors[color])
 
+        window.finalize()
+        window['turn_counter'].update(str(game.get_moves_counter()))
 
+
+def run_paths_based_search_without_animation(window, graph, game):
+    while not game.is_goal_state():
+        game.do_move_csp()
+        window.finalize()
+        window['turn_counter'].update(str(game.get_moves_counter()))
+
+    matrix = game.get_current_coloring_matrix()
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            window.finalize()
+            graph.drew_color_on_board(i, j, graph.colors[matrix[i][j]])
+
+
+
+
+# *** A Star *** #
 def run_board_based_search_with_animation(window, graph, game):
     while not game.is_goal_state():
         matrix = game.do_move_a_star()
@@ -36,27 +56,27 @@ def run_board_based_search_with_animation(window, graph, game):
         window['turn_counter'].update(str(game.get_moves_counter()))
 
 
-def run_search_without_animation(window, game):
+def run_board_based_search_without_animation(window, graph, game):
     while not game.is_goal_state():
-        game.do_move()
+        game.do_move_a_star()
         window.finalize()
         window['turn_counter'].update(str(game.get_moves_counter()))
 
-
-def disable_gui(window):
-    window['file_selector'].update(disabled=True)
-    window['combo_search'].update(disabled=True)
-    window['combo_variable'].update(disabled=True)
-    window['combo_heuristic'].update(disabled=True)
-    window['button_run'].update(disabled=True)
+    matrix = game.get_current_coloring_matrix()
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            window.finalize()
+            graph.drew_color_on_board(i, j, graph.colors[matrix[i][j]])
 
 
-def enable_gui(window):
-    window['file_selector'].update(disabled=False)
-    window['combo_search'].update(disabled=False)
-    window['combo_variable'].update(disabled=False)
-    window['combo_heuristic'].update(disabled=False)
-    window['button_run'].update(disabled=False)
+def toggle_gui(window, toggle):
+    toggle = not toggle
+    window['file_selector'].update(disabled=toggle)
+    window['combo_search'].update(disabled=toggle)
+    window['combo_variable'].update(disabled=toggle)
+    window['combo_heuristic'].update(disabled=toggle)
+    window['button_run'].update(disabled=toggle)
+    window['checkbox_show_animation'].update(disabled=toggle)
 
 
 class BoardGraph:
@@ -152,6 +172,8 @@ def runGUI(layout):
     """
     # Create the Window
     window = sg.Window(APP_NAME, layout)
+    game = None
+    graph = None
 
     # Event Loop to process 'events' and get the 'values' of the inputs
     while True:
@@ -182,18 +204,26 @@ def runGUI(layout):
 
             if values['file_path'] != '':
                 # Disable buttons on GUI while running the search
-                disable_gui(window)
+                toggle_gui(window, False)
 
                 # Set game to run
+                game.reset_game()
                 game.set_boards_generator(values['combo_search'], values['combo_variable'], values['combo_heuristic'])
 
+                # Select search, we scarified here generality for preference, since this is the core to the search
+                # and we wanted to avoid unneeded 'if' statements
                 if values['checkbox_show_animation']:
-                    pass
-                # run_paths_based_search(window, game, game)
+                    if values['combo_search'] == 'CSP':
+                        run_paths_based_search_with_animation(window, graph, game)
+                    if values['combo_search'] == 'A*':
+                        run_board_based_search_with_animation(window, graph, game)
                 else:
-                    run_search_without_animation(window, game)
+                    if values['combo_search'] == 'CSP':
+                        run_paths_based_search_without_animation(window, graph, game)
+                    if values['combo_search'] == 'A*':
+                        run_board_based_search_without_animation(window, graph, game)
 
-                # enable_gui(window)
+                toggle_gui(window, True)
 
             else:
                 print(FILE_NOT_SELECTED_MESSAGE)
@@ -249,7 +279,7 @@ if __name__ == '__main__':
             sg.Checkbox(key='checkbox_show_animation', text=SHOW_ANIMATION_CHECKBOX_TEXT, default=True),
             sg.Sizer(300),
             sg.Text(TURN_COUNTER_TEXT),
-            sg.Text(0, key='turn_counter')
+            sg.Text(0, key='turn_counter', size=(5, 1))
         ],
         [
             sg.Graph(key='graph_board', enable_events=True, float_values=True,

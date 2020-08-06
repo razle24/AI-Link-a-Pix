@@ -41,34 +41,23 @@ class Game:
         return (f'Search: {self.search}\nHeuristic: {self.heuristic}\nMoves counter: {self.moves_counter}'
                 f'\nBoard:\n{self.board}')
 
-    def do_move(self, x=None, y=None, cell_color=None):
+    def do_move_csp(self):
         """
         If no coordinates given, do the next move of the backtrack.
         If coordinates are given, color the cell (x, y) with the color of 'cell_color'
         Will increment moves counter by 1.
-        :param x: Row selection
-        :param y: Column selection
-        :param cell_color: Color index
         :return: List of all changed cells, with their new colors (list of ((number, color_number), cell_color))
         """
         self.moves_counter += 1
 
-        # If player controls the game
-        if x is None:
-            self.board, path, color = next(self.boards_generator, (None, None, None))
-            return path, color
-        else:
-            self.board.set_cell_coloring(x, y, cell_color)
-            return [((x, y), cell_color)]
+        self.board, path, color = next(self.boards_generator, (None, None, None))
+        return path, color
 
-    def do_move_a_star(self, x=None, y=None, cell_color=None):
+    def do_move_a_star(self):
         """
         If no coordinates given, do the next move of the backtrack.
         If coordinates are given, color the cell (x, y) with the color of 'cell_color'
         Will increment moves counter by 1.
-        :param x: Row selection
-        :param y: Column selection
-        :param cell_color: Color index
         :return: List of all changed cells, with their new colors (list of ((number, color_number), cell_color))
         """
         self.moves_counter += 1
@@ -129,10 +118,12 @@ class Game:
         self.variable_selection = variable_selection_dict[variable_selection]
         self.heuristic = heuristics_dict[heuristic]
 
-        self.boards_generator = self.search(self.board, self.variable_selection, self.heuristic)
+        self.boards_generator = self.search(self, self.variable_selection, self.heuristic)
 
-    def reset_counter(self):
+    def reset_game(self):
         self.moves_counter = 0
+        self.board = self.initial_board
+        self.boards_generator = None
 
 #
 # if __name__ == '__main__':

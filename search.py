@@ -20,7 +20,7 @@ def a_star_search(game, variable_selection, heuristic):
         if game.is_goal_state():
             return current_board
 
-        successor = game.get_successors(current_board)
+        successor = get_successors(current_board)
 
         for next_board, next_path in successor:
             if next_board not in explored:
@@ -57,7 +57,7 @@ def get_successors(board):
 
 
 # *** CSP *** #
-def csp(board, variable_selection, heuristic):
+def csp(game, variable_selection, heuristic):
     """
     Works as follows:
         state - Board state (what cells are filled and with what color). Since there are many invalid board states,
@@ -83,17 +83,23 @@ def csp(board, variable_selection, heuristic):
     :param lcv:
     :return:
     """
+    board = game.get_initial_board()
     return backtrack(board, 0, board.get_list_of_numbered_cells(), variable_selection, heuristic)
 
 
 def backtrack(board, i, numbered_cells, variable_selection, heuristic):
+    # Entire board is filled, return finished board
     if i == len(numbered_cells):
         return board
+
     x, y = numbered_cells[i]
+
+    # If cell is already colored (by path created earlier) move to next cell
     if board.is_colored_cell(x, y):
         yield board, [(x, y)], board.get_number_color_in_cell(x, y)
         yield from backtrack(board, i + 1, numbered_cells, variable_selection, heuristic)
 
+    # Get list of all possible paths from the cell. sort next cell using variable selection and paths using heuristic
     paths = board.get_possible_paths(x, y)
     if len(paths) > 1:
         variable_selection(board)
@@ -112,6 +118,8 @@ def backtrack(board, i, numbered_cells, variable_selection, heuristic):
             done_board = backtrack(next_board, i + 1, numbered_cells, variable_selection, heuristic)
             if done_board is not None:
                 yield from done_board
+
+            # Return back the old board and the path we deleted
             yield board, path, 0
 
 
