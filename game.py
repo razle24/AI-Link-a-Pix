@@ -119,24 +119,27 @@ class Game:
         self.heuristic = heuristic
 
     def set_boards_generator(self):
-        # self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
-        # prob = Problem(self.board, self.goal_board)
-        self.boards_generator = a_star_search(self, invalid_state)
+        self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
+        # # prob = Problem(self.board, self.goal_board)
+        # self.boards_generator = a_star_search(self, invalid_state)
+
 
 if __name__ == '__main__':
     xml = get_xml_from_path('boards/tiny_color.xml')
     my_game = Game(xml)
     # print("count empty: ", count_empty_cells(my_game.board))
-    heads = my_game.board.get_list_of_numbered_cells()
-    my_game.set_boards_generator()
-    while True:
-        my_game.do_move()
-        if my_game.is_goal_state():
-            break
-    # done_board = csp(my_game.board, heads, True)
-    print("Our board:")
-    print(my_game)
-    print("Goal board:")
-    print(my_game.goal_board)
-    # print("count empty: ", count_empty_cells(done_board))
-    print(f'Same: {my_game.is_goal_state()}')
+    # heads = my_game.board.get_list_of_numbered_cells()
+    result = a_star_search(my_game, invalid_state)
+    print(result)
+    # my_game.set_boards_generator()
+    # while True:
+    #     my_game.do_move()
+    #     if my_game.is_goal_state():
+    #         break
+    # # done_board = csp(my_game.board, heads, True)
+    # print("Our board:")
+    # print(my_game)
+    # print("Goal board:")
+    # print(my_game.goal_board)
+    # # print("count empty: ", count_empty_cells(done_board))
+    # print(f'Same: {my_game.is_goal_state()}')

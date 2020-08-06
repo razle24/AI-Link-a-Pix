@@ -6,7 +6,7 @@ import agent as ag
 import game as gm
 from texts import *
 
-GRAPH_SIZE = 700
+GRAPH_SIZE = 500
 MAX_SIZE_TO_SHOW_NUMBERS = 25
 
 class BoardGraph:
