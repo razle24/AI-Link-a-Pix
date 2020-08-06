@@ -6,6 +6,10 @@ import agent as ag
 import game as gm
 from texts import *
 
+from search import search_dict
+from variable_selection import variable_selection_dict
+from heuristics import heuristics_dict
+
 GRAPH_SIZE = 700
 MAX_SIZE_TO_SHOW_NUMBERS = 25
 
@@ -247,11 +251,11 @@ if __name__ == '__main__':
         ],
         [
             sg.Text(AI_MODE),
-            sg.Combo(key='combo_search', values=DROP_DOWN_SEARCH_LIST, text_color='black',
+            sg.Combo(key='combo_search', values=[item for item in search_dict], text_color='black',
                      default_value='Search type', readonly=True, size=(16, 1)),
-            sg.Combo(key='combo_variable', values=DROP_DOWN_SEARCH_LIST, text_color='black',
+            sg.Combo(key='combo_variable', values=[item for item in variable_selection_dict], text_color='black',
                      default_value='Variable selection', readonly=True, size=(16, 1)),
-            sg.Combo(key='combo_heuristic', values=DROP_DOWN_HEURISTIC_LIST, text_color='black',
+            sg.Combo(key='combo_heuristic', values=[item for item in heuristics_dict], text_color='black',
                      default_value='Heuristic (Domain selection)', readonly=True, size=(25, 1))
         ],
         [sg.HorizontalSeparator()],

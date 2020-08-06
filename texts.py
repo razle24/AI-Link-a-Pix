@@ -17,8 +17,6 @@ NO_PUZZLE_SELECTED_TEXT = 'No puzzle selected'
 FILE_NOT_SELECTED_MESSAGE = 'Please select a puzzle to play'
 
 AI_MODE = 'Select AI parameters:'
-DROP_DOWN_SEARCH_LIST = ['Select search type', 'BFS', 'A*']
-DROP_DOWN_HEURISTIC_LIST = ['Select heuristic', 'Null heuristic', 'MRV']
 
 BUTTON_RUN_TEXT = 'Run'
 TURN_COUNTER_TEXT = 'Turn: '

@@ -73,31 +73,3 @@ def create_colors_list(color_dict):
     for i in range(len(color_dict)):
         ret.append('#' + color_dict[i]['@rgb'])
     return ret
-
-
-# def readCommand(args):
-#     pass
-
-
-# def runGames(args):
-#     # self.path = path
-#     # self.gui = GUI()
-#     # self.game = Game(get_xml_from_path(path))
-#     # self.board = game.get_initial_board()
-#     # self.heuristic = heuristic
-#     # self.search = search
-#     # self.result = search(game, heuristic)
-#     # self.expand = 0
-#     pass
-
-
-def calc_err_rate(self):
-    pass
-
-
-def calc_succ_rate(self):
-    pass
-
-
-def get_runtime(self):
-    pass

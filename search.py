@@ -1,31 +1,10 @@
 import copy
 import util
 
+from heuristics import invalid_state
 
-def get_successors(board):
-    """
-    state: Search state
-
-    For a given state, this should return a list of triples,
-    (successor, action, stepCost), where 'successor' is a
-    successor to the current state, 'action' is the action
-    required to get there, and 'stepCost' is the incremental
-    cost of expanding to that successor
-    """
-    successors = []
-    numbered_cells = board.get_list_of_numbered_cells()
-
-    for i, j in numbered_cells:
-        paths = board.get_possible_moves(i, j)
-        for path in paths:
-            current_board = copy.copy(board)
-            color = current_board.get_number_color_in_cell(path[0][0], path[0][1])
-            current_board.set_cells_coloring(path, color)
-            successors += [(current_board, path)]
-    return successors
-
-
-def a_star_search(game, heuristic):
+# *** A star *** #
+def a_star_search(game, variable_selection, heuristic):
     """
     Search the node that has the lowest combined cost and heuristic first.
     """
@@ -54,24 +33,30 @@ def a_star_search(game, heuristic):
     return None
 
 
-def mrv_heuristic(board):
+def get_successors(board):
     """
-    Sort the list by number value (from small to big)
-    :param board: board object
-    :return: doesn't return anything. Sorts the numbered_cells list in the board.
+    state: Search state
+
+    For a given state, this should return a list of triples,
+    (successor, action, stepCost), where 'successor' is a
+    successor to the current state, 'action' is the action
+    required to get there, and 'stepCost' is the incremental
+    cost of expanding to that successor
     """
-    board.numbered_cells.sort(key=lambda coord: board.get_number_in_cell(coord[0], coord[1]), reverse=False)
+    successors = []
+    numbered_cells = board.get_list_of_numbered_cells()
+
+    for i, j in numbered_cells:
+        paths = board.get_possible_moves(i, j)
+        for path in paths:
+            current_board = copy.copy(board)
+            color = current_board.get_number_color_in_cell(path[0][0], path[0][1])
+            current_board.set_cells_coloring(path, color)
+            successors += [(current_board, path)]
+    return successors
 
 
-def lcv_heuristic(board):
-    """
-    Sort list by amount of possible paths
-    :param board:
-    :return:
-    """
-    board.numbered_cells.sort(key=lambda coord: len(board.get_possible_moves(coord[0], coord[1])), reverse=False)
-
-
+# *** CSP *** #
 def csp(board, variable_selection, heuristic):
     """
     Works as follows:
@@ -98,35 +83,21 @@ def csp(board, variable_selection, heuristic):
     :param lcv:
     :return:
     """
-    # if mrv:
-    #     mrv_heuristic(board)
-    #
-    # if lcv:
-    #     lcv_heuristic(board)
-
-    return backtrack(board, 0, board.get_list_of_numbered_cells())
+    return backtrack(board, 0, board.get_list_of_numbered_cells(), variable_selection, heuristic)
 
 
-def backtrack(board, i, numbered_cells):
-    """
-    Colors paths according to numbered_cells order, using different heuristics in order to color the whole board.w
-    :param board:
-    :param i:
-    :param numbered_cells:
-    :return:
-    """
+def backtrack(board, i, numbered_cells, variable_selection, heuristic):
     if i == len(numbered_cells):
         return board
     x, y = numbered_cells[i]
     if board.is_colored_cell(x, y):
         yield board, [(x, y)], board.get_number_color_in_cell(x, y)
-        yield from backtrack(board, i + 1, numbered_cells)
+        yield from backtrack(board, i + 1, numbered_cells, variable_selection, heuristic)
 
     paths = board.get_possible_paths(x, y)
     if len(paths) > 1:
-        lcv_heuristic(board)
-        # paths.sort(key=lambda path: count_possible_paths(board, path), reverse=True)
-        paths.sort(key=lambda path: stick_to_path_wall_heuristic(board, path), reverse=True)
+        variable_selection(board)
+        paths.sort(key=lambda path: heuristic(board, path), reverse=True)
 
     for path in paths:
         end_x, end_y = path[-1]
@@ -138,10 +109,13 @@ def backtrack(board, i, numbered_cells):
             next_board.set_cells_coloring(path, board.get_number_color_in_cell(x, y))
 
             yield next_board, path, board.get_number_color_in_cell(x, y)
-            done_board = backtrack(next_board, i + 1, numbered_cells)
+            done_board = backtrack(next_board, i + 1, numbered_cells, variable_selection, heuristic)
             if done_board is not None:
                 yield from done_board
             yield board, path, 0
 
 
-search_dict = {"CSP": csp, "A*": a_star_search}
+search_dict = {
+    "CSP": csp,
+    "A*": a_star_search
+}

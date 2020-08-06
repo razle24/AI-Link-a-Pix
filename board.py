@@ -6,7 +6,6 @@ def generate_matrix_from_xml_dict(xml_dict):
     """
     Given xml dictionary, read the beginning and end of each path, add corresponding coordinates to the board
     :param xml_dict: As explained at agent.py
-    :param return_goal_matrix: True if we want the matrix to be filled with the answer, otherwise False.
     :return: Matrix (w*h) with the following values [(number, number_color), cell_color].
              If no number in cell the tuple will be filled with zeros [(0, 0), 0]
     """
@@ -41,7 +40,6 @@ class Board:
     - matrix: a matrix (2D list) of [(number, number_color), cell_color]
     - colors: the number of the colors
     """
-
     def __init__(self, num_of_colors, numbers_matrix, coloring_matrix=None):
         self.num_of_colors = num_of_colors
         self.numbers_matrix = numbers_matrix
@@ -51,7 +49,6 @@ class Board:
         else:
             self.coloring_matrix = coloring_matrix
 
-        self.board_score = None
         self.possible_paths = [[None for i in range(self.get_width())] for j in range(self.get_height())]
         self.numbered_cells = [(i, j) for i in range(self.get_height()) for j in range(self.get_width())
                                if self.is_numbered_cell(i, j)]
@@ -77,7 +74,7 @@ class Board:
 
         return cpy_board
 
-    # ** Boolean Getters ** #
+    # *** Boolean Getters *** #
     def is_numbered_cell(self, x, y):
         """
         :return: True if the cell (x, y) is a head, else False
@@ -101,14 +98,7 @@ class Board:
                 return False
         return True
 
-    # def has_possible_moves(self, x, y):
-    #     paths = self.get_possible_paths(x, y)
-    #     for path in paths:
-    #         if self.is_valid_path(path):
-    #             return True
-    #     return False
-
-    # ** Getters ** #
+    # *** Getters *** #
     def get_number_in_cell(self, x, y):
         """
         :return: The number in cell (x, y)
@@ -145,13 +135,7 @@ class Board:
         """
         return self.numbered_cells
 
-    # def get_board_score(self):
-    #     """
-    #     :return: The board's current score
-    #     """
-    #     return self.board_score
-
-    # ** Setters ** #
+    # *** Setters *** #
     def set_cell_coloring(self, x, y, cell_color):
         """
         The function colors the cell (x, y) in the given color
@@ -167,9 +151,6 @@ class Board:
         for cell in cells:
             self.coloring_matrix[cell[0]][cell[1]] = cell_color
 
-    # def set_board_score(self, score):
-    #     self.board_score = score
-
     def get_possible_moves(self, x, y):
         """
         :return: All valid paths from the head (x, y) to another head
@@ -182,7 +163,7 @@ class Board:
                 continue
         return ret
 
-    # ** Possible Paths Finder ** #
+    # *** Possible Paths Finder *** #
     def get_possible_paths(self, x, y):
         """
         Get all possible paths from the cell (x, y).

@@ -1,19 +1,7 @@
-import math
-import copy
 from search import *
 
-colors_test = ['white', 'black', 'red']
 
-
-def null_heuristic(board=None, path=None):
-    """
-    A heuristic function that estimates the cost of the current board. This heuristic is trivial.
-    :param board: The current board
-    :return: 0 for every board
-    """
-    return 0
-
-
+# ** Used every time ** #
 def invalid_state(board, path=None):
     """
     A heuristic function that estimates the cost of the current board.
@@ -27,6 +15,17 @@ def invalid_state(board, path=None):
         if not board.is_colored_cell(i, j) and len(board.get_possible_moves(i, j)) == 0:
             return float('-inf')
 
+    return 0
+
+
+# ** Selected by user ** #
+def null_heuristic(board=None, path=None):
+    """
+    A heuristic function that estimates the cost of the current board. This heuristic is trivial.
+    :param board:
+    :param path:
+    :return: 0 for every board
+    """
     return 0
 
 
@@ -54,6 +53,7 @@ def count_empty_cells(board):
     return len([1 for i in range(board.get_height()) for j in range(board.get_width())
                 if not board.is_colored_cell(i, j)])
 
+
 def stick_to_wall(board, path):
     """
     A heuristic function that estimates the cost of the current board.
@@ -62,14 +62,8 @@ def stick_to_wall(board, path):
     :param board: The current board
     :return: The number of cells in the path that are closer to the walls of the board
     """
-    counter = 0
-    for i, j in path:
-        walls_dist = []
-
-
-
-    return sum([1 for i, j in path if i == 0 or i == board.get_height() - 1 or
-                          j == 0 or j == board.get_width() - 1])
+    return sum([1 for i, j in path if i == 0 or i == board.get_height() - 1
+                or j == 0 or j == board.get_width() - 1])
 
 
 def stick_to_path(board, path):
@@ -138,8 +132,10 @@ def all_heuristics(board, path):
 
 
 heuristics_dict = {
-    "Null Heuristic": null_heuristic,
-    "Count Empty Cells": count_empty_cells,
-    "MRV": mrv_heuristic,
-    "LCV": lcv_heuristic
+    "Null heuristic": null_heuristic,
+    "Count possible paths": count_possible_paths,
+    "Stick to walls": stick_to_wall,
+    "Stick to other paths": stick_to_path,
+    "Count empty cells": count_empty_cells,
+    'Linear combination': all_heuristics
 }

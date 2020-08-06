@@ -1,7 +1,9 @@
 from agent import *
 from board import *
-from search import *
-from heuristics import *
+
+from search import search_dict
+from variable_selection import variable_selection_dict
+from heuristics import heuristics_dict
 
 
 class Game:
@@ -9,12 +11,10 @@ class Game:
     Game engine class stores the current game state and controls when to
     get input/draw output
     """
-    def __init__(self, xml_dict, search_type=None, heuristic=None):
+    def __init__(self, xml_dict):
         """
         :param xml_dict: dictionary with the following items: Puzzle name, Puzzle width, Puzzle height,
         List of RGB values, paths, lists of lists of paths in the key color
-        :param search_type: The current search type - CSP or A*
-        :param heuristic: The current heuristic type
         """
         self.number_of_colors = len(xml_dict["colors"])
         self.colors_dict = xml_dict['colors']
@@ -82,15 +82,9 @@ class Game:
         """
         return self.board == self.goal_board
 
-    # **  Getters  ** #
-    def get_search(self):
-        return self.search
-
-    def get_heuristic(self):
-        """
-        :return: The current heuristic type
-        """
-        return self.heuristic
+    # ***  Getters  *** #
+    def get_initial_board(self):
+        return self.initial_board
 
     def get_current_numbers_matrix(self):
         """
@@ -129,10 +123,7 @@ class Game:
         """
         return self.moves_counter
 
-    def get_initial_board(self):
-        return self.initial_board
-
-    # **  Setters  ** #
+    # ***  Setters  *** #
     def set_search(self, search):
         """
         :param search: The current search type
@@ -151,26 +142,27 @@ class Game:
         self.heuristic = heuristic
 
     def set_boards_generator(self):
-        if self.search == 'CSP':
-            self.boards_generator = csp(self.board, self.variable_selection, heuristics_dict[self.heuristic])
-        if self.search == 'A_star':
-            self.boards_generator = a_star_search(self, heuristics_dict[self.heuristic])
+        self.boards_generator = self.search(self.board, variable_selection_dict[self.variable_selection],
+                                            heuristics_dict[self.heuristic])
 
+    def reset_counter(self):
+        self.moves_counter = 0
 
-if __name__ == '__main__':
-    xml = get_xml_from_path('boards/tiny_color.xml')
-    my_game = Game(xml)
-    # print("count empty: ", count_empty_cells(my_game.board))
-    heads = my_game.board.get_list_of_numbered_cells()
-    my_game.set_boards_generator()
-    while True:
-        my_game.do_move()
-        if my_game.is_goal_state():
-            break
-    # done_board = csp(my_game.board, heads, True)
-    print("Our board:")
-    print(my_game)
-    print("Goal board:")
-    print(my_game.goal_board)
-    # print("count empty: ", count_empty_cells(done_board))
-    print(f'Same: {my_game.is_goal_state()}')
+#
+# if __name__ == '__main__':
+#     xml = get_xml_from_path('boards/tiny_color.xml')
+#     my_game = Game(xml)
+#     # print("count empty: ", count_empty_cells(my_game.board))
+#     heads = my_game.board.get_list_of_numbered_cells()
+#     my_game.set_boards_generator()
+#     while True:
+#         my_game.do_move()
+#         if my_game.is_goal_state():
+#             break
+#     # done_board = csp(my_game.board, heads, True)
+#     print("Our board:")
+#     print(my_game)
+#     print("Goal board:")
+#     print(my_game.goal_board)
+#     # print("count empty: ", count_empty_cells(done_board))
+#     print(f'Same: {my_game.is_goal_state()}')
