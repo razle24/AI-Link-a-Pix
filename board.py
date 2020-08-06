@@ -79,51 +79,83 @@ class Board:
 
     # ** Boolean Getters ** #
     def is_numbered_cell(self, x, y):
+        """
+        :return: True if the cell (x, y) is a head, else False
+        """
         return self.get_number_in_cell(x, y) != 0
 
     def is_colored_cell(self, x, y):
+        """
+        :return: True if the cell (x, y) is colored, else False
+        """
         return self.get_cell_coloring(x, y) != 0
 
     def is_valid_path(self, path):
+        """
+        :param path: The path we want to check
+        :return: True if the path is valid - no cell is already colored, else False
+        """
         for cell in path:
             # Directly check matrix to improve performance
             if self.coloring_matrix[cell[0]][cell[1]]:
                 return False
-
         return True
 
-    def has_possible_moves(self, x, y):
-        paths = self.get_possible_paths(x, y)
-        for path in paths:
-            if self.is_valid_path(path):
-                return True
-
-        return False
+    # def has_possible_moves(self, x, y):
+    #     paths = self.get_possible_paths(x, y)
+    #     for path in paths:
+    #         if self.is_valid_path(path):
+    #             return True
+    #     return False
 
     # ** Getters ** #
     def get_number_in_cell(self, x, y):
+        """
+        :return: The number in cell (x, y)
+        """
         return self.numbers_matrix[x][y][0]
 
     def get_number_color_in_cell(self, x, y):
+        """
+        :return: The color of the number in cell (x, y)
+        """
         return self.numbers_matrix[x][y][1]
 
     def get_cell_coloring(self, x, y):
+        """
+        :return: The color of the cell (x, y)
+        """
         return self.coloring_matrix[x][y]
 
     def get_width(self):
+        """
+        :return: The board's width
+        """
         return len(self.numbers_matrix[0])
 
     def get_height(self):
+        """
+        :return: The board's height
+        """
         return len(self.numbers_matrix)
 
     def get_list_of_numbered_cells(self):
+        """
+        :return: All the (x, y) of the cells that has number in it (the heads)
+        """
         return self.numbered_cells
 
-    def get_board_score(self):
-        return self.board_score
+    # def get_board_score(self):
+    #     """
+    #     :return: The board's current score
+    #     """
+    #     return self.board_score
 
     # ** Setters ** #
     def set_cell_coloring(self, x, y, cell_color):
+        """
+        The function colors the cell (x, y) in the given color
+        """
         self.coloring_matrix[x][y] = cell_color
 
     def set_cells_coloring(self, cells, cell_color):
@@ -135,15 +167,12 @@ class Board:
         for cell in cells:
             self.coloring_matrix[cell[0]][cell[1]] = cell_color
 
-    def set_board_score(self, score):
-        self.board_score = score
+    # def set_board_score(self, score):
+    #     self.board_score = score
 
     def get_possible_moves(self, x, y):
         """
-        returns all valid paths from the head (x, y)
-        :param x:
-        :param y:
-        :return:
+        :return: All valid paths from the head (x, y) to another head
         """
         ret = []
         paths = self.get_possible_paths(x, y)
@@ -151,7 +180,6 @@ class Board:
             if self.is_valid_path(path):
                 ret += [path]
                 continue
-
         return ret
 
     # ** Possible Paths Finder ** #
@@ -242,6 +270,10 @@ class Board:
         return [path for i, path in enumerate(paths) if paths_mask[i]]
 
     def get_paths_rec(self, current_path, end_x, end_y, steps, length):
+        """
+        Recursive function that finds all valid paths from (x, y) to (end_x, end_y).
+        :return: List of paths. Path is a list of [(number, number_color), cell_color].
+        """
         x, y = current_path[-1]
 
         # If end of steps
