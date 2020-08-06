@@ -142,5 +142,15 @@ def all_heuristics(board):
     pass
 
 
+def geffen(board):
+    """
+    A heuristic function that estimates the cost of the current board.
+    Combines different heuristics in different weights
+    :param board: The current board
+    :return: The linear combination of all the heuristics used
+    """
+    pass
+
+
 # heuristics = {"Null Heuristic": null_heuristic, "Invalid State Heuristic": invalid_state,
 #               "Count Empty Cells": count_empty_cells, "MRV": mrv_heuristic, "LCV": lcv_heuristic}
