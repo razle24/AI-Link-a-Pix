@@ -1,3 +1,7 @@
+"""
+A file with all "Magic Numbers" in the Project
+"""
+
 APP_NAME = 'Link-a-Pix AI'
 
 GAME_MODE_TEXT = 'Select game mode and puzzle:'

@@ -9,7 +9,11 @@ from texts import *
 GRAPH_SIZE = 500
 MAX_SIZE_TO_SHOW_NUMBERS = 25
 
+
 class BoardGraph:
+    """
+    The board's GUI class
+    """
     def __init__(self, graph: sg.Graph, game: gm.Game):
         # GUI object, contains canvas to print board to
         self.graph = graph
@@ -37,6 +41,10 @@ class BoardGraph:
         self.draw_board_numbers()
 
     def draw_board_borders(self):
+        """
+        Draws the board borders
+        :return:
+        """
         curr_w = 0
         for i in range(self.h):
             curr_h = 0
@@ -54,6 +62,9 @@ class BoardGraph:
             curr_w += self.cell_size
 
     def draw_board_numbers(self):
+        """
+        Draws the numbers on the board
+        """
         for i in range(self.h):
             for j in range(self.w):
                 cell = self.board[i][j]
@@ -67,6 +78,13 @@ class BoardGraph:
                     self.graph.bring_figure_to_front(self.canvas_numbers[(i, j)])
 
     def drew_color_on_board(self, x, y, rgb_color):
+        """
+        Gets a coordinate (x, y) and colors it on the board with the given color.
+        :param x:
+        :param y:
+        :param rgb_color:
+        :return:
+        """
         self.graph.tk_canvas.itemconfigure(self.canvas_background[(x, y)], fill=rgb_color)
 
         # The cell also has number, we also need to change the color to the text
@@ -79,6 +97,10 @@ class BoardGraph:
 
 
 def runGUI(layout):
+    """
+    Runs the GUI.
+    :param layout:
+    """
     # Create the Window
     window = sg.Window(APP_NAME, layout, finalize=True)
 

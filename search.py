@@ -130,6 +130,13 @@ def csp(board, heads, mrv=False, lcv=False):
 
 
 def backtrack(board, i, numbered_cells):
+    """
+    Colors paths according to numbered_cells order, using different heuristics in order to color the whole board.w
+    :param board:
+    :param i:
+    :param numbered_cells:
+    :return:
+    """
     if i == len(numbered_cells):
         return board
     x, y = numbered_cells[i]

@@ -37,7 +37,8 @@ def get_xml_from_path(path):
 
 def create_paths_dict(paths_dict, color_list):
     """
-    
+    Creates a dictionary {"color" : [paths]}
+    :param color_list:
     :param paths_dict:
     :return:
     """
@@ -51,7 +52,7 @@ def create_paths_dict(paths_dict, color_list):
 
 def create_tuple_path(str_path):
     """
-    gets a path as a string - for example : '1 2 3 4' and creates a list of tuples.
+    Gets a path as a string - for example : '1 2 3 4' and creates a list of tuples.
     :param str_path:
     :return: a list of tuples - [(1,2), (3,4)]
     """
@@ -100,9 +101,3 @@ def calc_succ_rate(self):
 
 def get_runtime(self):
     pass
-
-
-if __name__ == '__main__':
-    get_xml_from_path('boards/small_color.xml')
-    print("lll")
-# # TODO - change
