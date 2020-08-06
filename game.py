@@ -5,7 +5,7 @@ from heuristics import *
 
 
 class Game:
-    def __init__(self, xml_dict, search_type=None, heuristic=None):
+    def __init__(self, xml_dict):
         """
 
         :param xml_dict:
@@ -21,8 +21,9 @@ class Game:
         self.initial_board = Board(self.number_of_colors, numbers_matrix)
         self.goal_board = Board(self.number_of_colors, numbers_matrix, coloring_matrix)
 
-        self.search = search_type
-        self.heuristic = heuristic
+        self.search = None
+        self.variable_selection = None
+        self.heuristic = None
 
         self.moves_counter = 0
 
@@ -72,34 +73,10 @@ class Game:
         self.board = next(self.boards_generator, None)
         return self.board.coloring_matrix
 
-
     def is_goal_state(self):
         return self.board == self.goal_board
 
     # **  Getters  ** #
-
-    def get_successors(self, board):
-        """
-        state: Search state
-
-        For a given state, this should return a list of triples,
-        (successor, action, stepCost), where 'successor' is a
-        successor to the current state, 'action' is the action
-        required to get there, and 'stepCost' is the incremental
-        cost of expanding to that successor
-        """
-        successors = []
-        numbered_cells = board.get_list_of_numbered_cells()
-
-        for i, j in numbered_cells:
-            paths = board.get_possible_moves(i, j)
-            for path in paths:
-                current_board = copy.copy(board)
-                color = current_board.get_number_color_in_cell(path[0][0], path[0][1])
-                current_board.set_cells_coloring(path, color)
-                successors += [(current_board, path)]
-        return successors
-
     def get_search(self):
         return self.search
 
@@ -128,19 +105,24 @@ class Game:
     def get_moves_counter(self):
         return self.moves_counter
 
-    def get_initial_board(selfs):
-        return selfs.initial_board
+    def get_initial_board(self):
+        return self.initial_board
 
     # **  Setters  ** #
     def set_search(self, search):
         self.search = search
 
+    def set_variable_selection(self, variable_selection):
+        self.variable_selection = variable_selection
+
     def set_heuristic(self, heuristic):
         self.heuristic = heuristic
 
     def set_boards_generator(self):
-        # self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
-        self.boards_generator = a_star_search(self, invalid_state)
+        if self.search == 'CSP':
+            self.boards_generator = csp(self.board, self.variable_selection, heuristics_dict[self.heuristic])
+        if self.search == 'A_star':
+            self.boards_generator = a_star_search(self, heuristics_dict[self.heuristic])
 
 
 if __name__ == '__main__':

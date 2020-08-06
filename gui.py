@@ -9,6 +9,48 @@ from texts import *
 GRAPH_SIZE = 700
 MAX_SIZE_TO_SHOW_NUMBERS = 25
 
+
+def run_paths_based_search_with_animation(window, graph, game):
+    while not game.is_goal_state():
+        path, color = game.do_move()
+
+        for cell in path:
+            window.finalize()
+            graph.drew_color_on_board(cell[0], cell[1], graph.colors[color])
+
+
+def run_board_based_search_with_animation(window, graph, game):
+    while not game.is_goal_state():
+        matrix = game.do_move_a_star()
+
+        for i in range(len(matrix)):
+            for j in range(len(matrix[0])):
+                window.finalize()
+                graph.drew_color_on_board(i, j, graph.colors[matrix[i][j]])
+
+
+def run_search_without_animation(window, game):
+    while not game.is_goal_state():
+        game.do_move()
+        window['turn_counter'] = str(game.get_moves_counter())
+
+
+def disable_gui(window):
+    window['file_selector'].update(disabled=True)
+    window['combo_search'].update(disabled=True)
+    window['combo_variable'].update(disabled=True)
+    window['combo_heuristic'].update(disabled=True)
+    window['button_run'].update(disabled=True)
+
+
+def enable_gui(window):
+    window['file_selector'].update(disabled=False)
+    window['combo_search'].update(disabled=False)
+    window['combo_variable'].update(disabled=False)
+    window['combo_heuristic'].update(disabled=False)
+    window['button_run'].update(disabled=False)
+
+
 class BoardGraph:
     def __init__(self, graph: sg.Graph, game: gm.Game):
         # GUI object, contains canvas to print board to
@@ -80,10 +122,7 @@ class BoardGraph:
 
 def runGUI(layout):
     # Create the Window
-    window = sg.Window(APP_NAME, layout, finalize=True)
-
-    # Set variables
-    run_game = False
+    window = sg.Window(APP_NAME, layout)
 
     # Event Loop to process 'events' and get the 'values' of the inputs
     while True:
@@ -112,34 +151,34 @@ def runGUI(layout):
             graph = BoardGraph(window['graph_board'], game)
 
         # Start run the game with given parameters
-        if event == 'button_resume':
-            print('button_resume')
+        if event == 'button_run':
+            print('button_run')
 
             if values['file_path'] != '':
-                game.set_search(values['combo_select'])
-                game.set_heuristic(values['combo_heuristic'])
+                # Disable buttons on GUI while running the search
+                disable_gui(window)
 
-                # Disable combo buttons and puzzle selector
-                window.finalize()
-                window['file_selector'].update(disabled=True)
-                window.finalize()
-                window['combo_select'].update(disabled=True)
-                window.finalize()
-                window['combo_heuristic'].update(disabled=True)
+                game.set_search(values['combo_search'])
+                game.set_variable_selection(values['combo_variable'])
+                game.set_heuristic(values['combo_heuristic'])
 
                 # Set game to run
                 game.set_boards_generator()
-                run_game = True
 
-        # Pause the game from running new steps
-        if event == 'button_pause':
-            print('button_pause')
-            run_game = False
+                if values['checkbox_show_animation']:
+                    pass
+                # run_paths_based_search(window, game, game)
+                else:
+                    run_search_without_animation(window, game)
+
+                # enable_gui(window)
+
+            else:
+                print(FILE_NOT_SELECTED_MESSAGE)
 
         # Clear the board and reset the current game, unable combo buttons and puzzle selector again
         if event == 'button_reset':
             print('button_reset')
-            run_game = False
 
             # Reset board
             window['graph_board'].erase()
@@ -153,39 +192,10 @@ def runGUI(layout):
             window.finalize()
             window['combo_heuristic'].update(disabled=False)
 
-        if event == 'button_next_move':
-            while True:
-                path, color = game.do_move()
-
-                for cell in path:
-                    window.finalize()
-                    graph.drew_color_on_board(cell[0], cell[1], graph.colors[color])
-
-                if game.is_goal_state():
-                    break
-
-        if event == 'button_next_move_a_star':
-            while True:
-                matrix = game.do_move_a_star()
-                for i in range(len(matrix)):
-                    for j in range(len(matrix[0])):
-                        window.finalize()
-                        graph.drew_color_on_board(i, j, graph.colors[matrix[i][j]])
-
-                if game.is_goal_state():
-                    break
-
         if event == 'graph_board':
             x, y = values["graph_board"]
             print(f'Clicked on x: {x}\t y: {y}')
             print(f'Figures in location {window["graph_board"].get_figures_at_location((x, y))}')
-
-        # if run_game:
-        #     print(f'Turn: {game.get_moves_counter()}')
-        #     path, color = game.do_move()
-        #     print(path, color)
-        #     for cell in path:
-        #         graph.drew_color_on_board(cell[0], cell[1], graph.colors[color])
 
     window.close()
 
@@ -216,24 +226,20 @@ if __name__ == '__main__':
         ],
         [
             sg.Text(AI_MODE),
-            sg.Combo(key='combo_select', values=DROP_DOWN_SEARCH_LIST, text_color='black',
-                     default_value='Select search type', readonly=True),
+            sg.Combo(key='combo_search', values=DROP_DOWN_SEARCH_LIST, text_color='black',
+                     default_value='Search type', readonly=True, size=(16, 1)),
+            sg.Combo(key='combo_variable', values=DROP_DOWN_SEARCH_LIST, text_color='black',
+                     default_value='Variable selection', readonly=True, size=(16, 1)),
             sg.Combo(key='combo_heuristic', values=DROP_DOWN_HEURISTIC_LIST, text_color='black',
-                     default_value='Select heuristic', readonly=True)
+                     default_value='Heuristic (Domain selection)', readonly=True, size=(25, 1))
         ],
         [sg.HorizontalSeparator()],
         [
-            sg.Button(key='button_resume', button_text=BUTTON_RESUME_TEXT, size=(8, 1)),
-            sg.Button(key='button_pause', button_text=BUTTON_PAUSE_TEXT, size=(8, 1)),
-            sg.Button(key='button_reset', button_text=BUTTON_RESET_TEXT, size=(8, 1)),
-            sg.Button(key='button_next_move', button_text=BUTTON_NEXT_MOVE_TEXT, size=(8, 1)),
-            sg.Button(key='button_next_move_a_star', button_text=BUTTON_NEXT_MOVE_TEXT, size=(8, 1))
-
-            # sg.Sizer(400),
-            #
-            # sg.Text(SLIDER_SPEED_TEXT),
-            # sg.Slider(key='slider_speed', range=(0, 2), default_value=0, resolution=1,
-            #           orientation='h', disable_number_display=True)
+            sg.Button(key='button_run', button_text=BUTTON_RUN_TEXT, size=(8, 1)),
+            sg.Checkbox(key='checkbox_show_animation', text=SHOW_ANIMATION_CHECKBOX_TEXT, default=True),
+            sg.Sizer(300),
+            sg.Text(TURN_COUNTER_TEXT),
+            sg.Text(0, key='turn_counter')
         ],
         [
             sg.Graph(key='graph_board', enable_events=True, float_values=True,
@@ -250,3 +256,5 @@ if __name__ == '__main__':
     ]
 
     runGUI(layout)
+
+

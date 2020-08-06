@@ -5,11 +5,11 @@ from search import *
 colors_test = ['white', 'black', 'red']
 
 
-def null_heuristic(board, path):
+def null_heuristic(board=None, path=None):
     return 0
 
 
-def invalid_state(board, path):
+def invalid_state(board, path=None):
     """
     Checks if every uncolored cell has at least one valid path.
     :param path:
@@ -119,5 +119,9 @@ def all_heuristics(state):
     pass
 
 
-# heuristics = {"Null Heuristic": null_heuristic, "Invalid State Heuristic": invalid_state,
-#               "Count Empty Cells": count_empty_cells, "MRV": mrv_heuristic, "LCV": lcv_heuristic}
+heuristics_dict = {
+    "Null Heuristic": null_heuristic,
+    "Count Empty Cells": count_empty_cells,
+    "MRV": mrv_heuristic,
+    "LCV": lcv_heuristic
+}

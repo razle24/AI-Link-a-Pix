@@ -10,15 +10,15 @@ FILE_BROWSER_TEXT = 'Select puzzle...'
 FILE_SELECTED_TEXT = 'Puzzle selected: '
 NO_PUZZLE_SELECTED_TEXT = 'No puzzle selected'
 
+FILE_NOT_SELECTED_MESSAGE = 'Please select a puzzle to play'
+
 AI_MODE = 'Select AI parameters:'
 DROP_DOWN_SEARCH_LIST = ['Select search type', 'BFS', 'A*']
 DROP_DOWN_HEURISTIC_LIST = ['Select heuristic', 'Null heuristic', 'MRV']
 
-BUTTON_RESUME_TEXT = 'Run'
-BUTTON_PAUSE_TEXT = 'Pause'
-BUTTON_RESET_TEXT = 'Reset'
-BUTTON_NEXT_MOVE_TEXT = 'Next Move'
-SLIDER_SPEED_TEXT = 'Speeds: normal/fast/instant'
+BUTTON_RUN_TEXT = 'Run'
+TURN_COUNTER_TEXT = 'Turn: '
+SHOW_ANIMATION_CHECKBOX_TEXT = 'Select this to show animation'
 
 STATS_TEXT = 'Run statistics:'
 

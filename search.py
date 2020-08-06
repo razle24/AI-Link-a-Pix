@@ -1,10 +1,28 @@
 import copy
-import math
-from heuristics import *
 import util
-from board import Board
 
-FAILURE = 'Failure'
+
+def get_successors(board):
+    """
+    state: Search state
+
+    For a given state, this should return a list of triples,
+    (successor, action, stepCost), where 'successor' is a
+    successor to the current state, 'action' is the action
+    required to get there, and 'stepCost' is the incremental
+    cost of expanding to that successor
+    """
+    successors = []
+    numbered_cells = board.get_list_of_numbered_cells()
+
+    for i, j in numbered_cells:
+        paths = board.get_possible_moves(i, j)
+        for path in paths:
+            current_board = copy.copy(board)
+            color = current_board.get_number_color_in_cell(path[0][0], path[0][1])
+            current_board.set_cells_coloring(path, color)
+            successors += [(current_board, path)]
+    return successors
 
 
 def a_star_search(game, heuristic):
@@ -55,7 +73,7 @@ def lcv_heuristic(board):
     board.numbered_cells.sort(key=lambda coord: len(board.get_possible_moves(coord[0], coord[1])), reverse=False)
 
 
-def csp(board, heads, mrv=False, lcv=False):
+def csp(board, variable_selection, heuristic):
     """
     Works as follows:
         state - Board state (what cells are filled and with what color). Since there are many invalid board states,
@@ -81,14 +99,13 @@ def csp(board, heads, mrv=False, lcv=False):
     :param lcv:
     :return:
     """
-    paths = []
-    if mrv:
-        mrv_heuristic(board)
+    # if mrv:
+    #     mrv_heuristic(board)
+    #
+    # if lcv:
+    #     lcv_heuristic(board)
 
-    if lcv:
-        lcv_heuristic(board)
-
-    return backtrack(board, 0, heads)
+    return backtrack(board, 0, board.get_list_of_numbered_cells())
 
 
 def backtrack(board, i, numbered_cells):
