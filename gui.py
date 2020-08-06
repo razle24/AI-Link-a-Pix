@@ -14,6 +14,17 @@ GRAPH_SIZE = 700
 MAX_SIZE_TO_SHOW_NUMBERS = 25
 
 
+def toggle_gui(window, toggle):
+    toggle = not toggle
+    window['file_selector'].update(disabled=toggle)
+    window['combo_search'].update(disabled=toggle)
+    window['combo_variable'].update(disabled=toggle)
+    window['combo_heuristic'].update(disabled=toggle)
+    window['button_run'].update(disabled=toggle)
+    window['button_reset'].update(disabled=toggle)
+    window['checkbox_show_animation'].update(disabled=toggle)
+
+
 # *** CSP *** #
 def run_paths_based_search_with_animation(window, graph, game):
     while not game.is_goal_state():
@@ -38,8 +49,6 @@ def run_paths_based_search_without_animation(window, graph, game):
         for j in range(len(matrix[0])):
             window.finalize()
             graph.drew_color_on_board(i, j, graph.colors[matrix[i][j]])
-
-
 
 
 # *** A Star *** #
@@ -69,16 +78,6 @@ def run_board_based_search_without_animation(window, graph, game):
             graph.drew_color_on_board(i, j, graph.colors[matrix[i][j]])
 
 
-def toggle_gui(window, toggle):
-    toggle = not toggle
-    window['file_selector'].update(disabled=toggle)
-    window['combo_search'].update(disabled=toggle)
-    window['combo_variable'].update(disabled=toggle)
-    window['combo_heuristic'].update(disabled=toggle)
-    window['button_run'].update(disabled=toggle)
-    window['checkbox_show_animation'].update(disabled=toggle)
-
-
 class BoardGraph:
     """
     The board's GUI class
@@ -100,7 +99,7 @@ class BoardGraph:
         # 2D array (w*h) contains tuples of ((number, number_color), color) of the board
         self.board = self.game.get_current_numbers_matrix()
 
-        # Dictionary of canvas items, each (x, y) is ID of the correspond item on the canvas
+        # Dictionary of canvas items, each (x, y) is the key of the correspond item on the canvas
         self.canvas_background = dict()
         self.canvas_numbers = dict()
 
@@ -164,6 +163,14 @@ class BoardGraph:
             else:
                 self.graph.tk_canvas.itemconfigure(self.canvas_numbers[(x, y)], fill='white')
 
+    def clear_board(self):
+        for cell in self.canvas_background:
+            self.graph.tk_canvas.itemconfigure(self.canvas_background[cell], fill='white')
+
+        for number in self.canvas_numbers:
+            self.graph.tk_canvas.itemconfigure(self.canvas_numbers[number], fill='black')
+
+
 
 def runGUI(layout):
     """
@@ -207,11 +214,10 @@ def runGUI(layout):
                 toggle_gui(window, False)
 
                 # Set game to run
-                game.reset_game()
                 game.set_boards_generator(values['combo_search'], values['combo_variable'], values['combo_heuristic'])
 
-                # Select search, we scarified here generality for preference, since this is the core to the search
-                # and we wanted to avoid unneeded 'if' statements
+                # Select search, we scarified here generality for performance, since this is the core to the search
+                # and we wanted to avoid unnecessary 'if' statements each iteration
                 if values['checkbox_show_animation']:
                     if values['combo_search'] == 'CSP':
                         run_paths_based_search_with_animation(window, graph, game)
@@ -223,10 +229,19 @@ def runGUI(layout):
                     if values['combo_search'] == 'A*':
                         run_board_based_search_without_animation(window, graph, game)
 
-                toggle_gui(window, True)
+                window.finalize()
+                window['button_reset'].update(disabled=False)
 
             else:
                 print(FILE_NOT_SELECTED_MESSAGE)
+
+        if event == 'button_reset':
+            game.reset_game()
+            graph.clear_board()
+
+            window.finalize()
+            toggle_gui(window, True)
+            window['button_reset'].update(disabled=True)
 
         if event == 'graph_board':
             x, y = values["graph_board"]
@@ -276,8 +291,9 @@ if __name__ == '__main__':
         [sg.HorizontalSeparator()],
         [
             sg.Button(key='button_run', button_text=BUTTON_RUN_TEXT, size=(8, 1)),
+            sg.Button(key='button_reset', button_text=BUTTON_RESET_TEXT, size=(8, 1), disabled=True),
             sg.Checkbox(key='checkbox_show_animation', text=SHOW_ANIMATION_CHECKBOX_TEXT, default=True),
-            sg.Sizer(300),
+            sg.Sizer(320),
             sg.Text(TURN_COUNTER_TEXT),
             sg.Text(0, key='turn_counter', size=(5, 1))
         ],

@@ -19,8 +19,9 @@ FILE_NOT_SELECTED_MESSAGE = 'Please select a puzzle to play'
 AI_MODE = 'Select AI parameters:'
 
 BUTTON_RUN_TEXT = 'Run'
+BUTTON_RESET_TEXT = 'Reset'
 TURN_COUNTER_TEXT = 'Turn: '
-SHOW_ANIMATION_CHECKBOX_TEXT = 'Select this to show animation'
+SHOW_ANIMATION_CHECKBOX_TEXT = 'Show animation'
 
 STATS_TEXT = 'Run statistics:'
 

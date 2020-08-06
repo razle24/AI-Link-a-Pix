@@ -78,7 +78,7 @@ class Game:
     def get_current_numbers_matrix(self):
         """
         returns the current board matrix
-        :return: Matrix of size (w*h) which contains ((number, number_color), cell_color)
+        :return: Matrix of size (w*h) which contains [(number, number_color), cell_color]
         """
         return self.board.numbers_matrix
 
@@ -122,7 +122,7 @@ class Game:
 
     def reset_game(self):
         self.moves_counter = 0
-        self.board = self.initial_board
+        self.board = copy.copy(self.initial_board)
         self.boards_generator = None
 
 #

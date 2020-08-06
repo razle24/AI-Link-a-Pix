@@ -43,7 +43,7 @@ def count_possible_paths(board, path):
     return max(1/len(board.get_possible_moves(x, y)), 1/len(board.get_possible_moves(end_x, end_y)))
 
 
-def count_empty_cells(board):
+def count_empty_cells(board, path=None):
     """
     A heuristic function that estimates the cost of the current board.
     Counts the number of empty cells on the board.

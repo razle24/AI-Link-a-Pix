@@ -1,3 +1,6 @@
+def top_to_bottom(board):
+    pass
+
 def mrv(board):
     """
     Sort the list by number value (from small to big)
@@ -21,6 +24,7 @@ def random_variable_selection(board):
 
 
 variable_selection_dict = {
+    "Top to bottom": top_to_bottom,
     "MRV": mrv,
     "LCV": lcv,
     "Random selection": random_variable_selection

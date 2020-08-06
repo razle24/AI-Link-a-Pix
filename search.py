@@ -101,8 +101,8 @@ def backtrack(board, i, numbered_cells, variable_selection, heuristic):
 
     # Get list of all possible paths from the cell. sort next cell using variable selection and paths using heuristic
     paths = board.get_possible_paths(x, y)
+    # variable_selection(board)
     if len(paths) > 1:
-        variable_selection(board)
         paths.sort(key=lambda path: heuristic(board, path), reverse=True)
 
     for path in paths:
