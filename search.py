@@ -7,22 +7,22 @@ from board import Board
 FAILURE = 'Failure'
 
 
-class StateNode:
-    """
-    Fix problem with util.PriorityQueue which tried (and failed) to use '<' operator on a tuple.
-    This class is basically the same tuple with overloaded '<' operator.
-    """
-
-    def __init__(self, state, actions):
-        self.state = state
-        self.actions = actions
-
-    def __lt__(self, other):
-        return self.state.score(0) < other.score(0)
-
-    def __iter__(self):
-        yield self.state
-        yield self.actions
+# class StateNode:
+#     """
+#     Fix problem with util.PriorityQueue which tried (and failed) to use '<' operator on a tuple.
+#     This class is basically the same tuple with overloaded '<' operator.
+#     """
+#
+#     def __init__(self, state, actions):
+#         self.state = state
+#         self.actions = actions
+#
+#     def __lt__(self, other):
+#         return self.state.score(0) < other.score(0)
+#
+#     def __iter__(self):
+#         yield self.state
+#         yield self.actions
 
 #
 # class Problem:
@@ -78,8 +78,8 @@ def a_star_search(game, heuristic):
 def mrv_heuristic(board):
     """
     Sort the list by number value (from small to big)
-    :param heads:
-    :return:
+    :param board: board object
+    :return: doesn't return anything. Sorts the numbered_cells list in the board.
     """
     board.numbered_cells.sort(key=lambda coord: board.get_number_in_cell(coord[0], coord[1]), reverse=False)
 
@@ -87,8 +87,7 @@ def mrv_heuristic(board):
 def lcv_heuristic(board):
     """
     Sort list by amount of possible paths
-    :param heads:
-    :param vars:
+    :param board:
     :return:
     """
     board.numbered_cells.sort(key=lambda coord: len(board.get_possible_moves(coord[0], coord[1])), reverse=False)
