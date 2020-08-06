@@ -61,6 +61,28 @@ class Game:
         return self.board == self.goal_board
 
     # **  Getters  ** #
+
+    def get_successors(self, board):
+        """
+        state: Search state
+
+        For a given state, this should return a list of triples,
+        (successor, action, stepCost), where 'successor' is a
+        successor to the current state, 'action' is the action
+        required to get there, and 'stepCost' is the incremental
+        cost of expanding to that successor
+        """
+        successors = []
+        numbered_cells = board.numbered_cells
+        for i, j in numbered_cells:
+            paths = board.get_possible_moves(i, j)
+            for path in paths:
+                cur_board = copy.copy(board)
+                # color = board.get_cell_coloring(path[0][0], path[0][1])
+                # cur_board.set_cells_coloring(path, color)
+                successors += [(cur_board, path)]
+        return successors
+
     def get_search(self):
         return self.search
 
@@ -102,7 +124,7 @@ class Game:
         # self.boards_generator = a_star_search(prob, invalid_state)
 
 if __name__ == '__main__':
-    xml = get_xml_from_path('boards/25_25_color.xml')
+    xml = get_xml_from_path('boards/tiny_color.xml')
     my_game = Game(xml)
     # print("count empty: ", count_empty_cells(my_game.board))
     heads = my_game.board.get_list_of_numbered_cells()

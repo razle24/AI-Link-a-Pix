@@ -24,54 +24,32 @@ class StateNode:
         yield self.state
         yield self.actions
 
+#
+# class Problem:
+#     """
+#     represents the problem we want to solve.
+#     """
+#     def __init__(self, board, goal_board):
+#         self.board = board
+#         self.goal_state = goal_board
+#         self.expanded = 0
+#
+#     # TODO - check if needed
+#     def get_start_state(self):
+#         """
+#         Returns the start state for the search problem
+#         """
+#         return self.board
+#
+#     def is_goal_state(self, state):
+#         """
+#         state: Search state
+#         Returns True if and only if the state is a valid goal state
+#         """
+#         return state == self.goal_state
+#
 
-class Problem:
-    """
-    represents the problem we want to solve.
-    """
-    def __init__(self, board, goal_board):
-        self.board = board
-        self.goal_state = goal_board
-        self.expanded = 0
-    
-    # TODO - check if needed
-    def get_start_state(self):
-        """
-        Returns the start state for the search problem
-        """
-        return self.board
-
-    def is_goal_state(self, state):
-        """
-        state: Search state
-        Returns True if and only if the state is a valid goal state
-        """
-        return state == self.goal_state
-
-    def get_successors(self, board):
-        """
-        state: Search state
-
-        For a given state, this should return a list of triples,
-        (successor, action, stepCost), where 'successor' is a
-        successor to the current state, 'action' is the action
-        required to get there, and 'stepCost' is the incremental
-        cost of expanding to that successor
-        """
-        successors = []
-        self.expanded = self.expanded + 1
-        numbered_cells = board.numbered_cells
-        for i, j in numbered_cells:
-            paths = board.get_possible_moves(i, j)
-            for path in paths:
-                cur_board = copy.copy(board)
-                # color = board.get_cell_coloring(path[0][0], path[0][1])
-                # cur_board.set_cells_coloring(path, color)
-                successors += [(cur_board, path)]
-        return successors
-        
-
-def a_star_search(problem, heuristic):
+def a_star_search(game, heuristic):
     """
     Search the node that has the lowest combined cost and heuristic first.
     """
@@ -79,14 +57,14 @@ def a_star_search(problem, heuristic):
     queue = util.PriorityQueue()
 
     # Contains 'state', 'total cost from start to state' and 'list of actions to the state'
-    queue.push(problem.board, 0)
+    queue.push(game.board, 0)
 
     while not queue.isEmpty():
         cur_board = queue.pop()
 
-        if problem.is_goal_state(cur_board):
+        if game.is_goal_state():
             return cur_board
-        succ = problem.get_successors(cur_board)
+        succ = game.get_successors(cur_board)
         for next_board, next_path in succ:
             if next_board not in explored:
                 total_cost = heuristic(next_board, next_path)
