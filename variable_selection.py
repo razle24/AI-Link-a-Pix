@@ -1,5 +1,9 @@
+from random import sample
+
 def top_to_bottom(board):
-    pass
+    for x, y in board.get_list_of_numbered_cells():
+        if not board.is_colored_cell(x, y):
+            return x, y
 
 
 def mrv(board):
@@ -8,7 +12,12 @@ def mrv(board):
     :param board: board object
     :return: doesn't return anything. Sorts the numbered_cells list in the board.
     """
-    board.numbered_cells.sort(key=lambda coord: board.get_number_in_cell(coord[0], coord[1]), reverse=False)
+    list = sorted(board.get_list_of_numbered_cells(),
+                  key=lambda coord: board.get_number_in_cell(coord[0], coord[1]), reverse=False)
+
+    for x, y in list:
+        if not board.is_colored_cell(x, y):
+            return x, y
 
 
 def lcv(board):
@@ -17,11 +26,20 @@ def lcv(board):
     :param board:
     :return:
     """
-    board.numbered_cells.sort(key=lambda coord: len(board.get_possible_moves(coord[0], coord[1])), reverse=False)
+    list = sorted(board.get_list_of_numbered_cells(),
+                  key=lambda coord: len(board.get_possible_moves(coord[0], coord[1])), reverse=False)
+
+    for x, y in list:
+        if not board.is_colored_cell(x, y):
+            return x, y
 
 
 def random_variable_selection(board):
-    pass
+    list = sample(board.get_list_of_numbered_cells(), len(board.get_list_of_numbered_cells()))
+
+    for x, y in list:
+        if not board.is_colored_cell(x, y):
+            return x, y
 
 
 variable_selection_dict = {
