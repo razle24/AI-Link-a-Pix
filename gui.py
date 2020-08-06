@@ -32,11 +32,15 @@ def run_board_based_search_with_animation(window, graph, game):
                 window.finalize()
                 graph.drew_color_on_board(i, j, graph.colors[matrix[i][j]])
 
+        window.finalize()
+        window['turn_counter'].update(str(game.get_moves_counter()))
+
 
 def run_search_without_animation(window, game):
     while not game.is_goal_state():
         game.do_move()
-        window['turn_counter'] = str(game.get_moves_counter())
+        window.finalize()
+        window['turn_counter'].update(str(game.get_moves_counter()))
 
 
 def disable_gui(window):
@@ -151,9 +155,6 @@ def runGUI(layout):
 
     # Event Loop to process 'events' and get the 'values' of the inputs
     while True:
-        # if run_game is True:
-        #     event, values = window.finalize()
-        # else:
         event, values = window.read()
 
         # If user closes window, close the program
@@ -183,12 +184,8 @@ def runGUI(layout):
                 # Disable buttons on GUI while running the search
                 disable_gui(window)
 
-                game.set_search(values['combo_search'])
-                game.set_variable_selection(values['combo_variable'])
-                game.set_heuristic(values['combo_heuristic'])
-
                 # Set game to run
-                game.set_boards_generator()
+                game.set_boards_generator(values['combo_search'], values['combo_variable'], values['combo_heuristic'])
 
                 if values['checkbox_show_animation']:
                     pass
@@ -200,22 +197,6 @@ def runGUI(layout):
 
             else:
                 print(FILE_NOT_SELECTED_MESSAGE)
-
-        # Clear the board and reset the current game, unable combo buttons and puzzle selector again
-        if event == 'button_reset':
-            print('button_reset')
-
-            # Reset board
-            window['graph_board'].erase()
-            graph = BoardGraph(window['graph_board'], game)
-
-            # Allow combo buttons and puzzle selector
-            window.finalize()
-            window['file_selector'].update(disabled=False)
-            window.finalize()
-            window['combo_select'].update(disabled=False)
-            window.finalize()
-            window['combo_heuristic'].update(disabled=False)
 
         if event == 'graph_board':
             x, y = values["graph_board"]
@@ -231,6 +212,10 @@ if __name__ == '__main__':
 
     # Needs to be first line of code for all elements to get this theme
     sg.theme('LightBrown7')
+
+    search_list = [item for item in search_dict]
+    variable_selection_list = [item for item in variable_selection_dict]
+    heuristics_list = [item for item in heuristics_dict]
 
     layout = [
         [
@@ -251,12 +236,12 @@ if __name__ == '__main__':
         ],
         [
             sg.Text(AI_MODE),
-            sg.Combo(key='combo_search', values=[item for item in search_dict], text_color='black',
-                     default_value='Search type', readonly=True, size=(16, 1)),
-            sg.Combo(key='combo_variable', values=[item for item in variable_selection_dict], text_color='black',
-                     default_value='Variable selection', readonly=True, size=(16, 1)),
-            sg.Combo(key='combo_heuristic', values=[item for item in heuristics_dict], text_color='black',
-                     default_value='Heuristic (Domain selection)', readonly=True, size=(25, 1))
+            sg.Combo(key='combo_search', values=search_list, text_color='black',
+                     default_value=search_list[0], readonly=True, size=(16, 1)),
+            sg.Combo(key='combo_variable', values=variable_selection_list, text_color='black',
+                     default_value=variable_selection_list[0], readonly=True, size=(16, 1)),
+            sg.Combo(key='combo_heuristic', values=heuristics_list, text_color='black',
+                     default_value=heuristics_list[0], readonly=True, size=(25, 1))
         ],
         [sg.HorizontalSeparator()],
         [

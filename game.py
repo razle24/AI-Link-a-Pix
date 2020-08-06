@@ -124,26 +124,12 @@ class Game:
         return self.moves_counter
 
     # ***  Setters  *** #
-    def set_search(self, search):
-        """
-        :param search: The current search type
-        Set the board's search type to the given parameter
-        """
-        self.search = search
+    def set_boards_generator(self, search, variable_selection, heuristic):
+        self.search = search_dict[search]
+        self.variable_selection = variable_selection_dict[variable_selection]
+        self.heuristic = heuristics_dict[heuristic]
 
-    def set_variable_selection(self, variable_selection):
-        self.variable_selection = variable_selection
-
-    def set_heuristic(self, heuristic):
-        """
-        :param heuristic: The current heuristic type
-        Set the board's heuristic type to the given parameter
-        """
-        self.heuristic = heuristic
-
-    def set_boards_generator(self):
-        self.boards_generator = self.search(self.board, variable_selection_dict[self.variable_selection],
-                                            heuristics_dict[self.heuristic])
+        self.boards_generator = self.search(self.board, self.variable_selection, self.heuristic)
 
     def reset_counter(self):
         self.moves_counter = 0
