@@ -49,6 +49,7 @@ class StateNode:
 #         return state == self.goal_state
 #
 
+
 def a_star_search(game, heuristic):
     """
     Search the node that has the lowest combined cost and heuristic first.

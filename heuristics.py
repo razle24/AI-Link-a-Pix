@@ -97,7 +97,6 @@ def get_stick_to_path(board, path):
     return counter
         
 
-
 def photo_recognition(state, action, successor):
     pass
 

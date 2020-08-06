@@ -5,9 +5,12 @@ from heuristics import *
 
 
 class Game:
+    """
+    Game engine class stores the current game state and controls when to
+    get input/draw output
+    """
     def __init__(self, xml_dict, search_type=None, heuristic=None):
         """
-
         :param xml_dict:
         :param search_type:
         :param heuristic:
@@ -32,7 +35,6 @@ class Game:
     def __str__(self):
         """
         prints the board
-        :return:
         """
         return (f'Search: {self.search}\nHeuristic: {self.heuristic}\nMoves counter: {self.moves_counter}'
                 f'\nBoard:\n{self.board}')
@@ -66,11 +68,11 @@ class Game:
         """
         state: Search state
 
-        For a given state, this should return a list of triples,
-        (successor, action, stepCost), where 'successor' is a
-        successor to the current state, 'action' is the action
-        required to get there, and 'stepCost' is the incremental
-        cost of expanding to that successor
+        For a given state, this should return a list of tuples,
+        (successor_board, path), where 'successor_board' is a
+        successor to the current board, and 'path' is the path
+        that is about to be drawn on the board.
+        
         """
         successors = []
         numbered_cells = board.numbered_cells
@@ -119,9 +121,10 @@ class Game:
         self.heuristic = heuristic
 
     def set_boards_generator(self):
-        # self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
+        self.boards_generator = csp(self.board, self.board.get_list_of_numbered_cells(), False, True)
         # prob = Problem(self.board, self.goal_board)
-        self.boards_generator = a_star_search(self, invalid_state)
+        # self.boards_generator = a_star_search(self, invalid_state)
+
 
 if __name__ == '__main__':
     xml = get_xml_from_path('boards/tiny_color.xml')
