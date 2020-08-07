@@ -1,4 +1,5 @@
 import os
+from time import time
 
 import PySimpleGUI as sg
 
@@ -187,6 +188,8 @@ def runGUI(layout):
 
         # If user closes window, close the program
         if event == sg.WIN_CLOSED:
+            end = time()
+            print("Running Time ", end - start)
             break
 
         # If player selects file, update GUI to show file name
@@ -206,6 +209,7 @@ def runGUI(layout):
 
         # Start run the game with given parameters
         if event == 'button_run':
+            start = time()
             print('button_run')
 
             if values['file_path'] != '':
@@ -248,6 +252,7 @@ def runGUI(layout):
             print(f'Figures in location {window["graph_board"].get_figures_at_location((x, y))}')
 
     window.close()
+    
 
 
 if __name__ == '__main__':
@@ -311,3 +316,4 @@ if __name__ == '__main__':
     ]
 
     runGUI(layout)
+    

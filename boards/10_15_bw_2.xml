@@ -1,0 +1,50 @@
+<puzzle>
+    <header>
+        <guid>86B74B82-D11A-41CE-A7D2-DA045DC95E1E</guid>
+        <code family="02" variant="0" model="10x15" />
+        <serialNumber>90600001</serialNumber>
+        <formatVersion major="2" minor="0" />
+        <builderVersion>8.23</builderVersion>
+        <creationDate>2012-04-22T18:05:25Z</creationDate>
+        <properties>
+            <numeric name="width" value="10" unit="block" />
+            <numeric name="height" value="15" unit="block" />
+            <text name="name">Man in love</text>
+            <numeric name="difficulty" value="1" />
+        </properties>
+    </header>
+    <data>
+        <dimensions width="10" height="15" />
+        <palette size="2">
+            <color id="0" rgb="ffffff" />
+            <color id="1" rgb="000000" />
+        </palette>
+        <solution>
+            <path color="1">9 10 8 10 8 11 9 11 9 12 9 13 9 14 8 14</path>
+            <path color="1">6 5 5 5 4 5 4 4 4 3 5 3 5 4</path>
+            <path color="1">7 5 7 6</path>
+            <path color="1">3 12 3 11</path>
+            <path color="1">8 1 8 2</path>
+            <path color="1">0 0</path>
+            <path color="1">3 2</path>
+            <path color="1">1 13</path>
+            <path color="1">1 4</path>
+            <path color="1">5 6</path>
+            <path color="1">3 4</path>
+            <path color="1">1 10 1 11</path>
+            <path color="1">5 8 4 8</path>
+            <path color="1">2 13 2 14 3 14 3 13</path>
+            <path color="1">8 6 8 7 8 8 8 9 7 9 7 10</path>
+            <path color="1">0 6 0 5 0 4 0 3</path>
+            <path color="1">5 9 6 9 6 8 7 8</path>
+            <path color="1">4 14 4 13 4 12</path>
+            <path color="1">5 2 6 2 6 3 6 4</path>
+            <path color="1">9 1 9 0 8 0 7 0 6 0 5 0</path>
+            <path color="1">7 1 6 1 5 1 4 1</path>
+            <path color="1">9 5 9 6 9 7 9 8 9 9</path>
+            <path color="1">6 10 6 11 6 12 6 13</path>
+            <path color="1">7 14 7 13 8 13 8 12 7 12 7 11</path>
+            <path color="1">0 7 0 8 0 9 0 10 0 11 0 12</path>
+        </solution>
+    </data>
+</puzzle>
