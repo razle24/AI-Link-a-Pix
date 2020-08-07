@@ -188,8 +188,6 @@ def runGUI(layout):
 
         # If user closes window, close the program
         if event == sg.WIN_CLOSED:
-            end = time()
-            print("Running Time ", end - start)
             break
 
         # If player selects file, update GUI to show file name
@@ -231,7 +229,8 @@ def runGUI(layout):
                         run_paths_based_search_without_animation(window, graph, game)
                     if values['combo_search'] == 'A*':
                         run_board_based_search_without_animation(window, graph, game)
-
+                end = time()
+                print("Running Time ", end - start)
                 window.finalize()
                 window['button_reset'].update(disabled=False)
 
