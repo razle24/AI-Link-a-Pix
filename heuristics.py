@@ -126,7 +126,8 @@ def all_heuristics(board, path):
     :param board: The current board
     :return: The linear combination of all the heuristics used
     """
-    return 0.5 * count_empty_cells(board) + 10 * stick_to_wall(board, path) + 5 *stick_to_path(board, path)
+    return 0.5 * count_empty_cells(board) + 10 * stick_to_wall(board, path) + 5 * stick_to_path(board, path) +\
+           count_possible_paths(board, path)
 
 
 heuristics_dict = {
