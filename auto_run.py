@@ -11,8 +11,7 @@ TIME_OUT = 180  # In sec
 path_puzzles = './boards'
 path_results = './report'
 
-puzzles = [f for f in os.listdir(path_puzzles)]
-
+puzzles = [f for f in os.listdir(path_puzzles) if f[0] == '4']
 
 def run(game):
     # Start clock
@@ -37,7 +36,7 @@ def run(game):
 if __name__ == '__main__':
     # CSP
     for puzzle in puzzles:
-        with open(path_results + '/' + puzzle[:-3] + '_CSP' + 'txt', 'w') as report:
+        with open(path_results + '/' + puzzle[:-4] + '_CSP.txt', 'w') as report:
             game = Game(get_xml_from_path(path_puzzles + '/' + puzzle))
 
             num = len(game.initial_board.get_list_of_numbered_cells())
@@ -50,6 +49,7 @@ if __name__ == '__main__':
 
             for variable_selection in variable_selection_dict:
                 for heuristics in heuristics_dict:
+                    print(f'File name: {puzzle}')
                     report.write(f'Search: CSP\n'
                                  f'Variable selection: {variable_selection}\n'
                                  f'Heuristics: {heuristics}\n'

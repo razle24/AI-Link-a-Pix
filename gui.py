@@ -173,8 +173,10 @@ class BoardGraph:
         for cell in self.canvas_background:
             self.graph.tk_canvas.itemconfigure(self.canvas_background[cell], fill='white')
 
-        for number in self.canvas_numbers:
-            self.graph.tk_canvas.itemconfigure(self.canvas_numbers[number], fill='black')
+
+        for cell in self.canvas_numbers:
+            color_index = self.game.initial_board.get_number_color_in_cell(cell[0], cell[1])
+            self.graph.tk_canvas.itemconfigure(self.canvas_numbers[cell], fill=self.colors[color_index])
 
 
 def runGUI(layout):

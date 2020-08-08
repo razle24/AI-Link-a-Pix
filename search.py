@@ -184,11 +184,6 @@ def csp(game, variable_selection, heuristic):
 def backtrack(board, i, variable_selection, heuristic):
     x, y = variable_selection(board)
 
-    # If cell is already colored (by path created earlier) move to next cell
-    if board.is_colored_cell(x, y):
-        # yield board, [(x, y)], board.get_number_color_in_cell(x, y)
-        yield from backtrack(board, i + 1, variable_selection, heuristic)
-
     # Get list of all possible paths from the cell. sort next cell using variable selection and paths using heuristic
     paths = board.get_possible_moves(x, y)
 

@@ -68,7 +68,7 @@ variable_selection_dict = {
     "Top to bottom": top_to_bottom,
     "MRV": mrv,
     "LCV": lcv,
-    "Random selection": random_variable_selection,
+    # "Random selection": random_variable_selection,
     "By bullets": by_bullets,
     "By color": by_color
 }
