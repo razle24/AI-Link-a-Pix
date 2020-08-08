@@ -38,7 +38,7 @@ def count_possible_paths(board, path):
     if len(end_moves) == 0:
         return float('-inf')
 
-    return max(1 / len(board.get_possible_moves(x, y)), 1 / len(board.get_possible_moves(end_x, end_y)))
+    return (-1) * max(1 / len(board.get_possible_moves(x, y)), 1 / len(board.get_possible_moves(end_x, end_y)))
 
 
 def count_empty_cells(board, path=None):
@@ -48,7 +48,7 @@ def count_empty_cells(board, path=None):
     :param board: The current board
     :return: The number of empty cells on the board.
     """
-    return (-1) * len([1 for i in range(board.get_height()) for j in range(board.get_width())
+    return len([1 for i in range(board.get_height()) for j in range(board.get_width())
                 if not board.is_colored_cell(i, j)])
 
 
@@ -60,7 +60,7 @@ def stick_to_wall(board, path):
     :param board: The current board
     :return: The number of cells in the path that are closer to the walls of the board
     """
-    return sum([1 for i, j in path if i == 0 or i == board.get_height() - 1
+    return (-1) * sum([1 for i, j in path if i == 0 or i == board.get_height() - 1
                 or j == 0 or j == board.get_width() - 1]) + 1
 
 
@@ -89,8 +89,11 @@ def stick_to_path(board, path):
                 flag = True
         if flag:
             counter += 1
-    return counter + 1
+    return (-1) * (counter + 1)
 
+
+def stick_to_path_or_wall(board, path):
+    return max(stick_to_wall(board, path), stick_to_path(board, path))
 
 # def photo_recognition(board, action, successor):
 #     pass
@@ -127,7 +130,7 @@ def all_heuristics(board, path):
     :return: The linear combination of all the heuristics used
     """
     return 0.5 * count_empty_cells(board) + 10 * stick_to_wall(board, path) + 5 * stick_to_path(board, path) +\
-           count_possible_paths(board, path)
+           count_possible_paths(board, path) + 15 * stick_to_path_or_wall(board, path)
 
 
 heuristics_dict = {
@@ -136,5 +139,6 @@ heuristics_dict = {
     "Stick to walls": stick_to_wall,
     "Stick to other paths": stick_to_path,
     "Count empty cells": count_empty_cells,
+    "Stick to path or wall": stick_to_path_or_wall,
     'Linear combination': all_heuristics
 }
