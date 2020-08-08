@@ -59,7 +59,7 @@ def run_paths_based_search_without_animation(window, graph, game):
 # *** A Star *** #
 def run_board_based_search_with_animation(window, graph, game):
     while not game.is_goal_state():
-        matrix = game.do_move_a_star()
+        matrix = game.do_move_other()
 
         for i in range(len(matrix)):
             for j in range(len(matrix[0])):
@@ -72,7 +72,7 @@ def run_board_based_search_with_animation(window, graph, game):
 
 def run_board_based_search_without_animation(window, graph, game):
     while not game.is_goal_state():
-        game.do_move_a_star()
+        game.do_move_other()
         window.finalize()
         window['turn_counter'].update(str(game.get_moves_counter()))
 
@@ -227,12 +227,12 @@ def runGUI(layout):
                 if values['checkbox_show_animation']:
                     if values['combo_search'] == 'CSP':
                         run_paths_based_search_with_animation(window, graph, game)
-                    if values['combo_search'] == 'A*':
+                    else:
                         run_board_based_search_with_animation(window, graph, game)
                 else:
                     if values['combo_search'] == 'CSP':
                         run_paths_based_search_without_animation(window, graph, game)
-                    if values['combo_search'] == 'A*':
+                    else:
                         run_board_based_search_without_animation(window, graph, game)
                 end = time()
                 print("Running Time ", end - start)

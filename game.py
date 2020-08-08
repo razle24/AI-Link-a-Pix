@@ -55,7 +55,7 @@ class Game:
         self.board, path, color = next(self.boards_generator, (None, None, None))
         return path, color
 
-    def do_move_a_star(self):
+    def do_move_other(self):
         """
         If no coordinates given, do the next move of the backtrack.
         If coordinates are given, color the cell (x, y) with the color of 'cell_color'
