@@ -1,5 +1,6 @@
 import os
 from time import time
+import ctypes
 
 import PySimpleGUI as sg
 
@@ -10,7 +11,10 @@ from search import search_dict
 from texts import *
 from variable_selection import variable_selection_dict
 
-GRAPH_SIZE = 700
+
+user32 = ctypes.windll.user32
+screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
+GRAPH_SIZE = min(screensize) - 400
 MAX_SIZE_TO_SHOW_NUMBERS = 25
 
 
@@ -251,7 +255,7 @@ def runGUI(layout):
             print(f'Figures in location {window["graph_board"].get_figures_at_location((x, y))}')
 
     window.close()
-    
+
 
 
 if __name__ == '__main__':
@@ -315,4 +319,4 @@ if __name__ == '__main__':
     ]
 
     runGUI(layout)
-    
+
