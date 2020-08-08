@@ -1,4 +1,5 @@
 import os
+from time import time
 import tkinter as tk
 
 import PySimpleGUI as sg
@@ -211,6 +212,7 @@ def runGUI(layout):
 
         # Start run the game with given parameters
         if event == 'button_run':
+            start = time()
             print('button_run')
 
             if values['file_path'] != '':
@@ -232,7 +234,8 @@ def runGUI(layout):
                         run_paths_based_search_without_animation(window, graph, game)
                     if values['combo_search'] == 'A*':
                         run_board_based_search_without_animation(window, graph, game)
-
+                end = time()
+                print("Running Time ", end - start)
                 window.finalize()
                 window['button_reset'].update(disabled=False)
 

@@ -4,6 +4,16 @@ import util
 from heuristics import invalid_state
 
 
+def calc_board_cost(board):
+    """
+    calculates the number of colored cells in the board
+    :param board: The current board
+    """
+    # borad_size = board.get_height() * board.get_width()
+    return sum([1 for i in range(board.get_height()) for j in range(board.get_width())
+                if not board.is_colored_cell(i, j)])
+
+
 # *** A star *** #
 def a_star_search(game, variable_selection, heuristic):
     """
@@ -11,27 +21,29 @@ def a_star_search(game, variable_selection, heuristic):
     """
     explored = set()
     queue = util.PriorityQueue()
-
     queue.push(game.get_initial_board(), 0)
 
     while not queue.isEmpty():
+        print(queue)
         current_board = queue.pop()
         yield current_board
 
         if game.is_goal_state():
-            return current_board
+            yield current_board
 
         successor = get_successors(current_board)
-
+        
         for next_board, next_path in successor:
             if next_board not in explored:
-                total_cost = heuristic(next_board, next_path)
+                total_cost = calc_board_cost(next_board) + heuristic(next_board, next_path)
+                # print(total_cost)
+                # total_cost = heuristic(next_board, next_path)
                 if total_cost > float('-inf'):
                     queue.push(next_board, total_cost)
 
         explored.add(current_board)
 
-    return None
+    yield None
 
 
 def get_successors(board):
@@ -55,6 +67,61 @@ def get_successors(board):
             current_board.set_cells_coloring(path, color)
             successors += [(current_board, path)]
     return successors
+
+
+# *** BFS *** #
+def breadth_first_search(game, variable_selection, heuristic):
+    """
+    Search the shallowest nodes in the search tree first.
+    """
+    explored = set()
+    queue = util.Queue()
+    queue.push(game.get_initial_board())
+    
+    while not queue.isEmpty():
+        current_board = queue.pop()
+        yield current_board
+
+        if game.is_goal_state():
+            yield current_board
+        
+        successor = get_successors(current_board)
+        for next_board, next_path in successor:
+            if next_board not in explored:
+                total_cost = heuristic(next_board, next_path)
+                if total_cost > float('-inf'):
+                    queue.push(next_board)
+
+        explored.add(current_board)
+        
+    yield None
+
+
+# *** UCS *** #
+def uniform_cost_search(game, variable_selection, heuristic):
+    """
+    Search the node of least total cost first.
+    """
+    explored = set()
+    queue = util.PriorityQueue()
+    queue.push(game.get_initial_board(), 0)
+
+    while not queue.isEmpty():
+        current_board = queue.pop()
+        yield current_board
+
+        if game.is_goal_state():
+            yield current_board
+        successor = get_successors(current_board)
+        
+        for next_board, next_path in successor:
+            if next_board not in explored:
+                total_cost = calc_board_cost(next_board)
+                queue.push(next_board, total_cost)
+
+        explored.add(current_board)
+
+    yield None
 
 
 # *** CSP *** #
@@ -104,7 +171,7 @@ def backtrack(board, i, variable_selection, heuristic):
 
     # variable_selection(board)
     if len(paths) > 1:
-        paths.sort(key=lambda path: heuristic(board, path), reverse=True)
+        paths.sort(key=lambda path: heuristic(board, path), reverse=False)
 
     for path in paths:
         next_board = copy.copy(board)
@@ -122,8 +189,8 @@ def backtrack(board, i, variable_selection, heuristic):
 
 search_dict = {
     "CSP": csp,
-    # 'BFS': bfs,
+    'BFS': breadth_first_search,
     # 'DFS': dfs,
-    # 'UFC': ufc,
+    'UCS': uniform_cost_search,
     "A*": a_star_search
 }
