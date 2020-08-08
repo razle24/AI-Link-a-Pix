@@ -3,6 +3,7 @@ from heuristics import heuristics_dict
 from search import search_dict
 from variable_selection import variable_selection_dict
 
+import os
 
 class Game:
     """
@@ -15,6 +16,8 @@ class Game:
         :param xml_dict: dictionary with the following items: Puzzle name, Puzzle width, Puzzle height,
         List of RGB values, paths, lists of lists of paths in the key color
         """
+        self.game_name = xml_dict["name"]
+
         self.number_of_colors = len(xml_dict["colors"])
         self.colors_dict = xml_dict['colors']
 

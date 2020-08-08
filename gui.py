@@ -1,5 +1,4 @@
 import os
-from time import time
 import tkinter as tk
 
 import PySimpleGUI as sg
@@ -12,11 +11,11 @@ from texts import *
 from variable_selection import variable_selection_dict
 
 
+# Get screen height to choose size for canvas
 root = tk.Tk()
 screensize = root.winfo_screenheight()
 root.destroy()
-GRAPH_SIZE = screensize - 400
-MAX_SIZE_TO_SHOW_NUMBERS = 25
+GRAPH_SIZE = screensize - 320
 
 
 def toggle_gui(window, toggle):
@@ -212,7 +211,6 @@ def runGUI(layout):
 
         # Start run the game with given parameters
         if event == 'button_run':
-            start = time()
             print('button_run')
 
             if values['file_path'] != '':
@@ -234,8 +232,7 @@ def runGUI(layout):
                         run_paths_based_search_without_animation(window, graph, game)
                     if values['combo_search'] == 'A*':
                         run_board_based_search_without_animation(window, graph, game)
-                end = time()
-                print("Running Time ", end - start)
+
                 window.finalize()
                 window['button_reset'].update(disabled=False)
 
