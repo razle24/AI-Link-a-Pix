@@ -1,0 +1,257 @@
+Game name: Yo Yo
+File name: 25_25_bw_1.xml
+Best case for this puzzle: 185
+Worst case for this puzzle: 49039857307708443467467104868809893875799651909875269632
+
+Search: CSP
+Variable selection: Top to bottom
+Heuristics: Null heuristic
+Time: 5.291019439697266
+Number of paths taken: 11528
+
+Search: CSP
+Variable selection: Top to bottom
+Heuristics: Count possible paths
+Time: 5.436499357223511
+Number of paths taken: 11528
+
+Search: CSP
+Variable selection: Top to bottom
+Heuristics: Stick to walls
+Time: 0.08975577354431152
+Number of paths taken: 128
+
+Search: CSP
+Variable selection: Top to bottom
+Heuristics: Stick to other paths
+Time: 1.7504212856292725
+Number of paths taken: 3792
+
+Search: CSP
+Variable selection: Top to bottom
+Heuristics: Count empty cells
+Time: 5.679445505142212
+Number of paths taken: 11528
+
+Search: CSP
+Variable selection: Top to bottom
+Heuristics: Stick to path or wall
+Time: 0.09175491333007812
+Number of paths taken: 128
+
+Search: CSP
+Variable selection: Top to bottom
+Heuristics: Linear combination
+Time: 0.10671472549438477
+Number of paths taken: 120
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Null heuristic
+Time: 0.612462043762207
+Number of paths taken: 432
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count possible paths
+Time: 0.5026559829711914
+Number of paths taken: 344
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to walls
+Time: 0.6991016864776611
+Number of paths taken: 506
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to other paths
+Time: 0.46631693840026855
+Number of paths taken: 354
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count empty cells
+Time: 0.7629938125610352
+Number of paths taken: 432
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to path or wall
+Time: 0.8636908531188965
+Number of paths taken: 626
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Linear combination
+Time: 1.0302402973175049
+Number of paths taken: 512
+
+Search: CSP
+Variable selection: LCV
+Heuristics: Null heuristic
+Time: 0.1954817771911621
+Number of paths taken: 116
+
+Search: CSP
+Variable selection: LCV
+Heuristics: Count possible paths
+Time: 0.19048833847045898
+Number of paths taken: 116
+
+Search: CSP
+Variable selection: LCV
+Heuristics: Stick to walls
+Time: 0.17761659622192383
+Number of paths taken: 104
+
+Search: CSP
+Variable selection: LCV
+Heuristics: Stick to other paths
+Time: 0.17652606964111328
+Number of paths taken: 104
+
+Search: CSP
+Variable selection: LCV
+Heuristics: Count empty cells
+Time: 0.19152164459228516
+Number of paths taken: 116
+
+Search: CSP
+Variable selection: LCV
+Heuristics: Stick to path or wall
+Time: 0.17552685737609863
+Number of paths taken: 104
+
+Search: CSP
+Variable selection: LCV
+Heuristics: Linear combination
+Time: 0.17453336715698242
+Number of paths taken: 104
+
+Search: CSP
+Variable selection: Random selection
+Heuristics: Null heuristic
+Time: 6.570617198944092
+Number of paths taken: 10926
+
+Search: CSP
+Variable selection: Random selection
+Heuristics: Count possible paths
+Time: 25.243813037872314
+Number of paths taken: 30840
+
+Search: CSP
+Variable selection: Random selection
+Heuristics: Stick to walls
+Time: 0.18749785423278809
+Number of paths taken: 194
+
+Search: CSP
+Variable selection: Random selection
+Heuristics: Stick to other paths
+Time: 0.11768317222595215
+Number of paths taken: 104
+
+Search: CSP
+Variable selection: Random selection
+Heuristics: Count empty cells
+Time: 0.625324010848999
+Number of paths taken: 1052
+
+Search: CSP
+Variable selection: Random selection
+Heuristics: Stick to path or wall
+Time: 8.20341968536377
+Number of paths taken: 10276
+
+Search: CSP
+Variable selection: Random selection
+Heuristics: Linear combination
+Time: 8.159700393676758
+Number of paths taken: 10384
+
+Search: CSP
+Variable selection: By bullets
+Heuristics: Null heuristic
+Time: 6.943771600723267
+Number of paths taken: 3202
+
+Search: CSP
+Variable selection: By bullets
+Heuristics: Count possible paths
+Time: 0.6014328002929688
+Number of paths taken: 342
+
+Search: CSP
+Variable selection: By bullets
+Heuristics: Stick to walls
+Time: 0.18563222885131836
+Number of paths taken: 254
+
+Search: CSP
+Variable selection: By bullets
+Heuristics: Stick to other paths
+Time: 0.4368288516998291
+Number of paths taken: 362
+
+Search: CSP
+Variable selection: By bullets
+Heuristics: Count empty cells
+Time: 9.409647941589355
+Number of paths taken: 3202
+
+Search: CSP
+Variable selection: By bullets
+Heuristics: Stick to path or wall
+Time: 0.18850088119506836
+Number of paths taken: 254
+
+Search: CSP
+Variable selection: By bullets
+Heuristics: Linear combination
+Time: 0.20844316482543945
+Number of paths taken: 232
+
+Search: CSP
+Variable selection: By color
+Heuristics: Null heuristic
+Time: 5.6030943393707275
+Number of paths taken: 11528
+
+Search: CSP
+Variable selection: By color
+Heuristics: Count possible paths
+Time: 5.7501654624938965
+Number of paths taken: 11528
+
+Search: CSP
+Variable selection: By color
+Heuristics: Stick to walls
+Time: 0.09474754333496094
+Number of paths taken: 128
+
+Search: CSP
+Variable selection: By color
+Heuristics: Stick to other paths
+Time: 1.842073917388916
+Number of paths taken: 3792
+
+Search: CSP
+Variable selection: By color
+Heuristics: Count empty cells
+Time: 5.887163162231445
+Number of paths taken: 11528
+
+Search: CSP
+Variable selection: By color
+Heuristics: Stick to path or wall
+Time: 0.09673714637756348
+Number of paths taken: 128
+
+Search: CSP
+Variable selection: By color
+Heuristics: Linear combination
+Time: 0.11281061172485352
+Number of paths taken: 120
+
