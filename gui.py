@@ -1,4 +1,5 @@
 import os
+import tkinter as tk
 
 import PySimpleGUI as sg
 
@@ -9,8 +10,12 @@ from search import search_dict
 from texts import *
 from variable_selection import variable_selection_dict
 
-GRAPH_SIZE = 700
-MAX_SIZE_TO_SHOW_NUMBERS = 25
+
+# Get screen height to choose size for canvas
+root = tk.Tk()
+screensize = root.winfo_screenheight()
+root.destroy()
+GRAPH_SIZE = screensize - 320
 
 
 def toggle_gui(window, toggle):
@@ -250,6 +255,7 @@ def runGUI(layout):
     window.close()
 
 
+
 if __name__ == '__main__':
     # List of themes:
     # https://user-images.githubusercontent.com/46163555/70382042-796da500-1923-11ea-8432-80d08cd5f503.jpg
@@ -311,3 +317,4 @@ if __name__ == '__main__':
     ]
 
     runGUI(layout)
+

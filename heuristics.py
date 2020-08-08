@@ -48,7 +48,7 @@ def count_empty_cells(board, path=None):
     :param board: The current board
     :return: The number of empty cells on the board.
     """
-    return len([1 for i in range(board.get_height()) for j in range(board.get_width())
+    return (-1) * len([1 for i in range(board.get_height()) for j in range(board.get_width())
                 if not board.is_colored_cell(i, j)])
 
 
@@ -61,7 +61,7 @@ def stick_to_wall(board, path):
     :return: The number of cells in the path that are closer to the walls of the board
     """
     return sum([1 for i, j in path if i == 0 or i == board.get_height() - 1
-                or j == 0 or j == board.get_width() - 1])
+                or j == 0 or j == board.get_width() - 1]) + 1
 
 
 def stick_to_path(board, path):
@@ -89,7 +89,7 @@ def stick_to_path(board, path):
                 flag = True
         if flag:
             counter += 1
-    return counter
+    return counter + 1
 
 
 # def photo_recognition(board, action, successor):
@@ -126,7 +126,8 @@ def all_heuristics(board, path):
     :param board: The current board
     :return: The linear combination of all the heuristics used
     """
-    return (-0.5) * count_empty_cells(board) + 10 * stick_to_wall(board, path) + 2 * stick_to_path(board, path)
+    return 0.5 * count_empty_cells(board) + 10 * stick_to_wall(board, path) + 5 * stick_to_path(board, path) +\
+           count_possible_paths(board, path)
 
 
 heuristics_dict = {

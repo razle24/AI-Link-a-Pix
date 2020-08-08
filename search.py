@@ -78,6 +78,9 @@ def csp(game, variable_selection, heuristic):
         domain selection - Each path can be scored using heuristic and than ordered from best to worst.
                            We can also remove path that will cause inevitable failure (blocking a cell from
                            forming a path)
+    :param heuristic:
+    :param game:
+    :param variable_selection:
     :param board:
     :param heads:
     :param mrv:
