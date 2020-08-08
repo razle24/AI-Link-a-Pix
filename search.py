@@ -88,14 +88,37 @@ def breadth_first_search(game, variable_selection, heuristic):
         successor = get_successors(current_board)
         for next_board, next_path in successor:
             if next_board not in explored:
-                total_cost = heuristic(next_board, next_path)
-                if total_cost > float('-inf'):
-                    queue.push(next_board)
+                queue.push(next_board)
 
         explored.add(current_board)
         
     yield None
 
+
+# *** DFS *** #
+def depth_first_search(game, variable_selection, heuristic):
+    """
+    Search the shallowest nodes in the search tree first.
+    """
+    explored = set()
+    stack = util.Stack()
+    stack.push(game.get_initial_board())
+    
+    while not stack.isEmpty():
+        current_board = stack.pop()
+        yield current_board
+        
+        if game.is_goal_state():
+            yield current_board
+        
+        successor = get_successors(current_board)
+        for next_board, next_path in successor:
+            if next_board not in explored:
+                stack.push(next_board)
+        
+        explored.add(current_board)
+    
+    yield None
 
 # *** UCS *** #
 def uniform_cost_search(game, variable_selection, heuristic):
@@ -190,7 +213,7 @@ def backtrack(board, i, variable_selection, heuristic):
 search_dict = {
     "CSP": csp,
     'BFS': breadth_first_search,
-    # 'DFS': dfs,
+    'DFS': depth_first_search,
     'UCS': uniform_cost_search,
     "A*": a_star_search
 }
