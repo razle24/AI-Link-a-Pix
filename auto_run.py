@@ -37,7 +37,7 @@ def run(game):
 if __name__ == '__main__':
     # CSP
     for puzzle in puzzles:
-        with open(path_results + '/' + puzzle[:-3] + 'txt', 'w') as report:
+        with open(path_results + '/' + puzzle[:-3] + '_CSP' + 'txt', 'w') as report:
             game = Game(get_xml_from_path(path_puzzles + '/' + puzzle))
 
             num = len(game.initial_board.get_list_of_numbered_cells())

@@ -16,7 +16,7 @@ from variable_selection import variable_selection_dict
 root = tk.Tk()
 screensize = root.winfo_screenheight()
 root.destroy()
-GRAPH_SIZE = screensize - 320
+GRAPH_SIZE = screensize - 310
 
 
 def toggle_gui(window, toggle):
@@ -310,13 +310,13 @@ if __name__ == '__main__':
                      canvas_size=(GRAPH_SIZE, GRAPH_SIZE),
                      graph_top_right=(GRAPH_SIZE, 0), graph_bottom_left=(0, GRAPH_SIZE),
                      background_color='white')
-        ],
-        [sg.HorizontalSeparator()],
-        [sg.Text(STATS_TEXT)],
-        [
-            # TODO: uncomment when done debugging
-            # sg.Output(key='textbox_stats', size=(100, 10))
         ]
+        # [sg.HorizontalSeparator()].
+        # [sg.Text(STATS_TEXT)],
+        # [
+        #     # TODO: uncomment when done debugging
+        #     # sg.Output(key='textbox_stats', size=(100, 10))
+        # ]
     ]
 
     runGUI(layout)
