@@ -12,11 +12,11 @@ from texts import *
 from variable_selection import variable_selection_dict
 
 
+# Get screen height to choose size for canvas
 root = tk.Tk()
 screensize = root.winfo_screenheight()
 root.destroy()
 GRAPH_SIZE = screensize - 320
-MAX_SIZE_TO_SHOW_NUMBERS = 25
 
 
 def toggle_gui(window, toggle):
@@ -227,12 +227,12 @@ def runGUI(layout):
                 if values['checkbox_show_animation']:
                     if values['combo_search'] == 'CSP':
                         run_paths_based_search_with_animation(window, graph, game)
-                    if values['combo_search'] == 'A*' or values['combo_search'] == 'BFS':
+                    if values['combo_search'] == 'A*':
                         run_board_based_search_with_animation(window, graph, game)
                 else:
                     if values['combo_search'] == 'CSP':
                         run_paths_based_search_without_animation(window, graph, game)
-                    if values['combo_search'] == 'A*' or values['combo_search'] == 'BFS':
+                    if values['combo_search'] == 'A*':
                         run_board_based_search_without_animation(window, graph, game)
                 end = time()
                 print("Running Time ", end - start)
