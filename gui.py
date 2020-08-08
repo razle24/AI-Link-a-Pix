@@ -1,6 +1,6 @@
 import os
 from time import time
-import ctypes
+import tkinter as tk
 
 import PySimpleGUI as sg
 
@@ -12,9 +12,10 @@ from texts import *
 from variable_selection import variable_selection_dict
 
 
-user32 = ctypes.windll.user32
-screensize = user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)
-GRAPH_SIZE = min(screensize) - 400
+root = tk.Tk()
+screensize = root.winfo_screenheight()
+root.destroy()
+GRAPH_SIZE = screensize - 400
 MAX_SIZE_TO_SHOW_NUMBERS = 25
 
 
