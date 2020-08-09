@@ -1,0 +1,45 @@
+Game name: Batman
+File name: 20_20_bw_1.xml
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Null heuristic
+Time: 0.06978273391723633
+Number of paths taken: 82
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count possible paths
+Time: 0.05286860466003418
+Number of paths taken: 82
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to walls
+Time: 0.05285835266113281
+Number of paths taken: 82
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to other paths
+Time: 0.055825233459472656
+Number of paths taken: 82
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count empty cells
+Time: 0.06781840324401855
+Number of paths taken: 82
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to path or wall
+Time: 0.07078099250793457
+Number of paths taken: 82
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Linear combination
+Time: 0.06881475448608398
+Number of paths taken: 82
+

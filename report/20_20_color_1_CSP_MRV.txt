@@ -1,0 +1,45 @@
+Game name: Mount Fuji
+File name: 20_20_color_1.xml
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Null heuristic
+Time: 0.8876380920410156
+Number of paths taken: 100
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count possible paths
+Time: 3.7215616703033447
+Number of paths taken: 100
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to walls
+Time: 0.9514560699462891
+Number of paths taken: 84
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to other paths
+Time: 0.9070823192596436
+Number of paths taken: 100
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count empty cells
+Time: 1.0856349468231201
+Number of paths taken: 100
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to path or wall
+Time: 0.5405805110931396
+Number of paths taken: 100
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Linear combination
+Time: 3.0369491577148438
+Number of paths taken: 84
+

@@ -1,0 +1,45 @@
+Game name: Yo Yo
+File name: 25_25_bw_1.xml
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Null heuristic
+Time: 0.5036535263061523
+Number of paths taken: 258
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count possible paths
+Time: 0.22439980506896973
+Number of paths taken: 138
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to walls
+Time: 0.24634146690368652
+Number of paths taken: 174
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to other paths
+Time: 0.45179200172424316
+Number of paths taken: 258
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count empty cells
+Time: 0.5674824714660645
+Number of paths taken: 258
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to path or wall
+Time: 0.40691208839416504
+Number of paths taken: 258
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Linear combination
+Time: 0.256314754486084
+Number of paths taken: 138
+

@@ -1,0 +1,45 @@
+Game name: Mohawk
+File name: 20_30_bw_2.xml
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Null heuristic
+Time: 1.331470251083374
+Number of paths taken: 1854
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count possible paths
+Time: 1.3529417514801025
+Number of paths taken: 1854
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to walls
+Time: 0.5116317272186279
+Number of paths taken: 750
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to other paths
+Time: 1.3504269123077393
+Number of paths taken: 1854
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count empty cells
+Time: 1.6984586715698242
+Number of paths taken: 1854
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to path or wall
+Time: 1.369412899017334
+Number of paths taken: 1854
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Linear combination
+Time: 0.6572401523590088
+Number of paths taken: 750
+

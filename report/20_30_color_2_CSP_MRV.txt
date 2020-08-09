@@ -1,0 +1,45 @@
+Game name: Zulu woman
+File name: 20_30_color_2.xml
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Null heuristic
+Time: -1
+Number of paths taken: 27836
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count possible paths
+Time: -1
+Number of paths taken: 21841
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to walls
+Time: -1
+Number of paths taken: 28930
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to other paths
+Time: -1
+Number of paths taken: 20144
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count empty cells
+Time: -1
+Number of paths taken: 17619
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to path or wall
+Time: -1
+Number of paths taken: 23791
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Linear combination
+Time: -1
+Number of paths taken: 16569
+

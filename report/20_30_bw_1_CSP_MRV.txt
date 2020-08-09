@@ -1,0 +1,45 @@
+Game name: Lemurs
+File name: 20_30_bw_1.xml
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Null heuristic
+Time: 0.44281435012817383
+Number of paths taken: 516
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count possible paths
+Time: 0.4358360767364502
+Number of paths taken: 516
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to walls
+Time: 0.4249229431152344
+Number of paths taken: 516
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to other paths
+Time: 0.44378232955932617
+Number of paths taken: 516
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count empty cells
+Time: 0.5276038646697998
+Number of paths taken: 516
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to path or wall
+Time: 0.43296265602111816
+Number of paths taken: 516
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Linear combination
+Time: 0.543543815612793
+Number of paths taken: 516
+

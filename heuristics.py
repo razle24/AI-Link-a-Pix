@@ -138,7 +138,7 @@ heuristics_dict = {
     "Count possible paths": count_possible_paths,
     "Stick to walls": stick_to_wall,
     "Stick to other paths": stick_to_path,
-    "Count empty cells": count_empty_cells,
+    # "Count empty cells": count_empty_cells,
     "Stick to path or wall": stick_to_path_or_wall,
     'Linear combination': all_heuristics
 }

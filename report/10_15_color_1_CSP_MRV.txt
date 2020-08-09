@@ -1,0 +1,45 @@
+Game name: Bird
+File name: 10_15_color_1.xml
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Null heuristic
+Time: 0.012962579727172852
+Number of paths taken: 38
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count possible paths
+Time: 0.011934518814086914
+Number of paths taken: 38
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to walls
+Time: 0.017978906631469727
+Number of paths taken: 38
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to other paths
+Time: 0.015930652618408203
+Number of paths taken: 38
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count empty cells
+Time: 0.008975028991699219
+Number of paths taken: 38
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to path or wall
+Time: 0.008975982666015625
+Number of paths taken: 38
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Linear combination
+Time: 0.008975982666015625
+Number of paths taken: 38
+

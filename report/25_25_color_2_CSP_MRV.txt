@@ -1,0 +1,45 @@
+Game name: Giraffes
+File name: 25_25_color_2.xml
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Null heuristic
+Time: 0.8956093788146973
+Number of paths taken: 132
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count possible paths
+Time: 2.574223518371582
+Number of paths taken: 132
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to walls
+Time: 0.3660249710083008
+Number of paths taken: 132
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to other paths
+Time: 0.3650190830230713
+Number of paths taken: 132
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count empty cells
+Time: 0.4797213077545166
+Number of paths taken: 132
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to path or wall
+Time: 0.37997984886169434
+Number of paths taken: 132
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Linear combination
+Time: 2.7387142181396484
+Number of paths taken: 132
+

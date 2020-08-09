@@ -1,0 +1,45 @@
+Game name: Windmill
+File name: 20_30_color_1.xml
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Null heuristic
+Time: 0.2184159755706787
+Number of paths taken: 227
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count possible paths
+Time: 0.20545077323913574
+Number of paths taken: 227
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to walls
+Time: 0.19447994232177734
+Number of paths taken: 227
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to other paths
+Time: 0.19248533248901367
+Number of paths taken: 227
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Count empty cells
+Time: 0.2234025001525879
+Number of paths taken: 227
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Stick to path or wall
+Time: 0.19949746131896973
+Number of paths taken: 227
+
+Search: CSP
+Variable selection: MRV
+Heuristics: Linear combination
+Time: 0.2343907356262207
+Number of paths taken: 227
+
