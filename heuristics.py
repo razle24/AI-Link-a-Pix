@@ -33,10 +33,10 @@ def count_possible_paths(board, path):
 
     start_moves = board.get_possible_moves(x, y)
     if len(start_moves) == 0:
-        return float('-inf')
+        return float('inf')
     end_moves = board.get_possible_moves(end_x, end_y)
     if len(end_moves) == 0:
-        return float('-inf')
+        return float('inf')
 
     return (-1) * max(1 / len(board.get_possible_moves(x, y)), 1 / len(board.get_possible_moves(end_x, end_y)))
 

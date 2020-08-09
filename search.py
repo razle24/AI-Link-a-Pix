@@ -24,7 +24,6 @@ def a_star_search(game, variable_selection, heuristic):
     queue.push(game.get_initial_board(), 0)
 
     while not queue.isEmpty():
-        print(queue)
         current_board = queue.pop()
         yield current_board
 
@@ -36,14 +35,12 @@ def a_star_search(game, variable_selection, heuristic):
         for next_board, next_path in successor:
             if next_board not in explored:
                 total_cost = calc_board_cost(next_board) + heuristic(next_board, next_path)
-                # print(total_cost)
-                # total_cost = heuristic(next_board, next_path)
                 if total_cost > float('-inf'):
                     queue.push(next_board, total_cost)
 
         explored.add(current_board)
 
-    yield None
+    # yield None
 
 
 def get_successors(board):
@@ -92,7 +89,7 @@ def breadth_first_search(game, variable_selection, heuristic):
 
         explored.add(current_board)
         
-    yield None
+    # yield None
 
 
 # *** DFS *** #
@@ -118,7 +115,7 @@ def depth_first_search(game, variable_selection, heuristic):
         
         explored.add(current_board)
     
-    yield None
+    # yield None
 
 
 # *** UCS *** #
@@ -145,7 +142,7 @@ def uniform_cost_search(game, variable_selection, heuristic):
 
         explored.add(current_board)
 
-    yield None
+    # yield None
 
 
 # *** CSP *** #
