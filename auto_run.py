@@ -11,7 +11,7 @@ TIME_OUT = 180  # In sec
 path_puzzles = './boards'
 path_results = './report'
 
-puzzles = [f for f in os.listdir(path_puzzles) if f.startswith('40_60_col')]
+puzzles = [f for f in os.listdir(path_puzzles) if f.startswith('40_60_color_2')]
 print(puzzles)
 
 def run(game):
