@@ -27,12 +27,6 @@ Number of paths taken: 100
 
 Search: CSP
 Variable selection: MRV
-Heuristics: Count empty cells
-Time: 1.0856349468231201
-Number of paths taken: 100
-
-Search: CSP
-Variable selection: MRV
 Heuristics: Stick to path or wall
 Time: 0.5405805110931396
 Number of paths taken: 100
