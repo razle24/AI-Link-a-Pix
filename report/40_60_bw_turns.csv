@@ -1,0 +1,7 @@
+40_60_bw.xml,Null heuristic,Count possible paths,Stick to walls,Stick to other paths,Stick to path or wall,Linear combination
+Top to bottom,43365,43046,45894,38804,41752,33744
+MRV,5803,3300,6539,5692,5577,1676
+Small to big,27733,24042,21673,25650,21603,19855
+LCV,1799,1799,1799,439,1799,565
+By bullets,13297,13767,4557,10657,4617,4821
+By color,41376,41004,44577,40151,32604,31066

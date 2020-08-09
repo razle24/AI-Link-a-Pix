@@ -79,7 +79,7 @@ def random_variable_selection(board):
 
 variable_selection_dict = {
     "Top to bottom": top_to_bottom,
-    "MRV": mrv,
+    # "MRV": mrv,
     "Small to big": small_to_big,
     "LCV": lcv,
     # "Random selection": random_variable_selection,

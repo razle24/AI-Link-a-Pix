@@ -11,8 +11,8 @@ TIME_OUT = 180  # In sec
 path_puzzles = './boards'
 path_results = './report'
 
-puzzles = [f for f in os.listdir(path_puzzles) if f[0] == '1']
-
+puzzles = [f for f in os.listdir(path_puzzles) if f.startswith('40_60_col')]
+print(puzzles)
 
 def run(game):
     # Start clock
@@ -53,7 +53,7 @@ if __name__ == '__main__':
                     report_turns.write(variable_selection)
 
                     for heuristic in heuristics_dict:
-                        print(f'running: {puzzle}, {variable_selection}, {heuristic}', end='')
+                        print(f'running: {puzzle}, {variable_selection}, {heuristic}. ', end='')
                         game.set_boards_generator('CSP', variable_selection, heuristic)
                         run_time = run(game)
 
