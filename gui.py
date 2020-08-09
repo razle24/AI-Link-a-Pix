@@ -16,7 +16,7 @@ from variable_selection import variable_selection_dict
 root = tk.Tk()
 screensize = root.winfo_screenheight()
 root.destroy()
-GRAPH_SIZE = screensize - 310
+GRAPH_SIZE = screensize - 300
 
 
 def toggle_gui(window, toggle):
@@ -266,7 +266,7 @@ if __name__ == '__main__':
     # https://user-images.githubusercontent.com/46163555/70382042-796da500-1923-11ea-8432-80d08cd5f503.jpg
 
     # Needs to be first line of code for all elements to get this theme
-    sg.theme('LightBrown7')
+    sg.theme('BlueMono')
 
     search_list = [item for item in search_dict]
     variable_selection_list = [item for item in variable_selection_dict]

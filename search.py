@@ -120,6 +120,7 @@ def depth_first_search(game, variable_selection, heuristic):
     
     yield None
 
+
 # *** UCS *** #
 def uniform_cost_search(game, variable_selection, heuristic):
     """
@@ -178,10 +179,10 @@ def csp(game, variable_selection, heuristic):
     :return:
     """
     board = game.get_initial_board()
-    return backtrack(board, 0, variable_selection, heuristic)
+    return backtrack(board, variable_selection, heuristic)
 
 
-def backtrack(board, i, variable_selection, heuristic):
+def backtrack(board, variable_selection, heuristic):
     x, y = variable_selection(board)
 
     # Get list of all possible paths from the cell. sort next cell using variable selection and paths using heuristic
@@ -197,12 +198,14 @@ def backtrack(board, i, variable_selection, heuristic):
 
         if not invalid_state(next_board):
             yield next_board, path, board.get_number_color_in_cell(x, y)
-            done_board = backtrack(next_board, i + 1, variable_selection, heuristic)
+            done_board = backtrack(next_board, variable_selection, heuristic)
             if done_board is not None:
                 yield from done_board
 
             # Return back the old board and the path we deleted
             yield board, path, 0
+            
+    # yield from None
 
 
 search_dict = {
