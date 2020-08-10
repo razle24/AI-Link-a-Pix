@@ -7,12 +7,6 @@ from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeRegressor
 
 import xml_parser as ag
-from game import Game
-
-# Space is:
-# (+, -) (+, 0) (+, +)    ^ x = cell[0]
-# (0, -) (0, 0) (0, +)
-# (-, -) (-, 0) (-, +)  --> y = cell[1]
 
 PATH_TO_TRAIN_SET = './learner/train_set.csv'
 PATH_TO_PREDICTOR = './learner/predictor'
@@ -90,9 +84,11 @@ class Predictor:
 
         with open(PATH_TO_PREDICTOR, 'rb') as file:
             self.predictor = pickle.load(file)
+        print('Predictor is read from disk')
 
         with open(PATH_TO_ONE_HOT_ENCODER, 'rb') as file:
             self.ohe = pickle.load(file)
+        print('Encoder is read from disk')
 
     def predict(self, path):
         path_start_x, path_start_y = path[0]
@@ -104,16 +100,18 @@ class Predictor:
             self.percent_of_filled_cells,
             path_start_x, path_start_y,
             path_end_x, path_end_y,
-            normalize_path(path)
+            str(normalize_path(path))
         ]
-
-        row[-1] = self.ohe.transform(row[-1])
-
-        return self.predictor.predict(row)
+        new_row = row[:-1]
+        new_row.extend(self.ohe.transform([[row[-1]]])[0])
+        return self.predictor.predict([new_row])
 
 
 # *** Create train set *** #
 def convert_xml_dict_to_rows(xml_dict):
+    # Most be here to avoid circular imports
+    from game import Game
+
     w = xml_dict['width']
     h = xml_dict['height']
     number_of_colors = len(xml_dict['colors'])
@@ -136,7 +134,7 @@ def convert_xml_dict_to_rows(xml_dict):
                 percent_of_filled_cells,
                 path_start_x, path_start_y,
                 path_end_x, path_end_y,
-                normalize_path(path),
+                str(normalize_path(path)),
                 100
             ]]
 
@@ -154,7 +152,7 @@ def convert_xml_dict_to_rows(xml_dict):
                     percent_of_filled_cells,
                     path_start_x, path_start_y,
                     path_end_x, path_end_y,
-                    normalize_path(path),
+                    str(normalize_path(path)),
                     0
                 ]]
 
@@ -175,7 +173,7 @@ def create_train_file():
     with open('learner/train_set.csv', 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerows(train_set)
-        print('Train set is written to disk')
+    print('Train set is written to disk')
 
 
 # *** Create predictor *** #
@@ -186,7 +184,9 @@ def create_predictor():
     del train_set['label']
 
     ohe = OneHotEncoder(sparse=False, handle_unknown='ignore')
-    train_set['normalize_path'] = ohe.fit_transform(train_set['normalize_path'].to_numpy().reshape(-1, 1))
+    one_hot_data_set = ohe.fit_transform(train_set['normalize_path'].to_numpy().reshape(-1, 1))
+    del train_set['normalize_path']
+    train_set = train_set.join(pd.DataFrame(one_hot_data_set))
 
     decision_tree_model = DecisionTreeRegressor(min_samples_split=0.05, min_samples_leaf=0.05)
     predictor = decision_tree_model.fit(train_set, train_label)

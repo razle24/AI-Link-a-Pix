@@ -1,4 +1,5 @@
-# from ml import predict
+from ml import Predictor
+
 
 # ** Used every time ** #
 def invalid_state(board):
@@ -130,8 +131,8 @@ class AllHeuristics:
 
 
 class MachineLearning:
-    def __init__(self, init_board=None):
-        pass
+    def __init__(self, init_board):
+        self.predictor = Predictor(init_board)
 
     def cost(self, board, path):
         """
@@ -140,7 +141,10 @@ class MachineLearning:
         :param path:
         :return:
         """
-        return 0  # ml.predict(path)
+        cost = self.predictor.predict(path)
+        print(cost)
+        # For predictor, higher is better, for heuristics lower is better
+        return (-1) * cost
 
 
 heuristics_dict = {
