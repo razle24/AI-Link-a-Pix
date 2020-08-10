@@ -85,4 +85,5 @@ variable_selection_dict = {
     # "Random selection": random_variable_selection,
     "By bullets": by_bullets,
     "By color": by_color
+    
 }
