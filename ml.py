@@ -3,6 +3,7 @@ import os
 import pickle
 
 import pandas as pd
+import numpy as np
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeRegressor
 
@@ -164,15 +165,19 @@ def create_train_file():
     train_set = [['w', 'h', 'number_of_colors', 'percent_of_filled_cells', 'path_start_x',
                   'path_start_y', 'path_end_x', 'path_end_y', 'normalize_path', 'label']]
 
-    puzzles = [f for f in os.listdir(path_puzzles) if f[0] == '1']
-
-    for puzzle in puzzles:
-        xml_dict = ag.get_xml_from_path(path_puzzles + '/' + puzzle)
-        train_set += convert_xml_dict_to_rows(xml_dict)
+    puzzles = [f for f in os.listdir(path_puzzles)]
 
     with open('learner/train_set.csv', 'w', newline='') as csv_file:
         writer = csv.writer(csv_file)
         writer.writerows(train_set)
+
+        for i, puzzle in enumerate(puzzles[:-2]):
+            print(f'{i} out of {len(puzzles[:-2])}')
+            xml_dict = ag.get_xml_from_path(path_puzzles + '/' + puzzle)
+            train_set = convert_xml_dict_to_rows(xml_dict)
+
+            writer.writerows(train_set)
+
     print('Train set is written to disk')
 
 
@@ -183,24 +188,34 @@ def create_predictor():
     train_label = train_set['label']
     del train_set['label']
 
+    print('1) Create one hot matrix')
     ohe = OneHotEncoder(sparse=False, handle_unknown='ignore')
     one_hot_data_set = ohe.fit_transform(train_set['normalize_path'].to_numpy().reshape(-1, 1))
-    del train_set['normalize_path']
-    train_set = train_set.join(pd.DataFrame(one_hot_data_set))
 
+    print('2) Delete path strings and convert data frame to uint8')
+    del train_set['normalize_path']
+    train_set = train_set.astype(np.uint8)
+
+    print('3) Convert one hot matrix to data frame of booleans')
+    pd_one_hot_data_set = pd.DataFrame(one_hot_data_set, dtype='bool')
+
+    print('4) Join to existing data')
+    train_set = train_set.join(pd_one_hot_data_set)
+
+    print('5) Train model on data')
     decision_tree_model = DecisionTreeRegressor(min_samples_split=0.05, min_samples_leaf=0.05)
     predictor = decision_tree_model.fit(train_set, train_label)
 
     with open(PATH_TO_PREDICTOR, 'wb') as file:
         pickle.dump(predictor, file)
-    print('Predictor is written to disk')
+    print('6) Predictor is written to disk')
 
     with open(PATH_TO_ONE_HOT_ENCODER, 'wb') as file:
         pickle.dump(ohe, file)
-    print('Encoder is written to disk')
+    print('7) Encoder is written to disk')
 
 
 # *** Main *** #
 if __name__ == '__main__':
-    create_train_file()
-    # create_predictor()
+    # create_train_file()
+    create_predictor()
