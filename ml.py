@@ -202,5 +202,5 @@ def create_predictor():
 
 # *** Main *** #
 if __name__ == '__main__':
-    # create_train_file()
-    create_predictor()
+    create_train_file()
+    # create_predictor()
