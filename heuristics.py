@@ -1,3 +1,5 @@
+# from ml import predict
+
 # ** Used every time ** #
 def invalid_state(board, path=None):
     """
@@ -39,17 +41,6 @@ def count_possible_paths(board, path):
         return float('-inf')
 
     return (-1) * max(1 / len(board.get_possible_moves(x, y)), 1 / len(board.get_possible_moves(end_x, end_y)))
-
-
-def count_empty_cells(board, path=None):
-    """
-    A heuristic function that estimates the cost of the current board.
-    Counts the number of empty cells on the board.
-    :param board: The current board
-    :return: The number of empty cells on the board.
-    """
-    return len([1 for i in range(board.get_height()) for j in range(board.get_width())
-                if not board.is_colored_cell(i, j)])
 
 
 def stick_to_wall(board, path):
@@ -95,31 +86,6 @@ def stick_to_path(board, path):
 def stick_to_path_or_wall(board, path):
     return max(stick_to_wall(board, path), stick_to_path(board, path))
 
-# def photo_recognition(board, action, successor):
-#     pass
-
-
-# def stick_to_same_color(board, action, successor):
-#     """
-#     heuristic 4
-#     :param state:
-#     :param action:
-#     :param successor:
-#     :return:
-#     """
-#     pass
-#
-#
-# def compact_path(board, action, successor):
-#     """
-#     heuristic 5
-#     :param state:
-#     :param action:
-#     :param successor:
-#     :return:
-#     """
-#     pass
-
 
 def all_heuristics(board, path):
     """
@@ -132,13 +98,23 @@ def all_heuristics(board, path):
     return 0.5 * count_empty_cells(board) + 10 * stick_to_wall(board, path) + 5 * stick_to_path(board, path) +\
            count_possible_paths(board, path) + 15 * stick_to_path_or_wall(board, path)
 
+#
+# def machine_learning(board, path):
+#     """
+#
+#     :param board:
+#     :param path:
+#     :return:
+#     """
+#     return ml.predict(path)
+
 
 heuristics_dict = {
     "Null heuristic": null_heuristic,
-    "Count possible paths": count_possible_paths,
+    # "Count possible paths": count_possible_paths,
     "Stick to walls": stick_to_wall,
     "Stick to other paths": stick_to_path,
-    # "Count empty cells": count_empty_cells,
     "Stick to path or wall": stick_to_path_or_wall,
-    'Linear combination': all_heuristics
+    'Linear combination': all_heuristics,
+    # "Machine learning": machine_learning
 }

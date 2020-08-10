@@ -137,6 +137,9 @@ class Board:
         """
         return self.numbered_cells
 
+    def get_number_of_colors(self):
+        return self.num_of_colors
+
     # *** Setters *** #
     def set_cell_coloring(self, x, y, cell_color):
         """
