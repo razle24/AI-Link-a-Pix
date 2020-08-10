@@ -1,11 +1,9 @@
 import os
 from time import time
-from agent import get_xml_from_path
-from game import Game
 
-from search import search_dict
-from variable_selection import variable_selection_dict
+from game import Game
 from heuristics import heuristics_dict
+from xml_parser import get_xml_from_path
 
 TIME_OUT = 180  # In sec
 path_puzzles = './boards'

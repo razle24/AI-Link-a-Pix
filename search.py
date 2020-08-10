@@ -15,10 +15,11 @@ def calc_board_cost(board):
 
 
 # *** A star *** #
-def a_star_search(game, variable_selection, heuristic):
+def a_star_search(game, variable_selection, HeuristicClass):
     """
     Search the node that has the lowest combined cost and heuristic first.
     """
+    heuristic = HeuristicClass()
     explored = set()
     queue = util.PriorityQueue()
     queue.push(game.get_initial_board(), 0)
@@ -31,10 +32,10 @@ def a_star_search(game, variable_selection, heuristic):
             yield current_board
 
         successor = get_successors(current_board)
-        
+
         for next_board, next_path in successor:
             if next_board not in explored:
-                total_cost = calc_board_cost(next_board) + heuristic(next_board, next_path)
+                total_cost = calc_board_cost(next_board) + heuristic.cost(next_board, next_path)
                 if total_cost > float('-inf'):
                     queue.push(next_board, total_cost)
 
@@ -74,21 +75,21 @@ def breadth_first_search(game, variable_selection, heuristic):
     explored = set()
     queue = util.Queue()
     queue.push(game.get_initial_board())
-    
+
     while not queue.isEmpty():
         current_board = queue.pop()
         yield current_board
 
         if game.is_goal_state():
             yield current_board
-        
+
         successor = get_successors(current_board)
         for next_board, next_path in successor:
             if next_board not in explored:
                 queue.push(next_board)
 
         explored.add(current_board)
-        
+
     # yield None
 
 
@@ -100,21 +101,21 @@ def depth_first_search(game, variable_selection, heuristic):
     explored = set()
     stack = util.Stack()
     stack.push(game.get_initial_board())
-    
+
     while not stack.isEmpty():
         current_board = stack.pop()
         yield current_board
-        
+
         if game.is_goal_state():
             yield current_board
-        
+
         successor = get_successors(current_board)
         for next_board, next_path in successor:
             if next_board not in explored:
                 stack.push(next_board)
-        
+
         explored.add(current_board)
-    
+
     # yield None
 
 
@@ -134,7 +135,7 @@ def uniform_cost_search(game, variable_selection, heuristic):
         if game.is_goal_state():
             yield current_board
         successor = get_successors(current_board)
-        
+
         for next_board, next_path in successor:
             if next_board not in explored:
                 total_cost = calc_board_cost(next_board)
@@ -146,7 +147,7 @@ def uniform_cost_search(game, variable_selection, heuristic):
 
 
 # *** CSP *** #
-def csp(game, variable_selection, heuristic):
+def csp(game, VariableSelectionClass, HeuristicClass):
     """
     Works as follows:
         state - Board state (what cells are filled and with what color). Since there are many invalid board states,
@@ -176,18 +177,20 @@ def csp(game, variable_selection, heuristic):
     :return:
     """
     board = game.get_initial_board()
-    return backtrack(board, variable_selection, heuristic)
+    variable_selection_object = VariableSelectionClass(board)
+    heuristic_object = HeuristicClass(board)
+    return backtrack(board, variable_selection_object, heuristic_object)
 
 
 def backtrack(board, variable_selection, heuristic):
-    x, y = variable_selection(board)
+    x, y = variable_selection.next_coordinate(board)
 
     # Get list of all possible paths from the cell. sort next cell using variable selection and paths using heuristic
     paths = board.get_possible_moves(x, y)
 
     # variable_selection(board)
     if len(paths) > 1:
-        paths.sort(key=lambda path: heuristic(board, path), reverse=False)
+        paths.sort(key=lambda path: heuristic.cost(board, path), reverse=False)
 
     for path in paths:
         next_board = copy.copy(board)
@@ -201,7 +204,7 @@ def backtrack(board, variable_selection, heuristic):
 
             # Return back the old board and the path we deleted
             yield board, path, 0
-            
+
     # yield from None
 
 

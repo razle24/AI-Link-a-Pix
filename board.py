@@ -6,7 +6,7 @@ from util import manhattan_distance
 def generate_matrix_from_xml_dict(xml_dict):
     """
     Given xml dictionary, read the beginning and end of each path, add corresponding coordinates to the board
-    :param xml_dict: As explained at agent.py
+    :param xml_dict: As explained at xml_parser.py
     :return: Matrix (w*h) with the following values [(number, number_color), cell_color].
              If no number in cell the tuple will be filled with zeros [(0, 0), 0]
     """

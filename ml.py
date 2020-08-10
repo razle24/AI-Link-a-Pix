@@ -1,12 +1,12 @@
 import csv
 import os
-
 import pickle
+
 import pandas as pd
 from sklearn.preprocessing import OneHotEncoder
 from sklearn.tree import DecisionTreeRegressor
 
-import agent as ag
+import xml_parser as ag
 from game import Game
 
 # Space is:
@@ -99,13 +99,13 @@ class Predictor:
         path_end_x, path_end_y = path[-1]
 
         row = [
-                self.w, self.h,
-                self.number_of_colors,
-                self.percent_of_filled_cells,
-                path_start_x, path_start_y,
-                path_end_x, path_end_y,
-                normalize_path(path)
-            ]
+            self.w, self.h,
+            self.number_of_colors,
+            self.percent_of_filled_cells,
+            path_start_x, path_start_y,
+            path_end_x, path_end_y,
+            normalize_path(path)
+        ]
 
         row[-1] = self.ohe.transform(row[-1])
 
