@@ -1,0 +1,56 @@
+<puzzle>
+    <header>
+        <guid>6BA9AADB-DA14-4DB2-866A-4A6387FE4E45</guid>
+        <code family="02" variant="0" model="10x15" />
+        <serialNumber>90600003</serialNumber>
+        <formatVersion major="2" minor="0" />
+        <builderVersion>8.23</builderVersion>
+        <creationDate>2012-04-22T18:08:55Z</creationDate>
+        <properties>
+            <numeric name="width" value="10" unit="block" />
+            <numeric name="height" value="15" unit="block" />
+            <text name="name">House</text>
+            <numeric name="difficulty" value="1" />
+        </properties>
+    </header>
+    <data>
+        <dimensions width="10" height="15" />
+        <palette size="2">
+            <color id="0" rgb="ffffff" />
+            <color id="1" rgb="000000" />
+        </palette>
+        <solution>
+            <path color="1">3 7 3 8 4 8 4 7 5 7 5 6</path>
+            <path color="1">1 5 0 5 0 4 1 4</path>
+            <path color="1">9 13 9 12 9 11</path>
+            <path color="1">5 12 4 12 4 13</path>
+            <path color="1">0 13 0 12 0 11</path>
+            <path color="1">6 7 6 8 5 8</path>
+            <path color="1">2 1 2 0</path>
+            <path color="1">1 0 0 0</path>
+            <path color="1">8 1 8 2</path>
+            <path color="1">7 2 7 3</path>
+            <path color="1">6 5 7 5</path>
+            <path color="1">4 6</path>
+            <path color="1">2 12</path>
+            <path color="1">0 3</path>
+            <path color="1">8 7</path>
+            <path color="1">7 12</path>
+            <path color="1">2 8</path>
+            <path color="1">0 8</path>
+            <path color="1">0 1</path>
+            <path color="1">7 8</path>
+            <path color="1">5 13</path>
+            <path color="1">9 8 9 7 9 6 9 5</path>
+            <path color="1">8 6 7 6</path>
+            <path color="1">5 0 4 0 3 0 3 1 3 2 4 2 4 1</path>
+            <path color="1">1 7 0 7 0 6 1 6 2 6 2 5 2 4 3 4 3 5</path>
+            <path color="1">7 0 8 0 9 0 9 1 9 2 9 3</path>
+            <path color="1">9 14 8 14 7 14 6 14</path>
+            <path color="1">0 14 1 14 2 14 3 14</path>
+            <path color="1">4 4 5 4 6 4 6 3</path>
+            <path color="1">2 3 3 3 4 3 5 3 5 2</path>
+            <path color="1">9 10 8 10 7 10 6 10 5 10 4 10 3 10 2 10 1 10 0 10</path>
+        </solution>
+    </data>
+</puzzle>
