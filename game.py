@@ -3,8 +3,6 @@ from heuristics import heuristics_dict
 from search import search_dict
 from variable_selection import variable_selection_dict
 
-import os
-
 class Game:
     """
     Game engine class stores the current game state and controls when to
