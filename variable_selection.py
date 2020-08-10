@@ -59,7 +59,7 @@ def by_bullets(board):
                     if board.is_numbered_cell(l, k) and not board.is_colored_cell(l, k):
                         return l, k
 
-
+# comment
 def by_color(board):
     cells_list = sorted(board.get_list_of_numbered_cells(),
                   key=lambda coord: board.get_number_color_in_cell(coord[0], coord[1]))
