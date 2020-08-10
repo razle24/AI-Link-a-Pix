@@ -1,16 +1,15 @@
 import os
-from time import time
 import tkinter as tk
+from time import time
 
 import PySimpleGUI as sg
 
-import agent as ag
 import game as gm
+import xml_parser as ag
 from heuristics import heuristics_dict
 from search import search_dict
 from texts import *
 from variable_selection import variable_selection_dict
-
 
 # Get screen height to choose size for canvas
 root = tk.Tk()
@@ -56,7 +55,7 @@ def run_paths_based_search_without_animation(window, graph, game):
             graph.drew_color_on_board(i, j, graph.colors[matrix[i][j]])
 
 
-# *** A Star *** #
+# *** Others *** #
 def run_board_based_search_with_animation(window, graph, game):
     while not game.is_goal_state():
         matrix = game.do_move_other()
@@ -259,7 +258,6 @@ def runGUI(layout):
     window.close()
 
 
-
 if __name__ == '__main__':
     # List of themes:
     # https://user-images.githubusercontent.com/46163555/70382042-796da500-1923-11ea-8432-80d08cd5f503.jpg
@@ -272,16 +270,7 @@ if __name__ == '__main__':
     heuristics_list = [item for item in heuristics_dict]
 
     layout = [
-        [
-            sg.Text(GAME_MODE_TEXT),
-
-            sg.Radio(key='radio_ai_play', text=RADIO_AI_PLAY_MODE, group_id=MODE_GROUP_ID,
-                     default=True),
-            sg.Radio(key='radio_ai_build', text=RADIO_AI_BUILD_MODE, group_id=MODE_GROUP_ID,
-                     disabled=True),
-            sg.Radio(key='radio_human', text=RADIO_HUMAN_MODE, group_id=MODE_GROUP_ID,
-                     disabled=True)
-        ],
+        [sg.HorizontalSeparator()],
         [
             sg.InputText(key='file_path', enable_events=True, visible=False),
             sg.FileBrowse(key='file_selector', button_text=FILE_BROWSER_TEXT, initial_folder='./boards', size=(14, 1)),
@@ -321,4 +310,3 @@ if __name__ == '__main__':
     ]
 
     runGUI(layout)
-

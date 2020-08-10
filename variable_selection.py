@@ -1,38 +1,46 @@
 from random import sample
 
 
-def top_to_bottom(board):
-    for x, y in board.get_list_of_numbered_cells():
-        if not board.is_colored_cell(x, y):
-            return x, y
+class TopToBottom:
+    def __init__(self, init_board):
+        self.list = init_board.get_list_of_numbered_cells()
+
+    def next_coordinate(self, board=None):
+        for x, y in self.list:
+            if not board.is_colored_cell(x, y):
+                return x, y
 
 
-def small_to_big(board):
-    """
-    Sort the list by number value (from small to big)
-    :param board: board object
-    :return: doesn't return anything. Sorts the numbered_cells list in the board.
-    """
-    cells_list = sorted(board.get_list_of_numbered_cells(),
-                  key=lambda coord: board.get_number_in_cell(coord[0], coord[1]), reverse=False)
+class SmallToBig:
+    def __init__(self, init_board):
+        self.list = sorted(init_board.get_list_of_numbered_cells(),
+                           key=lambda cell: init_board.get_number_in_cell(cell[0], cell[1]), reverse=False)
 
-    for x, y in cells_list:
-        if not board.is_colored_cell(x, y):
-            return x, y
+    def next_coordinate(self, board):
+        """
+        Sort the list by number value (from small to big)
+        :param board: board object
+        :return: doesn't return anything. Sorts the numbered_cells list in the board.
+        """
+        for x, y in self.list:
+            if not board.is_colored_cell(x, y):
+                return x, y
 
 
-def mrv(board):
-    """
-    Sort list by amount of possible paths (descending order)
-    :param board:
-    :return:
-    """
-    cells_list = sorted(board.get_list_of_numbered_cells(),
-                        key=lambda coord: len(board.get_possible_moves(coord[0], coord[1])), reverse=True)
+class MRV:
+    def __init__(self, init_board):
+        self.list = sorted(init_board.get_list_of_numbered_cells(),
+                           key=lambda cell: len(init_board.get_possible_moves(cell[0], cell[1])), reverse=True)
 
-    for x, y in cells_list:
-        if not board.is_colored_cell(x, y):
-            return x, y
+    def next_coordinate(self, board):
+        """
+        Sort list by amount of possible paths (descending order)
+        :param board:
+        :return:
+        """
+        for x, y in self.list:
+            if not board.is_colored_cell(x, y):
+                return x, y
 
 
 def lcv(board):
@@ -79,10 +87,10 @@ def random_variable_selection(board):
 
 variable_selection_dict = {
     "Top to bottom": top_to_bottom,
-    "MRV": mrv,
+    # "MRV": mrv,
     "Small to big": small_to_big,
     "LCV": lcv,
-    "Random selection": random_variable_selection,
+    # "Random selection": random_variable_selection,
     "By bullets": by_bullets,
     "By color": by_color
 }

@@ -1,8 +1,8 @@
-import os
 import itertools
 import random
 
 from board import *
+
 
 # def evaluate_board(board):
 #     board_value = 0

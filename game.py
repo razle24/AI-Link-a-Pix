@@ -3,7 +3,6 @@ from heuristics import heuristics_dict
 from search import search_dict
 from variable_selection import variable_selection_dict
 
-import os
 
 class Game:
     """
@@ -126,22 +125,3 @@ class Game:
         self.moves_counter = 0
         self.board = copy.copy(self.initial_board)
         self.boards_generator = None
-
-#
-# if __name__ == '__main__':
-#     xml = get_xml_from_path('boards/tiny_color.xml')
-#     my_game = Game(xml)
-#     # print("count empty: ", count_empty_cells(my_game.board))
-#     heads = my_game.board.get_list_of_numbered_cells()
-#     my_game.set_boards_generator()
-#     while True:
-#         my_game.do_move()
-#         if my_game.is_goal_state():
-#             break
-#     # done_board = csp(my_game.board, heads, True)
-#     print("Our board:")
-#     print(my_game)
-#     print("Goal board:")
-#     print(my_game.goal_board)
-#     # print("count empty: ", count_empty_cells(done_board))
-#     print(f'Same: {my_game.is_goal_state()}')
