@@ -142,7 +142,7 @@ class MachineLearning:
         :return:
         """
         cost = self.predictor.predict(path)
-        print(cost)
+        # print(cost)
         # For predictor, higher is better, for heuristics lower is better
         return (-1) * cost
 
