@@ -153,5 +153,5 @@ heuristics_dict = {
     "Stick to other paths": StickToOtherPaths,
     "Stick to path or wall": StickToPathsOrWalls,
     'Linear combination': AllHeuristics,
-    "Machine learning": MachineLearning
+    "Neural network": MachineLearning
 }
