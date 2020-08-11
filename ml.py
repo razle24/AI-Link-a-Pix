@@ -5,7 +5,7 @@ import pickle
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import OneHotEncoder
-from sklearn.tree import DecisionTreeRegressor
+from sklearn.neural_network import MLPRegressor
 
 import xml_parser as ag
 
@@ -203,8 +203,8 @@ def create_predictor():
     train_set = train_set.join(pd_one_hot_data_set)
 
     print('5) Train model on data')
-    decision_tree_model = DecisionTreeRegressor(min_samples_split=0.05, min_samples_leaf=0.05)
-    predictor = decision_tree_model.fit(train_set, train_label)
+    model = MLPRegressor(hidden_layer_sizes=(10,), activation='logistic')
+    predictor = model.fit(train_set, train_label)
 
     with open(PATH_TO_PREDICTOR, 'wb') as file:
         pickle.dump(predictor, file)

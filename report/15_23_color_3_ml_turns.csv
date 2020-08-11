@@ -1,0 +1,8 @@
+15_23_color_3.xml,Null heuristic,Count possible paths,Stick to walls,Stick to other paths,Stick to path or wall,Linear combination,Machine learning
+Top to bottom,152,152,160,122,154,130,98
+MRV,152,152,160,122,154,130,98
+Small to big,152,152,160,122,154,130,98
+LCV,152,152,160,122,154,130,98
+Random selection,152,152,160,122,154,130,98
+By bullets,152,152,160,122,154,130,98
+By color,152,152,160,122,154,130,98

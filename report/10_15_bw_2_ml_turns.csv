@@ -1,0 +1,8 @@
+10_15_bw_2.xml,Null heuristic,Count possible paths,Stick to walls,Stick to other paths,Stick to path or wall,Linear combination,Machine learning
+Top to bottom,43,43,43,43,43,43,25
+MRV,43,43,43,43,43,43,25
+Small to big,43,43,43,43,43,43,25
+LCV,43,43,43,43,43,43,25
+Random selection,43,43,43,43,43,43,25
+By bullets,43,43,43,43,43,43,25
+By color,43,43,43,43,43,43,25
