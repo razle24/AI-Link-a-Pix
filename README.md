@@ -6,7 +6,7 @@ First, sit back and enjoy a nice game of Link-a-Pix :
 
 https://www.conceptispuzzles.com/index.aspx?uri=puzzle/link-a-pix
 
-**** What is Link-a-Pix? ****
+# What is Link-a-Pix?
 
 A board game puzzle that form whimsical pixel-art pictures when solved. Each puzzle consists of a grid containing numbers in various places.
 Every number, except for the 1’s, is half of a pair.The purpose is to reveal a hidden picture by linking the pairs and painting the paths 
