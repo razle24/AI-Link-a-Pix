@@ -48,7 +48,7 @@ In order to solve bigger boards, we needed to add ways to go over the numbered c
 
 1. Make sure you use Python 3. 
 2. Make sure you hava all the required packages (look in the requirements.txt file for more info) 
-            Download all packages using the command : 'pip install <package>'
+            Download all packages using the command : 'pip install'
             
 3. In your terminal go to the project's directory and run : 'python3 gui.py'. 
 4. The GUI will appear and you can choose one of the boards in the boards directory, and enjoy the game! 
