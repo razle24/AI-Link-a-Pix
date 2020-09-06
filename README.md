@@ -53,6 +53,18 @@ In order to solve bigger boards, we needed to add ways to go over the numbered c
 3. In your terminal go to the project's directory and run : 'python3 gui.py'. 
 4. The GUI will appear and you can choose one of the boards in the boards directory, and enjoy the game! 
 
+### Load the board (from ./boards) and choose Heuristic and Variable Selection methods:
+
+<p align="center">
+  <img src="https://github.com/razle24/AI-Link-a-Pix/blob/master/images/board_1.png" width="400" height="400" />
+
+### Press 'Run' and watch the board filling in!
+
+<p align="center">
+  <img src="https://github.com/razle24/AI-Link-a-Pix/blob/master/images/board_3.png" width="300" height="300" />
+  <img src="https://github.com/razle24/AI-Link-a-Pix/blob/master/images/board_4.png" width="300" height="300" />
+  <img src="https://github.com/razle24/AI-Link-a-Pix/blob/master/images/board_5.png" width="300" height="300" />
+
 
 
 
