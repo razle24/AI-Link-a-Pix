@@ -1,6 +1,6 @@
 # AI-Link-a-Pix
 
-![](images/board_5.png =250x250)
+![](images/board_5.png&s=200)
 
 This is an AI solver for the Link-a-Pix game. 
 
