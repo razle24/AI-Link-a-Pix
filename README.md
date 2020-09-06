@@ -43,7 +43,7 @@ In order to solve bigger boards, we needed to add ways to go over the numbered c
 4. Count possible paths - Returns the maximum between the possible paths from the starting point of the path, and the possible paths from the ending point of the path. 
 5. Linear combination - Returns a linear combination of all the heuristics above. 
 
-# How to run the code?
+## How to run the code?
 
 1. Make sure you use Python 3. 
 2. Make sure you hava all the required packages (look in the requirements.txt file for more info) 
