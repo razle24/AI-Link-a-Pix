@@ -1,5 +1,7 @@
 # AI-Link-a-Pix
 
+![](images/board_5.png)
+
 This is an AI solver for the Link-a-Pix game. 
 
 First, sit back and enjoy a nice game of Link-a-Pix :
@@ -50,7 +52,7 @@ In order to solve bigger boards, we needed to add ways to go over the numbered c
             Download all packages using the command : "pip install <package>"
             
 3. In your terminal go to the project's directory and run : "python3 gui.py". 
-4. The GUI will appear and you can choose one of the boards in the boards directory, and enjoy the game!           
+4. The GUI will appear and you can choose one of the boards in the boards directory, and enjoy the game! 
 
 
 
