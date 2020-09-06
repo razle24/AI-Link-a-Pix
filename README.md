@@ -13,7 +13,7 @@ Every number, except for the 1’s, is half of a pair.The purpose is to reveal a
 so that the number of squares in the path, including the squares at the ends, equals the value of the numbers being linked together. 
 
 
-**** Solutions ****
+# Solutions 
 
 The solution of the game is finding a series of legal paths under the constraints in order to get the final picture (each board has a unique solution)
 
@@ -23,7 +23,7 @@ We decided to use multiple solutions in order to solve our problem :
 2. Search algorithms : DFS, BFS, UCS and A*
 3. Machine learning algorithm 
 
-**** Variable Selection ****
+# Variable Selection
 We managed to solve the small boards (up to 10x15) with no variable selection. 
 
 In order to solve bigger boards, we needed to add ways to go over the numbered cells on the board – Variable selection : 
@@ -36,14 +36,14 @@ In order to solve bigger boards, we needed to add ways to go over the numbered c
 6. By color - Orders the cells by their color (RGB color numbers)
 7. Random selection - Orders the cells randomly.
 
-**** Heuristics ****
+# Heuristics
 1. Null Heuristic - Return 0 for every board and path. 
 2. Stick to walls - Counts the number of cells in the path that “stick to the walls” of the board. Gives a higher score for paths closer to the walls.
 3. Stick to other paths - Counts the number of cells in the path that “stick to other paths” on the board. Gives a higher score for paths closer to other paths – avoiding holes in the picture.
 4. Count possible paths - Returns the maximum between the possible paths from the starting point of the path, and the possible paths from the ending point of the path. 
 5. Linear combination - Returns a linear combination of all the heuristics above. 
 
-*** How to run the code ? **** 
+# How to run the code?
 
 1. Make sure you use Python 3. 
 2. Make sure you hava all the required packages (look in the requirements.txt file for more info) 
